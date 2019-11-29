@@ -247,13 +247,16 @@ namespace FrogEngine
 			Cube
 		};
 	public:
-		Mesh(Geometry geometry);
-		Mesh(std::vector<Vertex>& vertices);
-		Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices);
+		static Mesh* Create(Geometry geometry);
+		static Mesh* Create(std::vector<Vertex>& vertices);
+		static Mesh* Create(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices);
 		~Mesh();
 		void Draw();
 		void Draw(Shader* shader);
 		void SimpleDraw(Shader* shader);
+	private:
+		Mesh();
+		void TransmitData();
 	public:
 		Transform transform;
 		Material* material;
@@ -269,18 +272,18 @@ namespace FrogEngine
 	{
 	public:
 		Model(std::string path);
-		Model(Mesh& mesh);
+		Model(Mesh* mesh);
 		~Model();
 		Transform& GetTransform();
 		void Rendering();
 	private:
 		void ProcessNode(aiNode* node, const aiScene* scene);
-		Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+		Mesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
 		Texture2D* LoadMaterialTextures(aiMaterial* mat, aiTextureType type);
 	private:
 		std::string _directory;
 		Transform _transform;
-		std::vector<Mesh> _meshs;
+		std::vector<Mesh*> _meshs;
 	};
 	class DirectionalLight
 	{

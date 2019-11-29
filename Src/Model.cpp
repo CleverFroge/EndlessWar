@@ -14,7 +14,7 @@ Model::Model(std::string path)
 	ProcessNode(scene->mRootNode, scene);
 }
 
-Model::Model(Mesh& mesh)
+Model::Model(Mesh* mesh)
 {
 	_meshs.push_back(mesh);
 }
@@ -27,7 +27,7 @@ void Model::Rendering()
 {
 	for (size_t i = 0; i < _meshs.size(); i++)
 	{
-		_meshs[i].Draw();
+		_meshs[i]->Draw();
 	}
 }
 
@@ -51,7 +51,7 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene)
 	}
 }
 
-Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+Mesh* Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
@@ -79,7 +79,7 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 		for (unsigned int j = 0; j < face.mNumIndices; j++)
 			indices.push_back(face.mIndices[j]);
 	}
-	Mesh result(vertices, indices);
+	Mesh* result = Mesh::Create(vertices, indices);
 	// ´¦Àí²ÄÖÊ
 	if (mesh->mMaterialIndex >= 0)
 	{	
@@ -87,7 +87,7 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 		aiMaterial* ai_material = scene->mMaterials[mesh->mMaterialIndex];
 		material->diffuseTexture = LoadMaterialTextures(ai_material, aiTextureType_DIFFUSE);
 		material->specularTexture = LoadMaterialTextures(ai_material, aiTextureType_SPECULAR);
-		result.material = material;
+		result->material = material;
 	}
 	return result;
 }
