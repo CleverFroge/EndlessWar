@@ -47,8 +47,6 @@ void Camera::ProcessMouseMovement(float deltaX, float deltaY)
 
 void Camera::Move(Direction direction, float deltaTime)
 {
-	static int counter = 0;
-	std::cout << "Move:"<< ++counter << std::endl;
 	Vector3 moveDirection;
 	switch (direction)
 	{

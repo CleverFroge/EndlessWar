@@ -89,7 +89,7 @@ int main()
 	Shader::LoadShader("Specular", "../Shader/Common.vs", "../Shader/Specular.fs");
 	Shader::LoadShader("SkyBox", "../Shader/SkyBox.vs", "../Shader/SkyBox.fs");
 
-	Model model("../Resource/Model/nanosuit.obj");
+	Node* model = Model::LoadModel("../Resource/Model/nanosuit.obj");
 
 	auto skyBox = SkyBox("../Resource/skybox/front.jpg", "../Resource/skybox/back.jpg", "../Resource/skybox/left.jpg", "../Resource/skybox/right.jpg", "../Resource/skybox/top.jpg", "../Resource/skybox/bottom.jpg");
 	//Loop
@@ -102,7 +102,7 @@ int main()
 		CameraUpdate();
 
 		skyBox.Draw();
-		model.Rendering();
+		model->Rendering();
 
 		Input::ClearFrameInput();
 

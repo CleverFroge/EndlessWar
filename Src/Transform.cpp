@@ -1,9 +1,9 @@
 #include "FrogEngine.h"
 using namespace FrogEngine;
 
-Transform* Transform::root = new Transform();
+Node* Node::root = new Node();
 
-Transform::Transform()
+Node::Node()
 {
 	_scale = Vector3(1, 1, 1);
 	SetPosition(0, 0, 0);
@@ -12,26 +12,26 @@ Transform::Transform()
 	_parent = root;
 }
 
-Transform::~Transform()
+Node::~Node()
 {
 }
 
-void Transform::SetScale(float x, float y, float z)
+void Node::SetScale(float x, float y, float z)
 {
 	_scale = Vector3(x, y, z);
 }
 
-void Transform::SetPosition(const Vector3& position)
+void Node::SetPosition(const Vector3& position)
 {
 	_position = position;
 }
 
-void Transform::SetPosition(float x, float y, float z)
+void Node::SetPosition(float x, float y, float z)
 {
 	_position = Vector3(x, y, z);
 }
 
-void Transform::SetEulerAngle(const Vector3& eulerAngles)
+void Node::SetEulerAngle(const Vector3& eulerAngles)
 {
 	_eulerAngle.SetX(NormalizedAngle(eulerAngles.GetX()));
 	_eulerAngle.SetY(NormalizedAngle(eulerAngles.GetY()));
@@ -39,7 +39,7 @@ void Transform::SetEulerAngle(const Vector3& eulerAngles)
 	InitByEulerAngles();
 }
 
-void Transform::SetEulerAngle(float x, float y, float z)
+void Node::SetEulerAngle(float x, float y, float z)
 {
 	_eulerAngle = Vector3(
 		NormalizedAngle(x),
@@ -49,25 +49,25 @@ void Transform::SetEulerAngle(float x, float y, float z)
 	InitByEulerAngles();
 }
 
-void Transform::SetEulerAngleX(float eularAngleX)
+void Node::SetEulerAngleX(float eularAngleX)
 {
 	_eulerAngle.SetX(NormalizedAngle(eularAngleX));
 	InitByEulerAngles();
 }
 
-void Transform::SetEulerAngleY(float eularAngleY)
+void Node::SetEulerAngleY(float eularAngleY)
 {
 	_eulerAngle.SetY(NormalizedAngle(eularAngleY));
 	InitByEulerAngles();
 }
 
-void Transform::SetEulerAngleZ(float eularAngleZ)
+void Node::SetEulerAngleZ(float eularAngleZ)
 {
 	_eulerAngle.SetZ(NormalizedAngle(eularAngleZ));
 	InitByEulerAngles();
 }
 
-void Transform::InitByEulerAngles()
+void Node::InitByEulerAngles()
 {
 	Matrix4 matrix;
 	matrix.Rotate(Vector3(1, 0, 0), -_eulerAngle.GetX());
@@ -78,37 +78,37 @@ void Transform::InitByEulerAngles()
 	_up = Vector3::UP * matrix;
 }
 
-const Vector3& Transform::Scale() const
+const Vector3& Node::Scale() const
 {
 	return _scale;
 }
 
-const Vector3& Transform::Position() const
+const Vector3& Node::Position() const
 {
 	return _position;
 }
 
-const Vector3& Transform::EulerAngle() const
+const Vector3& Node::EulerAngle() const
 {
 	return _eulerAngle;
 }
 
-const Vector3& Transform::Forward() const
+const Vector3& Node::Forward() const
 {
 	return _front;
 }
 
-const Vector3& Transform::Up() const
+const Vector3& Node::Up() const
 {
 	return _up;
 }
 
-const Vector3& Transform::Right() const
+const Vector3& Node::Right() const
 {
 	return _right;
 }
 
-void Transform::Print() const
+void Node::Print() const
 {
 	std::cout << "Position:";
 	_position.Print();
@@ -122,20 +122,126 @@ void Transform::Print() const
 	_eulerAngle.Print();
 }
 
-void Transform::SetParent(Transform* parent)
+void Node::SetParent(Node* parent)
 {
 	if (parent)
 	{
 		_parent = parent;
+		parent->_childs.insert(this);
 	}
 }
 
-void Transform::AddChild(Transform* child)
+void Node::AddChild(Node* child)
 {
-	_childs.insert(child);
+	if (child)
+	{
+		_childs.insert(child);
+		child->_parent = this;
+	}
 }
 
-void Transform::RemoveChild(Transform* child)
+void Node::RemoveChild(Node* child)
 {
 	_childs.erase(child);
+}
+
+void Node::Rendering()
+{
+	if (mesh)
+	{
+		Shader* shader = mesh->shader;
+		Material* material = mesh->material;
+		if (!shader)
+		{
+			shader = Shader::GetShader("Phong");
+		}
+		//使用该着色器程序
+		shader->Use();
+		//向shader发送材质数据
+		if (material)
+		{
+			unsigned int textureIndex = 0;
+			if (material->diffuseTexture)
+			{
+				shader->SetBool("material.alpha", material->diffuseTexture->Alpha);
+				shader->SetInt("material.diffuse", textureIndex);
+				glActiveTexture(GL_TEXTURE0 + textureIndex);
+				glBindTexture(GL_TEXTURE_2D, material->diffuseTexture->ID);
+				textureIndex++;
+			}
+			else
+			{
+				shader->SetInt("material.diffuse", -1);
+			}
+			if (material->specularTexture)
+			{
+				shader->SetInt("material.specular", textureIndex);
+				glActiveTexture(GL_TEXTURE0 + textureIndex);
+				glBindTexture(GL_TEXTURE_2D, material->specularTexture->ID);
+			}
+			else
+			{
+				shader->SetInt("material.specular", -1);
+			}
+			shader->SetFloat("material.shininess", material->shininess);
+		}
+		//向shader发送model矩阵
+		Matrix4 model;
+		model.Translate(_position);
+		model.Rotate(Vector3(1, 0, 0), -_eulerAngle.GetX());
+		model.Rotate(Vector3(0, 1, 0), _eulerAngle.GetY());
+		model.Rotate(Vector3(0, 0, 1), _eulerAngle.GetZ());
+		model.Scale(_scale);
+		shader->SetMat4("model", model);
+
+		//向shader发送相机相关数据
+		Camera* currentCamera = Camera::GetCurrentCamera();
+		shader->SetVector3("viewPos", currentCamera->Position());
+		shader->SetMat4("view", currentCamera->GetLookAtMatrix());
+		shader->SetMat4("projection", currentCamera->GetProjectionMatrix());
+
+		//向shader发送光源相关数据
+		//方向光
+		auto directionalLights = DirectionalLight::GetLights();
+		shader->SetInt("directionalLightNum", directionalLights.size());
+		for (size_t i = 0; i < directionalLights.size(); i++)
+		{
+			std::string name = std::string("directionalLights[") + std::to_string(i) + std::string("]");
+			shader->SetVector3((name + std::string(".direction")).c_str(), directionalLights[i]->direction);
+			shader->SetVector3((name + std::string(".color")).c_str(), directionalLights[i]->color);
+		}
+		//点光源
+		auto pointLights = PointLight::GetLights();
+		shader->SetInt("pointLightNum", pointLights.size());
+		for (size_t i = 0; i < pointLights.size(); i++)
+		{
+			std::string name = std::string("pointLights[") + std::to_string(i) + std::string("]");
+			shader->SetVector3((name + std::string(".position")).c_str(), pointLights[i]->position);
+			shader->SetVector3((name + std::string(".color")).c_str(), pointLights[i]->color);
+			shader->SetFloat((name + std::string(".constant")).c_str(), pointLights[i]->constant);
+			shader->SetFloat((name + std::string(".linear")).c_str(), pointLights[i]->linear);
+			shader->SetFloat((name + std::string(".quadratic")).c_str(), pointLights[i]->quadratic);
+		}
+		//聚光
+		auto flashLights = FlashLight::GetLights();
+		shader->SetInt("flashLightNum", flashLights.size());
+		for (size_t i = 0; i < flashLights.size(); i++)
+		{
+			std::string name = std::string("flashLights[") + std::to_string(i) + std::string("]");
+			shader->SetVector3((name + std::string(".position")).c_str(), flashLights[i]->position);
+			shader->SetVector3((name + std::string(".direction")).c_str(), flashLights[i]->direction);
+			shader->SetVector3((name + std::string(".color")).c_str(), flashLights[i]->color);
+			shader->SetFloat((name + std::string(".innerCone")).c_str(), flashLights[i]->innerCone);
+			shader->SetFloat((name + std::string(".outerCone")).c_str(), flashLights[i]->outerCone);
+			shader->SetFloat((name + std::string(".constant")).c_str(), flashLights[i]->constant);
+			shader->SetFloat((name + std::string(".linear")).c_str(), flashLights[i]->linear);
+			shader->SetFloat((name + std::string(".quadratic")).c_str(), flashLights[i]->quadratic);
+		}
+		mesh->Draw();
+	}
+	
+	for (auto it = _childs.begin(); it!=_childs.end(); it++)
+	{
+		(*it)->Rendering();
+	}
 }

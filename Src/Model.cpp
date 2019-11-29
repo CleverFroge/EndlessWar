@@ -1,57 +1,37 @@
 #include "FrogEngine.h"
 using namespace FrogEngine;
 
-Model::Model(std::string path)
+Node* Model::LoadModel(std::string path)
 {
-	_directory = path.substr(0, path.find_last_of('/')) + "/";
+	std::string directory = path.substr(0, path.find_last_of('/')) + "/";
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
 		std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
-		return;
+		return nullptr;
 	}
-	ProcessNode(scene->mRootNode, scene);
+	return ProcessNode(directory, scene->mRootNode, scene);
 }
 
-Model::Model(Mesh* mesh)
+Node* Model::ProcessNode(std::string directory, aiNode* node, const aiScene* scene)
 {
-	_meshs.push_back(mesh);
-}
-
-Model::~Model()
-{
-}
-
-void Model::Rendering()
-{
-	for (size_t i = 0; i < _meshs.size(); i++)
-	{
-		_meshs[i]->Draw();
-	}
-}
-
-Transform& Model::GetTransform()
-{
-	return _transform;
-}
-
-void Model::ProcessNode(aiNode* node, const aiScene* scene)
-{
+	Node* ret = new Node();
 	// 处理节点所有的网格（如果有的话）
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		_meshs.push_back(ProcessMesh(mesh, scene));
+		ret->mesh = ProcessMesh(directory, mesh, scene);
 	}
 	// 接下来对它的子节点重复这一过程
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
-		ProcessNode(node->mChildren[i], scene);
+		ret->AddChild(ProcessNode(directory, node->mChildren[i], scene));
 	}
+	return ret;
 }
 
-Mesh* Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+Mesh* Model::ProcessMesh(std::string directory, aiMesh* mesh, const aiScene* scene)
 {
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
@@ -85,21 +65,21 @@ Mesh* Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 	{	
 		Material* material = Material::Create();
 		aiMaterial* ai_material = scene->mMaterials[mesh->mMaterialIndex];
-		material->diffuseTexture = LoadMaterialTextures(ai_material, aiTextureType_DIFFUSE);
-		material->specularTexture = LoadMaterialTextures(ai_material, aiTextureType_SPECULAR);
+		material->diffuseTexture = LoadMaterialTextures(directory, ai_material, aiTextureType_DIFFUSE);
+		material->specularTexture = LoadMaterialTextures(directory, ai_material, aiTextureType_SPECULAR);
 		result->material = material;
 	}
 	return result;
 }
 
-Texture2D* Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type)
+Texture2D* Model::LoadMaterialTextures(std::string directory, aiMaterial* mat, aiTextureType type)
 {
 	Texture2D* texture = nullptr;
 	if (mat->GetTextureCount(type) != 0)
 	{
 		aiString str;
 		mat->GetTexture(type, 0, &str);
-		texture = Texture2D::Create((_directory + str.C_Str()).c_str(), false);
+		texture = Texture2D::Create((directory + str.C_Str()).c_str(), false);
 	}
 	return texture;
 }

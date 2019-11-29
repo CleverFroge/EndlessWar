@@ -18,22 +18,22 @@
 
 namespace FrogEngine
 {
-	static const float PI = atan(1) * 4;
+	static const float PI = (float)atan(1) * 4;
 	static float Attenuation[] =
 	{
-		//dis, constant, linear, quadratic
-		7,	1.0,	0.7,	1.8,		
-		13,	1.0,	0.35,	0.44,	
-		20,	1.0,	0.22,	0.20,	
-		32,	1.0,	0.14,	0.07,	
-		50,	1.0,	0.09,	0.032,	
-		65,	1.0,	0.07,	0.017,	
-		100,	1.0,	0.045,	0.0075,	
-		160,	1.0,	0.027,	0.0028,	
-		200,	1.0,	0.022,	0.0019,	
-		325,	1.0,	0.014,	0.0007,	
-		600,	1.0,	0.007,	0.0002,	
-		3250,	1.0,	0.0014,	0.000007,	
+		//dis,		constant,	linear,		quadratic
+		7.0f,		1.0f,		0.7f,		1.8f,
+		13.0f,		1.0f,		0.35f,		0.44f,
+		20.0f,		1.0f,		0.22f,		0.20f,
+		32.0f,		1.0f,		0.14f,		0.07f,
+		50.0f,		1.0f,		0.09f,		0.032f,
+		65.0f,		1.0f,		0.07f,		0.017f,
+		100.0f,		1.0f,		0.045f,		0.0075f,
+		160.0f,		1.0f,		0.027f,		0.0028f,
+		200.0f,		1.0f,		0.022f,		0.0019f,
+		325.0f,		1.0f,		0.014f,		0.0007f,
+		600.0f,		1.0f,		0.007f,		0.0002f,
+		3250.0f,	1.0f,		0.0014f,	0.000007f,
 	};
 	enum Direction
 	{
@@ -124,13 +124,14 @@ namespace FrogEngine
 		glm::mat4 _mat;
 		friend Vector3;
 	};
-	class Transform
+	class Mesh;
+	class Node
 	{
 	private:
 		void InitByEulerAngles();
 	public:
-		Transform();
-		~Transform();
+		Node();
+		~Node();
 		void SetScale(float x, float y, float z);
 		void SetPosition(const Vector3& position);
 		void SetPosition(float x, float y, float z);
@@ -149,14 +150,18 @@ namespace FrogEngine
 
 		void Print() const;
 
-		void SetParent(Transform* parent);
-		void AddChild(Transform* child);
-		void RemoveChild(Transform* child);
+		void SetParent(Node* parent);
+		void AddChild(Node* child);
+		void RemoveChild(Node* child);
+
+		void Rendering();
 	public:
-		static Transform* root;
+		static Node* root;
+		Mesh* mesh;
 	private:
-		Transform* _parent;
-		std::set<Transform*> _childs;
+		
+		Node* _parent;
+		std::set<Node*> _childs;
 		Vector3 _scale;
 		Vector3 _position;
 
@@ -165,7 +170,7 @@ namespace FrogEngine
 		Vector3 _front;
 		Vector3 _right;
 	};
-	class Camera : public Transform
+	class Camera : public Node
 	{
 	public:
 		static void SetCurrentCamera(Camera* camera);
@@ -252,13 +257,11 @@ namespace FrogEngine
 		static Mesh* Create(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices);
 		~Mesh();
 		void Draw();
-		void Draw(Shader* shader);
-		void SimpleDraw(Shader* shader);
 	private:
 		Mesh();
 		void TransmitData();
 	public:
-		Transform transform;
+		Node transform;
 		Material* material;
 		Shader* shader;
 	private:
@@ -271,19 +274,11 @@ namespace FrogEngine
 	class Model
 	{
 	public:
-		Model(std::string path);
-		Model(Mesh* mesh);
-		~Model();
-		Transform& GetTransform();
-		void Rendering();
+		static Node* LoadModel(std::string path);
 	private:
-		void ProcessNode(aiNode* node, const aiScene* scene);
-		Mesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
-		Texture2D* LoadMaterialTextures(aiMaterial* mat, aiTextureType type);
-	private:
-		std::string _directory;
-		Transform _transform;
-		std::vector<Mesh*> _meshs;
+		static Node* ProcessNode(std::string directory, aiNode* node, const aiScene* scene);
+		static Mesh* ProcessMesh(std::string directory, aiMesh* mesh, const aiScene* scene);
+		static Texture2D* LoadMaterialTextures(std::string directory, aiMaterial* mat, aiTextureType type);
 	};
 	class DirectionalLight
 	{
