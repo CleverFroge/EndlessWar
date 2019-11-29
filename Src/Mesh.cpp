@@ -1,6 +1,6 @@
 #include <glad/glad.h>
-#include "FrogeEngine.h"
-using namespace FrogeEngine;
+#include "FrogEngine.h"
+using namespace FrogEngine;
 Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices)
 {
 	_vertices = vertices;
@@ -221,7 +221,7 @@ Mesh::Mesh(Geometry geometry)
 {
 	switch (geometry)
 	{
-	case FrogeEngine::Mesh::Quad:
+	case FrogEngine::Mesh::Quad:
 	{
 		float vertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
 		// positions   // texCoords
@@ -243,7 +243,7 @@ Mesh::Mesh(Geometry geometry)
 		}
 	}
 	break;
-	case FrogeEngine::Mesh::Cube:
+	case FrogEngine::Mesh::Cube:
 	{
 		float vertices[] = {
 			// positions          // normals           // texture coords

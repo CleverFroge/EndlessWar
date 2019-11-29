@@ -1,17 +1,17 @@
-#include "FrogeEngine.h"
-using namespace FrogeEngine;
+#include "FrogEngine.h"
+using namespace FrogEngine;
 
-float FrogeEngine::Radians(float angle)
+float FrogEngine::Radians(float angle)
 {
 	return glm::radians(angle);
 }
 
-float FrogeEngine::Angle(float radians)
+float FrogEngine::Angle(float radians)
 {
 	return radians / PI * 180.0;
 }
 
-float FrogeEngine::NormalizedAngle(float angle)
+float FrogEngine::NormalizedAngle(float angle)
 {
 	int multiplePI = angle / 180;
 	if (multiplePI % 2 == 0)
@@ -24,12 +24,12 @@ float FrogeEngine::NormalizedAngle(float angle)
 	}
 }
 
-float FrogeEngine::GetAttenuationLinear(float distant)
+float FrogEngine::GetAttenuationLinear(float distant)
 {
 	return 0;
 }
 
-float FrogeEngine::GetAttenuationQuadratic(float distant)
+float FrogEngine::GetAttenuationQuadratic(float distant)
 {
 	return 0;
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include <glad/glad.h>
-#include "FrogeEngine.h"
-using namespace FrogeEngine;
+#include "FrogEngine.h"
+using namespace FrogEngine;
 #include <iostream>
 
 Texture2D* Texture2D::Create()

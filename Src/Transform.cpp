@@ -1,5 +1,5 @@
-#include "FrogeEngine.h"
-using namespace FrogeEngine;
+#include "FrogEngine.h"
+using namespace FrogEngine;
 
 Transform* Transform::root = new Transform();
 

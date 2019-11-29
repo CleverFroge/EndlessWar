@@ -1,5 +1,5 @@
-#include "FrogeEngine.h"
-using namespace FrogeEngine;
+#include "FrogEngine.h"
+using namespace FrogEngine;
 
 std::vector<PointLight*> PointLight::_lights;
 

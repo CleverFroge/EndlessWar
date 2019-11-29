@@ -16,7 +16,7 @@
 
 #include "stb_image.h"
 
-namespace FrogeEngine
+namespace FrogEngine
 {
 	static const float PI = atan(1) * 4;
 	static float Attenuation[] =
@@ -363,5 +363,33 @@ namespace FrogeEngine
 	private:
 		static int Width;
 		static int Height;
+	};
+	class Time
+	{
+	public:
+		static float GetCurrentTime();
+		static float GetDeltaTime();
+		static void Update();
+	private:
+		static float CurrentTime;
+		static float DeltaTime;
+	};
+	class Input
+	{
+	public:
+		static void SetWindow(GLFWwindow* window);
+		static void UpdateMousePos(GLFWwindow* window, double xpos, double ypos);
+		static void ClearFrameInput();
+		static double GetMousePosX();
+		static double GetMousePosY();
+		static double GetMousePosDeltaX();
+		static double GetMousePosDeltaY();
+		static bool GetKey(int key);
+	private:
+		static GLFWwindow* _window;
+		static double _mousePosX;
+		static double _mousePosY;
+		static double _mousePosDeltaX;
+		static double _mousePosDeltaY;
 	};
 }

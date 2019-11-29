@@ -1,5 +1,5 @@
-#include "FrogeEngine.h"
-using namespace FrogeEngine;
+#include "FrogEngine.h"
+using namespace FrogEngine;
 
 float SkyBox::_skyboxVertices[] = {
 	// positions          
@@ -100,7 +100,8 @@ SkyBox::SkyBox(const char* front, const char* back, const char* left, const char
 
 SkyBox::~SkyBox()
 {
-
+	glDeleteVertexArrays(1, &_vao);
+	glDeleteBuffers(1, &_vbo);
 }
 
 void SkyBox::Draw()

@@ -1,5 +1,5 @@
-#include "FrogeEngine.h"
-using namespace FrogeEngine;
+#include "FrogEngine.h"
+using namespace FrogEngine;
 
 Camera* Camera::_currentCamera = nullptr;
 
@@ -47,33 +47,35 @@ void Camera::ProcessMouseMovement(float deltaX, float deltaY)
 
 void Camera::Move(Direction direction, float deltaTime)
 {
+	static int counter = 0;
+	std::cout << "Move:"<< ++counter << std::endl;
 	Vector3 moveDirection;
 	switch (direction)
 	{
-	case FrogeEngine::FRONT:
+	case FrogEngine::FRONT:
 		moveDirection = Forward();
 		moveDirection.SetY(0);
 		moveDirection = moveDirection.Normalized();
 		break;
-	case FrogeEngine::BACK:
+	case FrogEngine::BACK:
 		moveDirection = Vector3(0, 0, 0) - Forward();
 		moveDirection.SetY(0);
 		moveDirection = moveDirection.Normalized();
 		break;
-	case FrogeEngine::LEFT:
+	case FrogEngine::LEFT:
 		moveDirection = Vector3(0, 0, 0) - Right();
 		moveDirection.SetY(0);
 		moveDirection = moveDirection.Normalized();
 		break;
-	case FrogeEngine::RIGHT:
+	case FrogEngine::RIGHT:
 		moveDirection = Right();
 		moveDirection.SetY(0);
 		moveDirection = moveDirection.Normalized();
 		break;
-	case FrogeEngine::UP:
+	case FrogEngine::UP:
 		moveDirection = Vector3(0, 1, 0);
 		break;
-	case FrogeEngine::DOWN:
+	case FrogEngine::DOWN:
 		moveDirection = Vector3(0, -1, 0);
 		break;
 	default:

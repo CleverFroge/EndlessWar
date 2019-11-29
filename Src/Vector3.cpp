@@ -1,5 +1,5 @@
-#include "FrogeEngine.h"
-using namespace FrogeEngine;
+#include "FrogEngine.h"
+using namespace FrogEngine;
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

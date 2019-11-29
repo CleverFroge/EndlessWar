@@ -1,5 +1,5 @@
-#include "FrogeEngine.h"
-using namespace FrogeEngine;
+#include "FrogEngine.h"
+using namespace FrogEngine;
 Matrix4::Matrix4()
 {
 	_mat = glm::mat4(1);
