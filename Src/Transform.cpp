@@ -1,7 +1,8 @@
+#include <stack>
 #include "FrogEngine.h"
 using namespace FrogEngine;
 
-Node* Node::root = new Node();
+Node* Node::ROOT = new Node();
 
 Node::Node()
 {
@@ -9,7 +10,6 @@ Node::Node()
 	SetPosition(0, 0, 0);
 	SetEulerAngle(0, 0, 0);
 	InitByEulerAngles();
-	_parent = root;
 }
 
 Node::~Node()
@@ -160,7 +160,7 @@ void Node::Rendering()
 		//向shader发送材质数据
 		if (material)
 		{
-			unsigned int textureIndex = 0;
+			unsigned int textureIndex = 1;
 			if (material->diffuseTexture)
 			{
 				shader->SetBool("material.alpha", material->diffuseTexture->Alpha);
@@ -169,29 +169,49 @@ void Node::Rendering()
 				glBindTexture(GL_TEXTURE_2D, material->diffuseTexture->ID);
 				textureIndex++;
 			}
-			else
-			{
-				shader->SetInt("material.diffuse", -1);
-			}
 			if (material->specularTexture)
 			{
 				shader->SetInt("material.specular", textureIndex);
 				glActiveTexture(GL_TEXTURE0 + textureIndex);
 				glBindTexture(GL_TEXTURE_2D, material->specularTexture->ID);
+				textureIndex++;
 			}
-			else
+			if (material->normalTexture)
 			{
-				shader->SetInt("material.specular", -1);
+				shader->SetInt("material.normal", textureIndex);
+				glActiveTexture(GL_TEXTURE0 + textureIndex);
+				glBindTexture(GL_TEXTURE_2D, material->normalTexture->ID);
+				textureIndex++;
+			}
+			if (material->displacementTexture)
+			{
+				shader->SetInt("material.displacement", textureIndex);
+				glActiveTexture(GL_TEXTURE0 + textureIndex);
+				glBindTexture(GL_TEXTURE_2D, material->displacementTexture->ID);
+				textureIndex++;
 			}
 			shader->SetFloat("material.shininess", material->shininess);
 		}
 		//向shader发送model矩阵
 		Matrix4 model;
-		model.Translate(_position);
-		model.Rotate(Vector3(1, 0, 0), -_eulerAngle.GetX());
-		model.Rotate(Vector3(0, 1, 0), _eulerAngle.GetY());
-		model.Rotate(Vector3(0, 0, 1), _eulerAngle.GetZ());
-		model.Scale(_scale);
+		std::stack<Node*> temp;
+		Node* node = this;
+		while (node->_parent != nullptr)
+		{
+			temp.push(node);
+			node = node->_parent;
+		}
+		while (temp.size()!=0)
+		{
+			node = temp.top();
+			temp.pop();
+
+			model.Translate(node->_position);
+			model.Rotate(Vector3(0, 0, 1), node->_eulerAngle.GetZ());
+			model.Rotate(Vector3(0, 1, 0), node->_eulerAngle.GetY());
+			model.Rotate(Vector3(1, 0, 0), -node->_eulerAngle.GetX());
+			model.Scale(node->_scale);
+		}
 		shader->SetMat4("model", model);
 
 		//向shader发送相机相关数据
@@ -244,4 +264,38 @@ void Node::Rendering()
 	{
 		(*it)->Rendering();
 	}
+}
+
+Node* Node::Find(std::string& searchName) const
+{
+	/*
+	if (searchName ==name)
+	{
+		return (Node*)this;
+	}
+	for (auto it = _childs.begin(); it != _childs.end(); it++)
+	{
+		Node* subRet = (*it)->Find(searchName);
+		if (subRet)
+		{
+			return subRet;
+		}
+	}
+	return nullptr;
+	*/
+	
+	for (auto it = _childs.begin(); it != _childs.end(); it++)
+	{
+		if ((*it)->name==searchName&&(*it)->mesh)
+		{
+			return *it;
+		}
+		Node* subRet = (*it)->Find(searchName);
+		if (subRet)
+		{
+			return subRet;
+		}
+	}
+	return nullptr;
+	
 }

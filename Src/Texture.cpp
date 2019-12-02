@@ -4,18 +4,18 @@
 using namespace FrogEngine;
 #include <iostream>
 
-Texture2D* Texture2D::Create()
-{
-	return new Texture2D();
-}
+std::map<std::string, Texture2D*> Texture2D::_textures;
+
 
 Texture2D* Texture2D::Create(const char* path, bool alpha)
 {
-	return new Texture2D(path, alpha);
-}
-
-Texture2D::Texture2D()
-{
+	if (_textures.find(path) != _textures.end())
+	{
+		return _textures[path];
+	}
+	Texture2D* ret = new Texture2D(path, alpha);
+	_textures[path] = ret;
+	return ret;
 }
 
 Texture2D::Texture2D(const char* path, bool alpha)

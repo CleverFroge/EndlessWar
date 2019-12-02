@@ -15,7 +15,7 @@ Material::Material()
 {
 	this->diffuseTexture = nullptr;
 	this->specularTexture = nullptr;
-	this->shininess = 32.0;
+	this->shininess = 32;
 }
 
 Material::Material(Texture2D* diffuseTexure, Texture2D* specularTexture, float shininess)

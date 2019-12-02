@@ -16,12 +16,25 @@ Node* Model::LoadModel(std::string path)
 
 Node* Model::ProcessNode(std::string directory, aiNode* node, const aiScene* scene)
 {
+	if (node->mParent)
+	{
+		std::cout << node->mName.C_Str() << "  Parent:" << node->mParent->mName.C_Str() << std::endl;
+	}
+	else
+	{
+		std::cout << node->mName.C_Str() << std::endl;
+	}
 	Node* ret = new Node();
+	ret->name = node->mName.C_Str();
+	if (std::string(node->mName.C_Str()) == "Cannon")
+	{
+		std::cout << "stop" << std::endl;
+	}
 	// 处理节点所有的网格（如果有的话）
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		ret->mesh = ProcessMesh(directory, mesh, scene);
+		ret->mesh = ProcessMesh(directory, mesh, node, scene);
 	}
 	// 接下来对它的子节点重复这一过程
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
@@ -31,7 +44,7 @@ Node* Model::ProcessNode(std::string directory, aiNode* node, const aiScene* sce
 	return ret;
 }
 
-Mesh* Model::ProcessMesh(std::string directory, aiMesh* mesh, const aiScene* scene)
+Mesh* Model::ProcessMesh(std::string directory, aiMesh* mesh, aiNode* node, const aiScene* scene)
 {
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
@@ -40,8 +53,12 @@ Mesh* Model::ProcessMesh(std::string directory, aiMesh* mesh, const aiScene* sce
 	{
 		Vertex vertex;
 		// 处理顶点位置、法线和纹理坐标
-		vertex.Position = Vector3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
-		vertex.Normal = Vector3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+		aiVector3D pos = mesh->mVertices[i];
+		pos *= node->mTransformation;
+		vertex.Position = Vector3(pos.x, pos.y, pos.z);
+		aiVector3D normal = mesh->mNormals[i];
+		normal *= node->mTransformation;
+		vertex.Normal = Vector3(normal.x, normal.y, normal.z);
 		if (mesh->mTextureCoords[0])
 		{
 			vertex.TexCoord = Vector2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
@@ -66,7 +83,15 @@ Mesh* Model::ProcessMesh(std::string directory, aiMesh* mesh, const aiScene* sce
 		Material* material = Material::Create();
 		aiMaterial* ai_material = scene->mMaterials[mesh->mMaterialIndex];
 		material->diffuseTexture = LoadMaterialTextures(directory, ai_material, aiTextureType_DIFFUSE);
+		//if (material->diffuseTexture)
+		//{
+		//	material->diffuseTexture->Alpha = true;
+		//}
 		material->specularTexture = LoadMaterialTextures(directory, ai_material, aiTextureType_SPECULAR);
+		material->normalTexture = LoadMaterialTextures(directory, ai_material, aiTextureType_NORMALS);
+		material->displacementTexture = LoadMaterialTextures(directory, ai_material, aiTextureType_DISPLACEMENT);
+		
+		aiGetMaterialFloat(ai_material, AI_MATKEY_SHININESS, &material->shininess);
 		result->material = material;
 	}
 	return result;

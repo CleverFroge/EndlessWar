@@ -12,14 +12,16 @@ in vec2 TexCoord;
 #define NR_FLASH_LIGHTS 4
 
 float ambientStrength = 0.2;
-float diffuseStrength = 0.3;
-float specularStrength = 0.5;
+float diffuseStrength = 0.4;
+float specularStrength = 0.2;
 
 struct Material {
     sampler2D diffuse;
     bool alpha;
     sampler2D specular;
     float shininess;
+    sampler2D normal;
+	sampler2D displacement;
 }; 
 
 struct DirectionalLight {

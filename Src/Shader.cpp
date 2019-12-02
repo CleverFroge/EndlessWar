@@ -20,7 +20,7 @@ Shader* Shader::GetShader(const char* name)
 
 Shader::Shader(const char* name, const char* vertexShaderPath, const char* fragmentShaderPath)
 {
-	_name = name;
+	name = name;
 	std::ifstream vShaderFile;
 	std::ifstream fShaderFile;
 	// 保证ifstream对象可以抛出异常：

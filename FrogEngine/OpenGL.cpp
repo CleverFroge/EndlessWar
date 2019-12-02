@@ -2,13 +2,14 @@
 #include <glad/glad.h> 
 #include <glfw3.h>
 #include "FrogEngine.h"
+
 using namespace FrogEngine;
 
 Camera camera;
 
 void CameraUpdate()
 {
-	camera.ProcessMouseMovement(Input::GetMousePosDeltaX() / Screen::GetWidth(), Input::GetMousePosDeltaY() / Screen::GetHeight());
+//	camera.ProcessMouseMovement(Input::GetMousePosDeltaX() / Screen::GetWidth(), Input::GetMousePosDeltaY() / Screen::GetHeight());
 	if (Input::GetKey(GLFW_KEY_W))
 	{
 		camera.Move(Direction::FRONT, Time::GetDeltaTime());
@@ -24,10 +25,6 @@ void CameraUpdate()
 	if (Input::GetKey(GLFW_KEY_D))
 	{
 		camera.Move(Direction::RIGHT, Time::GetDeltaTime());
-	}
-	if (Input::GetKey(GLFW_KEY_ESCAPE))
-	{
-//		glfwSetWindowShouldClose(window, true);
 	}
 	if (Input::GetKey(GLFW_KEY_SPACE))
 	{
@@ -50,7 +47,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//Mac OS X系统需要以下语句
 	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
+	
 	//创建窗口
 	GLFWwindow* window = glfwCreateWindow(Screen::GetWidth(), Screen::GetHeight(), "LearnOpenGL", NULL, NULL);
 	if (window == NULL)
@@ -82,27 +79,86 @@ int main()
 
 	Camera::SetCurrentCamera(&camera);
 
-	auto directionalLight = DirectionalLight::Create(Vector3(0, 0, -1), Vector3(1, 1, 1));
+	auto directionalLight = DirectionalLight::Create(Vector3(1, -1, 1), Vector3(1, 1, 1));
 //	auto pointLight = PointLight::Create(Vector3(0, 0, 3), Vector3(1, 1, 1), 50);
 //	auto flashLight = FlashLight::Create(Vector3(0, 0, 0), Vector3(0, 0, -1), Vector3(1, 1, 1), 15, 20);
 	Shader::LoadShader("Phong", "../Shader/Common.vs", "../Shader/BlinnPhong.fs");
-	Shader::LoadShader("Specular", "../Shader/Common.vs", "../Shader/Specular.fs");
 	Shader::LoadShader("SkyBox", "../Shader/SkyBox.vs", "../Shader/SkyBox.fs");
 
-	Node* model = Model::LoadModel("../Resource/Model/nanosuit.obj");
+	Node* model = Model::LoadModel("../Resource/Tank2/Tank2.FBX");
+//	Node* model = Model::LoadModel("../Resource/Model/nanosuit.obj");
+//	Node* model = Model::LoadModel("../Resource/Tank1/Tank.obj");
+//	Node* model = Model::LoadModel("../Resource/M103/M103.obj");
+//	Node* model = Model::LoadModel("../Resource/Scene/2/Dragon.obj");
+	Node::ROOT->AddChild(model);
+	model->SetScale(0.01,0.01,0.01);
+	std::string name = "Battery";
+	Node* paotai = model->Find(name);
+	if (!paotai)
+	{
+		std::cout << "Can't find: " << name << std::endl;
+	}
+	std::string paoName = "Cannon";
+	Node* pao = model->Find(paoName);
+	if (!pao)
+	{
+		std::cout << "Can't find: " << paoName << std::endl;
+	}
 
 	auto skyBox = SkyBox("../Resource/skybox/front.jpg", "../Resource/skybox/back.jpg", "../Resource/skybox/left.jpg", "../Resource/skybox/right.jpg", "../Resource/skybox/top.jpg", "../Resource/skybox/bottom.jpg");
+	
+	float startTime = glfwGetTime();
+	unsigned int frame = 0;
+	unsigned int intTime = 0;
+	unsigned int lastPrint = 0;
+
+
+//	camera.SetEulerAngle(-89, 0, 0);
 	//Loop
 	while (!glfwWindowShouldClose(window))
 	{
+		/*
+		//idelFun:
+		DWORD currentTime = GetTickCount();
+		std::cout << currentTime << std::endl;
+		float timeInnerSpace = currentTime - lastTime;
+		checkCollision();
+		if ((currentTime - lastTime) > msPerFrame)  // msPerFram = 1.0/FPS
+		{
+			iScene->Update();
+			display();
+			tempTimer++;
+			lastTime = currentTime;
+		}
+		*/
 		//清除颜色缓冲和深度缓冲
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		Time::Update();
 		CameraUpdate();
 
+		if (paotai)
+		{
+			float eulerAngle = paotai->EulerAngle().GetY();
+			paotai->SetEulerAngleY(eulerAngle + Input::GetMousePosDeltaX() * Time::GetDeltaTime() * 10);
+		}
+
+		if (pao)
+		{
+			float eulerAngle = pao->EulerAngle().GetX();
+			pao->SetEulerAngleX(eulerAngle + Input::GetMousePosDeltaY() * Time::GetDeltaTime() * 10);
+		}
+
+		frame++;
+		intTime = glfwGetTime() -startTime;
+		if (intTime % 2 == 0&&intTime!=lastPrint)
+		{
+			lastPrint = intTime;
+			std::cout << frame << "/" << Time::GetCurrentTime() << "=" << frame / (glfwGetTime() - startTime) << std::endl;
+		}
 		skyBox.Draw();
-		model->Rendering();
+
+		Node::ROOT->Rendering();
 
 		Input::ClearFrameInput();
 

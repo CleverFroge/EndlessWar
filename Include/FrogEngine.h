@@ -148,6 +148,8 @@ namespace FrogEngine
 		const Vector3& Up() const;
 		const Vector3& Right() const;
 
+		Node* Find(std::string& name) const;
+
 		void Print() const;
 
 		void SetParent(Node* parent);
@@ -156,10 +158,10 @@ namespace FrogEngine
 
 		void Rendering();
 	public:
-		static Node* root;
+		static Node* ROOT;
 		Mesh* mesh;
+		std::string name;
 	private:
-		
 		Node* _parent;
 		std::set<Node*> _childs;
 		Vector3 _scale;
@@ -196,12 +198,11 @@ namespace FrogEngine
 		unsigned int ID;
 		bool Alpha;
 	public:
-		static Texture2D* Create();
 		static Texture2D* Create(const char* path, bool alpha);
 		~Texture2D();
 	private:
-		Texture2D();
 		Texture2D(const char* path, bool Alpha);
+		static std::map<std::string, Texture2D*> _textures;
 	};
 	class Material
 	{
@@ -215,6 +216,8 @@ namespace FrogEngine
 	public:
 		Texture2D* diffuseTexture;
 		Texture2D* specularTexture;
+		Texture2D* normalTexture;
+		Texture2D* displacementTexture;
 		float shininess;
 	};
 
@@ -228,7 +231,7 @@ namespace FrogEngine
 	{
 	private:
 		static std::map<const char*, Shader*> _shaders;
-		const char* _name;
+		const char* name;
 		unsigned int _shaderProgram;
 	private:
 		Shader(const char* name, const char* vertexShaderPath, const char* fragmentShaderPath);
@@ -277,7 +280,7 @@ namespace FrogEngine
 		static Node* LoadModel(std::string path);
 	private:
 		static Node* ProcessNode(std::string directory, aiNode* node, const aiScene* scene);
-		static Mesh* ProcessMesh(std::string directory, aiMesh* mesh, const aiScene* scene);
+		static Mesh* ProcessMesh(std::string directory, aiMesh* mesh, aiNode* node, const aiScene* scene);
 		static Texture2D* LoadMaterialTextures(std::string directory, aiMaterial* mat, aiTextureType type);
 	};
 	class DirectionalLight
