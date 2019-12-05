@@ -111,12 +111,13 @@ namespace FrogEngine
 	public:
 		Matrix4();
 		Matrix4(glm::mat4 value);
+		Matrix4(aiMatrix4x4 mat);
 		~Matrix4();
 		float* ValuePtr();
 		void Translate(const Vector3& offset);
 		void Rotate(const Vector3& axis, float angle);
-		void Scale(const Vector3& scale);
-		void Scale(float scaleX, float scaleY, float scaleZ);
+		void LocalScale(const Vector3& scale);
+		void LocalScale(float scaleX, float scaleY, float scaleZ);
 		void LookAt(Vector3 cameraPos, Vector3 targetPos, Vector3 upDirection);
 		void Perspective(float portAngle, float scale, float near, float far);
 		glm::mat4 Value();
@@ -132,23 +133,19 @@ namespace FrogEngine
 	public:
 		Node();
 		~Node();
-		void SetScale(float x, float y, float z);
-		void SetPosition(const Vector3& position);
-		void SetPosition(float x, float y, float z);
-		void SetEulerAngle(const Vector3& eulerAngles);
-		void SetEulerAngle(float x, float y, float z);
-		void SetEulerAngleX(float eularAngleX);
-		void SetEulerAngleY(float eularAngleY);
-		void SetEulerAngleZ(float eularAngleZ);
+		void SetLocalPosition(float x, float y, float z);
+		void SetLocalEulerAngles(const Vector3& eulerAngles);
+		void SetLocalEulerAngles(float x, float y, float z);
+		void SetLocalEulerAngleX(float eularAngleX);
+		void SetLocalEulerAngleY(float eularAngleY);
+		void SetLocalEulerAngleZ(float eularAngleZ);
 
-		const Vector3& Scale() const;
-		const Vector3& Position() const;
-		const Vector3& EulerAngle() const;
+		const Vector3& GetLocalEulerAngles() const;
 		const Vector3& Forward() const;
 		const Vector3& Up() const;
 		const Vector3& Right() const;
 
-		Node* Find(std::string& name) const;
+		Node* Find(const char* name) const;
 
 		void Print() const;
 
@@ -157,17 +154,19 @@ namespace FrogEngine
 		void RemoveChild(Node* child);
 
 		void Rendering();
+
+		Vector3 GetPosition();
 	public:
 		static Node* ROOT;
 		Mesh* mesh;
 		std::string name;
+		Matrix4 parentTransform;
+		Vector3 LocalScale;
+		Vector3 LocalPosition;
 	private:
 		Node* _parent;
 		std::set<Node*> _childs;
-		Vector3 _scale;
-		Vector3 _position;
-
-		Vector3 _eulerAngle;
+		Vector3 _eulerAngles;
 		Vector3 _up;
 		Vector3 _front;
 		Vector3 _right;
@@ -277,10 +276,10 @@ namespace FrogEngine
 	class Model
 	{
 	public:
-		static Node* LoadModel(std::string path);
+		static Node* LoadModel(std::string path, bool simplified);
 	private:
-		static Node* ProcessNode(std::string directory, aiNode* node, const aiScene* scene);
-		static Mesh* ProcessMesh(std::string directory, aiMesh* mesh, aiNode* node, const aiScene* scene);
+		static Node* ProcessNode(std::string directory, aiNode* node, const aiScene* scene, Node* parent, bool simplified);
+		static Mesh* ProcessMesh(std::string directory, aiMesh* mesh, aiNode* node, const aiScene* scene, bool simplified);
 		static Texture2D* LoadMaterialTextures(std::string directory, aiMaterial* mat, aiTextureType type);
 	};
 	class DirectionalLight
@@ -392,5 +391,16 @@ namespace FrogEngine
 		static double _mousePosY;
 		static double _mousePosDeltaX;
 		static double _mousePosDeltaY;
+	};
+	class Tank : public Node
+	{
+	public:
+		Tank(const char* path);
+		void Move(Vector3 direction, float deltaTime);
+		void Aim(float deltaX, float deltaY);
+		~Tank();
+	private:
+		Node* _battery;
+		Node* _cannon;
 	};
 }

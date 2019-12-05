@@ -30,7 +30,7 @@ void Camera::ProcessMouseMovement(float deltaX, float deltaY)
 	deltaX *= _mouseSensitivity;
 	deltaY *= _mouseSensitivity;
 
-	Vector3 eulerAngle = EulerAngle();
+	Vector3 eulerAngle = GetLocalEulerAngles();
 	float pitch = eulerAngle.GetX();
 	float yaw = eulerAngle.GetY();
 	
@@ -41,8 +41,8 @@ void Camera::ProcessMouseMovement(float deltaX, float deltaY)
 		pitch = -89.0f;
 	yaw += deltaX;
 
-	SetEulerAngleX(pitch);
-	SetEulerAngleY(yaw);
+	SetLocalEulerAngleX(pitch);
+	SetLocalEulerAngleY(yaw);
 }
 
 void Camera::Move(Direction direction, float deltaTime)
@@ -80,8 +80,7 @@ void Camera::Move(Direction direction, float deltaTime)
 		break;
 	}
 	float velocity = _movementSpeed * deltaTime;
-	Vector3 position = Position();
-	SetPosition(position + moveDirection * velocity);
+	LocalPosition = LocalPosition + moveDirection * velocity;
 }
 
 void Camera::ProcessMouseScroll(float scroll)
@@ -104,6 +103,6 @@ Matrix4 Camera::GetProjectionMatrix() const
 Matrix4 Camera::GetLookAtMatrix() const
 {
 	Matrix4 view;
-	view.LookAt(Position(), Position() + Forward(), Up());
+	view.LookAt(LocalPosition, LocalPosition + Forward(), Up());
 	return view;
 }

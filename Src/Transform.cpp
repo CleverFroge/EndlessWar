@@ -6,9 +6,9 @@ Node* Node::ROOT = new Node();
 
 Node::Node()
 {
-	_scale = Vector3(1, 1, 1);
-	SetPosition(0, 0, 0);
-	SetEulerAngle(0, 0, 0);
+	LocalScale = Vector3(1, 1, 1);
+	SetLocalPosition(0, 0, 0);
+	SetLocalEulerAngles(0, 0, 0);
 	InitByEulerAngles();
 }
 
@@ -16,32 +16,22 @@ Node::~Node()
 {
 }
 
-void Node::SetScale(float x, float y, float z)
+void Node::SetLocalPosition(float x, float y, float z)
 {
-	_scale = Vector3(x, y, z);
+	LocalPosition = Vector3(x, y, z);
 }
 
-void Node::SetPosition(const Vector3& position)
+void Node::SetLocalEulerAngles(const Vector3& eulerAngles)
 {
-	_position = position;
-}
-
-void Node::SetPosition(float x, float y, float z)
-{
-	_position = Vector3(x, y, z);
-}
-
-void Node::SetEulerAngle(const Vector3& eulerAngles)
-{
-	_eulerAngle.SetX(NormalizedAngle(eulerAngles.GetX()));
-	_eulerAngle.SetY(NormalizedAngle(eulerAngles.GetY()));
-	_eulerAngle.SetZ(NormalizedAngle(eulerAngles.GetZ()));
+	_eulerAngles.SetX(NormalizedAngle(eulerAngles.GetX()));
+	_eulerAngles.SetY(NormalizedAngle(eulerAngles.GetY()));
+	_eulerAngles.SetZ(NormalizedAngle(eulerAngles.GetZ()));
 	InitByEulerAngles();
 }
 
-void Node::SetEulerAngle(float x, float y, float z)
+void Node::SetLocalEulerAngles(float x, float y, float z)
 {
-	_eulerAngle = Vector3(
+	_eulerAngles = Vector3(
 		NormalizedAngle(x),
 		NormalizedAngle(y),
 		NormalizedAngle(z)
@@ -49,48 +39,38 @@ void Node::SetEulerAngle(float x, float y, float z)
 	InitByEulerAngles();
 }
 
-void Node::SetEulerAngleX(float eularAngleX)
+void Node::SetLocalEulerAngleX(float eularAngleX)
 {
-	_eulerAngle.SetX(NormalizedAngle(eularAngleX));
+	_eulerAngles.SetX(NormalizedAngle(eularAngleX));
 	InitByEulerAngles();
 }
 
-void Node::SetEulerAngleY(float eularAngleY)
+void Node::SetLocalEulerAngleY(float eularAngleY)
 {
-	_eulerAngle.SetY(NormalizedAngle(eularAngleY));
+	_eulerAngles.SetY(NormalizedAngle(eularAngleY));
 	InitByEulerAngles();
 }
 
-void Node::SetEulerAngleZ(float eularAngleZ)
+void Node::SetLocalEulerAngleZ(float eularAngleZ)
 {
-	_eulerAngle.SetZ(NormalizedAngle(eularAngleZ));
+	_eulerAngles.SetZ(NormalizedAngle(eularAngleZ));
 	InitByEulerAngles();
 }
 
 void Node::InitByEulerAngles()
 {
 	Matrix4 matrix;
-	matrix.Rotate(Vector3(1, 0, 0), -_eulerAngle.GetX());
-	matrix.Rotate(Vector3(0, 1, 0), _eulerAngle.GetY());
-	matrix.Rotate(Vector3(0, 0, 1), _eulerAngle.GetZ());
+	matrix.Rotate(Vector3(1, 0, 0), -_eulerAngles.GetX());
+	matrix.Rotate(Vector3(0, 1, 0), _eulerAngles.GetY());
+	matrix.Rotate(Vector3(0, 0, 1), _eulerAngles.GetZ());
 	_front = Vector3::FRONT * matrix;
 	_right = Vector3::RIGHT * matrix;
 	_up = Vector3::UP * matrix;
 }
 
-const Vector3& Node::Scale() const
+const Vector3& Node::GetLocalEulerAngles() const
 {
-	return _scale;
-}
-
-const Vector3& Node::Position() const
-{
-	return _position;
-}
-
-const Vector3& Node::EulerAngle() const
-{
-	return _eulerAngle;
+	return _eulerAngles;
 }
 
 const Vector3& Node::Forward() const
@@ -111,7 +91,7 @@ const Vector3& Node::Right() const
 void Node::Print() const
 {
 	std::cout << "Position:";
-	_position.Print();
+	LocalPosition.Print();
 	std::cout << "Forward:";
 	_front.Print();
 	std::cout << "Up:";
@@ -119,7 +99,7 @@ void Node::Print() const
 	std::cout << "Right:";
 	_right.Print();
 	std::cout << "EulerAngles:";
-	_eulerAngle.Print();
+	_eulerAngles.Print();
 }
 
 void Node::SetParent(Node* parent)
@@ -194,6 +174,7 @@ void Node::Rendering()
 		}
 		//向shader发送model矩阵
 		Matrix4 model;
+		
 		std::stack<Node*> temp;
 		Node* node = this;
 		while (node->_parent != nullptr)
@@ -206,17 +187,18 @@ void Node::Rendering()
 			node = temp.top();
 			temp.pop();
 
-			model.Translate(node->_position);
-			model.Rotate(Vector3(0, 0, 1), node->_eulerAngle.GetZ());
-			model.Rotate(Vector3(0, 1, 0), node->_eulerAngle.GetY());
-			model.Rotate(Vector3(1, 0, 0), -node->_eulerAngle.GetX());
-			model.Scale(node->_scale);
+			model.Translate(node->LocalPosition);
+			model.Rotate(Vector3(0, 0, 1), node->_eulerAngles.GetZ());
+			model.Rotate(Vector3(0, 1, 0), node->_eulerAngles.GetY());
+			model.Rotate(Vector3(1, 0, 0), -node->_eulerAngles.GetX());
+			model.LocalScale(node->LocalScale);
 		}
+		
 		shader->SetMat4("model", model);
 
 		//向shader发送相机相关数据
 		Camera* currentCamera = Camera::GetCurrentCamera();
-		shader->SetVector3("viewPos", currentCamera->Position());
+		shader->SetVector3("viewPos", currentCamera->GetPosition());
 		shader->SetMat4("view", currentCamera->GetLookAtMatrix());
 		shader->SetMat4("projection", currentCamera->GetProjectionMatrix());
 
@@ -266,24 +248,8 @@ void Node::Rendering()
 	}
 }
 
-Node* Node::Find(std::string& searchName) const
+Node* Node::Find(const char* searchName) const
 {
-	/*
-	if (searchName ==name)
-	{
-		return (Node*)this;
-	}
-	for (auto it = _childs.begin(); it != _childs.end(); it++)
-	{
-		Node* subRet = (*it)->Find(searchName);
-		if (subRet)
-		{
-			return subRet;
-		}
-	}
-	return nullptr;
-	*/
-	
 	for (auto it = _childs.begin(); it != _childs.end(); it++)
 	{
 		if ((*it)->name==searchName&&(*it)->mesh)
@@ -298,4 +264,20 @@ Node* Node::Find(std::string& searchName) const
 	}
 	return nullptr;
 	
+}
+
+Vector3 Node::GetPosition()
+{
+	Node* it = this;
+	Matrix4 model;
+	while (it)
+	{
+		model.Translate(it->LocalPosition);
+		model.Rotate(Vector3(0, 0, 1), it->_eulerAngles.GetZ());
+		model.Rotate(Vector3(0, 1, 0), it->_eulerAngles.GetY());
+		model.Rotate(Vector3(1, 0, 0), -it->_eulerAngles.GetX());
+		model.LocalScale(it->LocalScale);
+		it = it->_parent;
+	}
+	return LocalPosition * model;
 }

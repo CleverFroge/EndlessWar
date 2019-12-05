@@ -10,6 +10,26 @@ Matrix4::Matrix4(glm::mat4 value)
 	_mat = value;
 }
 
+Matrix4::Matrix4(aiMatrix4x4 mat)
+{
+	_mat[0][0] = mat.a1;
+	_mat[0][1] = mat.a2;
+	_mat[0][2] = mat.a3;
+	_mat[0][3] = mat.a4;
+	_mat[1][0] = mat.b1;
+	_mat[1][1] = mat.b2;
+	_mat[1][2] = mat.b3;
+	_mat[1][3] = mat.b4;
+	_mat[2][0] = mat.c1;
+	_mat[2][1] = mat.c2;
+	_mat[2][2] = mat.c3;
+	_mat[2][3] = mat.c4;
+	_mat[3][0] = mat.d1;
+	_mat[3][1] = mat.d2;
+	_mat[3][2] = mat.d3;
+	_mat[3][3] = mat.d4;
+}
+
 Matrix4::~Matrix4()
 {
 }
@@ -31,7 +51,7 @@ void Matrix4::Rotate(const Vector3& axis, float angle)
 	_mat = glm::rotate(_mat, glm::radians(angle), glm::vec3(axis.GetX(), axis.GetY(), axis.GetZ()));
 }
 
-void Matrix4::Scale(const Vector3& scale)
+void Matrix4::LocalScale(const Vector3& scale)
 {
 	_mat = glm::scale(_mat, glm::vec3(
 		scale.GetX(),
@@ -40,7 +60,7 @@ void Matrix4::Scale(const Vector3& scale)
 	));
 }
 
-void Matrix4::Scale(float scaleX, float scaleY, float scaleZ)
+void Matrix4::LocalScale(float scaleX, float scaleY, float scaleZ)
 {
 	_mat = glm::scale(_mat, glm::vec3(scaleX, scaleY, scaleZ));
 }

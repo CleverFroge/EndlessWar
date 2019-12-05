@@ -49,7 +49,7 @@ int main()
 	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	
 	//创建窗口
-	GLFWwindow* window = glfwCreateWindow(Screen::GetWidth(), Screen::GetHeight(), "LearnOpenGL", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(Screen::GetWidth(), Screen::GetHeight(), "", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -85,79 +85,44 @@ int main()
 	Shader::LoadShader("Phong", "../Shader/Common.vs", "../Shader/BlinnPhong.fs");
 	Shader::LoadShader("SkyBox", "../Shader/SkyBox.vs", "../Shader/SkyBox.fs");
 
-	Node* model = Model::LoadModel("../Resource/Tank2/Tank2.FBX");
+	Tank* tank = new Tank("../Resource/Tank2/Tank2.FBX");
+
 //	Node* model = Model::LoadModel("../Resource/Model/nanosuit.obj");
 //	Node* model = Model::LoadModel("../Resource/Tank1/Tank.obj");
 //	Node* model = Model::LoadModel("../Resource/M103/M103.obj");
 //	Node* model = Model::LoadModel("../Resource/Scene/2/Dragon.obj");
-	Node::ROOT->AddChild(model);
-	model->SetScale(0.01,0.01,0.01);
-	std::string name = "Battery";
-	Node* paotai = model->Find(name);
-	if (!paotai)
-	{
-		std::cout << "Can't find: " << name << std::endl;
-	}
-	std::string paoName = "Cannon";
-	Node* pao = model->Find(paoName);
-	if (!pao)
-	{
-		std::cout << "Can't find: " << paoName << std::endl;
-	}
-
+	Node::ROOT->AddChild(tank);
+	tank->LocalScale = Vector3(0.01,0.01,0.01);
+	
 	auto skyBox = SkyBox("../Resource/skybox/front.jpg", "../Resource/skybox/back.jpg", "../Resource/skybox/left.jpg", "../Resource/skybox/right.jpg", "../Resource/skybox/top.jpg", "../Resource/skybox/bottom.jpg");
 	
-	float startTime = glfwGetTime();
-	unsigned int frame = 0;
-	unsigned int intTime = 0;
 	unsigned int lastPrint = 0;
 
+	auto quad = Mesh::Create(Mesh::Quad);
+	Node* ori = new Node();
+	ori->mesh = quad;
+	ori->SetLocalEulerAngleX(90);
+	Node::ROOT->AddChild(ori);
 
-//	camera.SetEulerAngle(-89, 0, 0);
+	tank->Find("Cannon")->GetPosition().Print();
 	//Loop
 	while (!glfwWindowShouldClose(window))
 	{
-		/*
-		//idelFun:
-		DWORD currentTime = GetTickCount();
-		std::cout << currentTime << std::endl;
-		float timeInnerSpace = currentTime - lastTime;
-		checkCollision();
-		if ((currentTime - lastTime) > msPerFrame)  // msPerFram = 1.0/FPS
-		{
-			iScene->Update();
-			display();
-			tempTimer++;
-			lastTime = currentTime;
-		}
-		*/
 		//清除颜色缓冲和深度缓冲
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		Time::Update();
+		if (Time::GetCurrentTime() - lastPrint >= 1)
+		{
+			lastPrint = Time::GetCurrentTime();
+			glfwSetWindowTitle(window, (std::string("Endless War    Fps: ") + std::to_string(1 / Time::GetDeltaTime())).c_str());
+		}
 		CameraUpdate();
 
-		if (paotai)
-		{
-			float eulerAngle = paotai->EulerAngle().GetY();
-			paotai->SetEulerAngleY(eulerAngle + Input::GetMousePosDeltaX() * Time::GetDeltaTime() * 10);
-		}
+		tank->Aim(Input::GetMousePosDeltaX(), Input::GetMousePosDeltaY());
+		
 
-		if (pao)
-		{
-			float eulerAngle = pao->EulerAngle().GetX();
-			pao->SetEulerAngleX(eulerAngle + Input::GetMousePosDeltaY() * Time::GetDeltaTime() * 10);
-		}
-
-		frame++;
-		intTime = glfwGetTime() -startTime;
-		if (intTime % 2 == 0&&intTime!=lastPrint)
-		{
-			lastPrint = intTime;
-			std::cout << frame << "/" << Time::GetCurrentTime() << "=" << frame / (glfwGetTime() - startTime) << std::endl;
-		}
 		skyBox.Draw();
-
 		Node::ROOT->Rendering();
 
 		Input::ClearFrameInput();

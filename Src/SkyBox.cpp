@@ -111,7 +111,7 @@ void SkyBox::Draw()
 	// ... 设置观察和投影矩阵
 	Camera* camera = Camera::GetCurrentCamera();
 	Matrix4 model;
-	model.Translate(camera->Position());
+	model.Translate(camera->GetPosition());
 	Shader::GetShader("SkyBox")->SetMat4("model", model);
 	Shader::GetShader("SkyBox")->SetMat4("projection", camera->GetProjectionMatrix());
 	Shader::GetShader("SkyBox")->SetMat4("view", camera->GetLookAtMatrix());
