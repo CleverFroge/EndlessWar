@@ -83,6 +83,7 @@ namespace FrogEngine
 		static Vector3 DOWN;
 	public:
 		Vector3();
+		Vector3(glm::vec3 vec);
 		Vector3(float x, float y, float z);
 		~Vector3();
 		float* ValuePtr();
@@ -116,8 +117,8 @@ namespace FrogEngine
 		float* ValuePtr();
 		void Translate(const Vector3& offset);
 		void Rotate(const Vector3& axis, float angle);
-		void LocalScale(const Vector3& scale);
-		void LocalScale(float scaleX, float scaleY, float scaleZ);
+		void Scale(const Vector3& scale);
+		void Scale(float scaleX, float scaleY, float scaleZ);
 		void LookAt(Vector3 cameraPos, Vector3 targetPos, Vector3 upDirection);
 		void Perspective(float portAngle, float scale, float near, float far);
 		glm::mat4 Value();
@@ -141,9 +142,9 @@ namespace FrogEngine
 		void SetLocalEulerAngleZ(float eularAngleZ);
 
 		const Vector3& GetLocalEulerAngles() const;
-		const Vector3& Forward() const;
-		const Vector3& Up() const;
-		const Vector3& Right() const;
+		const Vector3& GetLocalForward() const;
+		const Vector3& GetLocalUp() const;
+		const Vector3& GetLocalRight() const;
 
 		Node* Find(const char* name) const;
 
@@ -155,7 +156,10 @@ namespace FrogEngine
 
 		void Rendering();
 
-		Vector3 GetPosition();
+		Vector3 GetPosition() const;
+		Vector3 GetForward() const;
+		Vector3 GetUp() const;
+		Vector3 GetRight() const;
 	public:
 		static Node* ROOT;
 		Mesh* mesh;
@@ -163,7 +167,7 @@ namespace FrogEngine
 		Matrix4 parentTransform;
 		Vector3 LocalScale;
 		Vector3 LocalPosition;
-	private:
+	protected:
 		Node* _parent;
 		std::set<Node*> _childs;
 		Vector3 _eulerAngles;

@@ -15,7 +15,7 @@ Camera* Camera::GetCurrentCamera()
 
 Camera::Camera()
 {
-	_movementSpeed = 2.5;
+	_movementSpeed = 25;
 	_mouseSensitivity = 180;
 	_zoom = 45;
 	AspectRatio = 800.0 / 600.0;
@@ -51,22 +51,22 @@ void Camera::Move(Direction direction, float deltaTime)
 	switch (direction)
 	{
 	case FrogEngine::FRONT:
-		moveDirection = Forward();
+		moveDirection = GetLocalForward();
 		moveDirection.SetY(0);
 		moveDirection = moveDirection.Normalized();
 		break;
 	case FrogEngine::BACK:
-		moveDirection = Vector3(0, 0, 0) - Forward();
+		moveDirection = Vector3(0, 0, 0) - GetLocalForward();
 		moveDirection.SetY(0);
 		moveDirection = moveDirection.Normalized();
 		break;
 	case FrogEngine::LEFT:
-		moveDirection = Vector3(0, 0, 0) - Right();
+		moveDirection = Vector3(0, 0, 0) - GetLocalRight();
 		moveDirection.SetY(0);
 		moveDirection = moveDirection.Normalized();
 		break;
 	case FrogEngine::RIGHT:
-		moveDirection = Right();
+		moveDirection = GetLocalRight();
 		moveDirection.SetY(0);
 		moveDirection = moveDirection.Normalized();
 		break;
@@ -96,13 +96,19 @@ void Camera::ProcessMouseScroll(float scroll)
 Matrix4 Camera::GetProjectionMatrix() const
 {
 	Matrix4 projection;
-	projection.Perspective(45, AspectRatio, 0.1f, 100.0f);
+	projection.Perspective(45, AspectRatio, 0.1f, 1000.0f);
 	return projection;
 }
 
 Matrix4 Camera::GetLookAtMatrix() const
 {
 	Matrix4 view;
-	view.LookAt(LocalPosition, LocalPosition + Forward(), Up());
+	/*
+	GetPosition().Print();
+	GetForward().Print();
+	GetUp().Print();
+	std::cout << std::endl;
+	*/
+	view.LookAt(GetPosition(), GetPosition() + GetForward(), GetUp());
 	return view;
 }

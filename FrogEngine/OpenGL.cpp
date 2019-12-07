@@ -9,7 +9,8 @@ Camera camera;
 
 void CameraUpdate()
 {
-//	camera.ProcessMouseMovement(Input::GetMousePosDeltaX() / Screen::GetWidth(), Input::GetMousePosDeltaY() / Screen::GetHeight());
+	/*
+	camera.ProcessMouseMovement(Input::GetMousePosDeltaX() / Screen::GetWidth(), Input::GetMousePosDeltaY() / Screen::GetHeight());
 	if (Input::GetKey(GLFW_KEY_W))
 	{
 		camera.Move(Direction::FRONT, Time::GetDeltaTime());
@@ -26,6 +27,7 @@ void CameraUpdate()
 	{
 		camera.Move(Direction::RIGHT, Time::GetDeltaTime());
 	}
+	*/
 	if (Input::GetKey(GLFW_KEY_SPACE))
 	{
 		camera.Move(Direction::UP, Time::GetDeltaTime());
@@ -86,25 +88,24 @@ int main()
 	Shader::LoadShader("SkyBox", "../Shader/SkyBox.vs", "../Shader/SkyBox.fs");
 
 	Tank* tank = new Tank("../Resource/Tank2/Tank2.FBX");
+	camera.SetLocalPosition(300,200,0);
+	camera.SetLocalEulerAngles(0,90,20);
+	tank->Find("Cannon")->AddChild(&camera);
+	camera.GetPosition().Print();
 
 //	Node* model = Model::LoadModel("../Resource/Model/nanosuit.obj");
 //	Node* model = Model::LoadModel("../Resource/Tank1/Tank.obj");
-//	Node* model = Model::LoadModel("../Resource/M103/M103.obj");
-//	Node* model = Model::LoadModel("../Resource/Scene/2/Dragon.obj");
-	Node::ROOT->AddChild(tank);
+//	Node* model = Model::LoadModel("../Resource/M103/M103.obj", false);
+//	model->LocalScale = Vector3(0.01, 0.01, 0.01);Node::ROOT->AddChild(model);
+	Node* model = Model::LoadModel("../Resource/Scene/3/Scene.FBX", false);
+//	Node* model = Model::LoadModel("../Resource/Scene/2/Dragon.obj", false);
+	Node::ROOT->AddChild(model);
 	tank->LocalScale = Vector3(0.01,0.01,0.01);
-	
+	Node::ROOT->AddChild(tank);
 	auto skyBox = SkyBox("../Resource/skybox/front.jpg", "../Resource/skybox/back.jpg", "../Resource/skybox/left.jpg", "../Resource/skybox/right.jpg", "../Resource/skybox/top.jpg", "../Resource/skybox/bottom.jpg");
 	
 	unsigned int lastPrint = 0;
 
-	auto quad = Mesh::Create(Mesh::Quad);
-	Node* ori = new Node();
-	ori->mesh = quad;
-	ori->SetLocalEulerAngleX(90);
-	Node::ROOT->AddChild(ori);
-
-	tank->Find("Cannon")->GetPosition().Print();
 	//Loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -118,10 +119,40 @@ int main()
 			glfwSetWindowTitle(window, (std::string("Endless War    Fps: ") + std::to_string(1 / Time::GetDeltaTime())).c_str());
 		}
 		CameraUpdate();
-
+		/*	
+		std::cout << "TankPos" << std::endl;
+		tank->GetPosition().Print();
+		std::cout << "Pos" << std::endl;
+		camera.GetPosition().Print();
+	std::cout << "Front" << std::endl;
+		camera.GetForward().Print();
+		std::cout << "Up" << std::endl;
+		camera.GetUp().Print();
+		*/
 		tank->Aim(Input::GetMousePosDeltaX(), Input::GetMousePosDeltaY());
+		Vector3 direction;
+		if (Input::GetKey(GLFW_KEY_W))
+		{
+			direction = direction + Vector3::LEFT;
+		}
+		if (Input::GetKey(GLFW_KEY_A))
+		{
+			direction = direction + Vector3::BEHIND;
+		}
+		if (Input::GetKey(GLFW_KEY_S))
+		{
+			direction = direction + Vector3::RIGHT;
+		}
+		if (Input::GetKey(GLFW_KEY_D))
+		{
+			direction = direction + Vector3::FRONT;
+		}
+		if (!(direction == Vector3(0, 0, 0)))
+		{
+			tank->Move(direction.Normalized(), Time::GetDeltaTime());
+		}
 		
-
+		
 		skyBox.Draw();
 		Node::ROOT->Rendering();
 

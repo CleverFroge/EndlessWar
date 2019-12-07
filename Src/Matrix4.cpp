@@ -51,7 +51,7 @@ void Matrix4::Rotate(const Vector3& axis, float angle)
 	_mat = glm::rotate(_mat, glm::radians(angle), glm::vec3(axis.GetX(), axis.GetY(), axis.GetZ()));
 }
 
-void Matrix4::LocalScale(const Vector3& scale)
+void Matrix4::Scale(const Vector3& scale)
 {
 	_mat = glm::scale(_mat, glm::vec3(
 		scale.GetX(),
@@ -60,7 +60,7 @@ void Matrix4::LocalScale(const Vector3& scale)
 	));
 }
 
-void Matrix4::LocalScale(float scaleX, float scaleY, float scaleZ)
+void Matrix4::Scale(float scaleX, float scaleY, float scaleZ)
 {
 	_mat = glm::scale(_mat, glm::vec3(scaleX, scaleY, scaleZ));
 }

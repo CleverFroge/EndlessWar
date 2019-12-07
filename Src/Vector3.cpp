@@ -15,6 +15,11 @@ Vector3::Vector3()
 {
 }
 
+Vector3::Vector3(glm::vec3 vec)
+{
+	_vec = vec;
+}
+
 Vector3::Vector3(float x, float y, float z)
 {
 	_vec.x = x;
@@ -62,7 +67,7 @@ Vector3 Vector3::operator*(float scale) const
 
 Vector3 Vector3::operator*(const Matrix4& mat) const
 {
-	glm::vec4 result = glm::vec4(_vec.x, _vec.y, _vec.z, 1) * mat._mat;
+	glm::vec4 result = mat._mat * glm::vec4(_vec.x, _vec.y, _vec.z, 1);
 	return Vector3(result.x, result.y, result.z);
 }
 
