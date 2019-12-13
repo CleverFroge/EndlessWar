@@ -59,13 +59,21 @@ void Node::SetLocalEulerAngleZ(float eularAngleZ)
 
 void Node::InitByEulerAngles()
 {
-	Matrix4 matrix;
-	matrix.Rotate(Vector3(0, 0, 1), _eulerAngles.GetZ());
-	matrix.Rotate(Vector3(0, 1, 0), _eulerAngles.GetY());
-	matrix.Rotate(Vector3(1, 0, 0), _eulerAngles.GetX());
-	_front = Vector3::FRONT * matrix;
-	_right = Vector3::RIGHT * matrix;
-	_up = Vector3::UP * matrix;
+	Matrix4 rx;
+	rx.Rotate(Vector3(1, 0, 0), _eulerAngles.GetX());
+	_front = Vector3::FRONT * rx;
+	_up = Vector3::UP * rx;
+	_right = Vector3::RIGHT * rx;
+	Matrix4 ry;
+	ry.Rotate(Vector3(0, 1, 0), _eulerAngles.GetY());
+	_front = _front * ry;
+	_up = _up * ry;
+	_right = _right * ry;
+	Matrix4 rz;
+	rz.Rotate(_front, _eulerAngles.GetZ());
+	_front = _front * rz;
+	_up = _up * rz;
+	_right = _right * rz;
 }
 
 const Vector3& Node::GetLocalEulerAngles() const
@@ -91,13 +99,13 @@ const Vector3& Node::GetLocalRight() const
 void Node::Print() const
 {
 	std::cout << "Position:";
-	LocalPosition.Print();
+	GetPosition().Print();
 	std::cout << "Forward:";
-	_front.Print();
+	GetForward().Print();
 	std::cout << "Up:";
-	_up.Print();
+	GetUp().Print();
 	std::cout << "Right:";
-	_right.Print();
+	GetRight().Print();
 	std::cout << "EulerAngles:";
 	_eulerAngles.Print();
 }
@@ -188,7 +196,7 @@ void Node::Rendering()
 			temp.pop();
 
 			model.Translate(node->LocalPosition);
-			model.Rotate(Vector3(0, 0, 1), node->_eulerAngles.GetZ());
+			model.Rotate(_front, node->_eulerAngles.GetZ());
 			model.Rotate(Vector3(0, 1, 0), node->_eulerAngles.GetY());
 			model.Rotate(Vector3(1, 0, 0), -node->_eulerAngles.GetX());
 			model.Scale(node->LocalScale);
@@ -282,7 +290,7 @@ Vector3 Node::GetPosition() const
 		ry.Rotate(Vector3(0, 1, 0), it->_eulerAngles.GetY());
 		res = res * ry;
 		Matrix4 rz;
-		rz.Rotate(Vector3(0, 0, 1), it->_eulerAngles.GetZ());
+		rz.Rotate(_front, it->_eulerAngles.GetZ());
 		res = res * rz;
 		Matrix4 t;
 		t.Translate(it->LocalPosition);
@@ -312,7 +320,7 @@ Vector3 Node::GetForward() const
 		front = front * ry;
 		ori = ori * ry;
 		Matrix4 rz;
-		rz.Rotate(Vector3(0, 0, 1), it->_eulerAngles.GetZ());
+		rz.Rotate(_front, it->_eulerAngles.GetZ());
 		front = front * rz;
 		ori = ori * rz;
 		Matrix4 t;
@@ -321,7 +329,7 @@ Vector3 Node::GetForward() const
 		ori = ori * t;
 		it = it->_parent;
 	}
-	return front-ori;
+	return (front - ori).Normalized();
 }
 
 Vector3 Node::GetUp() const
@@ -344,7 +352,7 @@ Vector3 Node::GetUp() const
 		up = up * ry;
 		ori = ori * ry;
 		Matrix4 rz;
-		rz.Rotate(Vector3(0, 0, 1), it->_eulerAngles.GetZ());
+		rz.Rotate(_front, it->_eulerAngles.GetZ());
 		up = up * rz;
 		ori = ori * rz;
 		Matrix4 t;
@@ -353,7 +361,7 @@ Vector3 Node::GetUp() const
 		ori = ori * t;
 		it = it->_parent;
 	}
-	return up - ori;
+	return (up - ori).Normalized();
 }
 
 Vector3 Node::GetRight() const
@@ -376,7 +384,7 @@ Vector3 Node::GetRight() const
 		right = right * ry;
 		ori = ori * ry;
 		Matrix4 rz;
-		rz.Rotate(Vector3(0, 0, 1), it->_eulerAngles.GetZ());
+		rz.Rotate(_front, it->_eulerAngles.GetZ());
 		right = right * rz;
 		ori = ori * rz;
 		Matrix4 t;
@@ -385,5 +393,5 @@ Vector3 Node::GetRight() const
 		ori = ori * t;
 		it = it->_parent;
 	}
-	return right - ori;
+	return (right - ori).Normalized();
 }

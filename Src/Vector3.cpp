@@ -85,10 +85,14 @@ Vector3 Vector3::Cross(const Vector3& other) const
 
 float Vector3::Angle(Vector3 from, Vector3 to)
 {
-	glm::vec3 fromVec = glm::vec3(from.GetX(), from.GetY(), from.GetZ());
-	glm::vec3 toVec = glm::vec3(to.GetX(), to.GetY(), to.GetZ());
-	return 0;
-	//	return glm::angle(fromVec, toVec);
+	glm::vec3 fromVec = glm::normalize(glm::vec3(from.GetX(), from.GetY(), from.GetZ()));
+	glm::vec3 toVec = glm::normalize(glm::vec3(to.GetX(), to.GetY(), to.GetZ()));
+	float res = glm::acos(glm::dot(fromVec, toVec)) / PI * 180;
+	if (glm::cross(fromVec, toVec).y > 0) 
+	{
+		res = -res;
+	}
+	return res;
 }
 
 float Vector3::GetX() const

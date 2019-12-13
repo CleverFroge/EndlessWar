@@ -81,8 +81,6 @@ int main()
 	Camera::SetCurrentCamera(&camera);
 
 	auto directionalLight = DirectionalLight::Create(Vector3(1, -1, 1), Vector3(1, 1, 1));
-//	auto pointLight = PointLight::Create(Vector3(0, 0, 3), Vector3(1, 1, 1), 50);
-//	auto flashLight = FlashLight::Create(Vector3(0, 0, 0), Vector3(0, 0, -1), Vector3(1, 1, 1), 15, 20);
 	Shader::LoadShader("Phong", "../Shader/Common.vs", "../Shader/BlinnPhong.fs");
 	Shader::LoadShader("SkyBox", "../Shader/SkyBox.vs", "../Shader/SkyBox.fs");
 
@@ -91,37 +89,31 @@ int main()
 	Node::ROOT->AddChild(tank);
 
 	camera.SetLocalPosition(300,200,0);
-	camera.SetLocalEulerAngles(0,90,20);
+	camera.SetLocalEulerAngles(-20,90,0);
 	tank->Find("Cannon")->AddChild(&camera);
 
-//	Node* model = Model::LoadModel("../Resource/Model/nanosuit.obj");
-//	Node* model = Model::LoadModel("../Resource/Tank1/Tank.obj");
-//	Node* model = Model::LoadModel("../Resource/M103/M103.obj", false);
-//	model->LocalScale = Vector3(0.01, 0.01, 0.01);Node::ROOT->AddChild(model);
-//	Node* model = Model::LoadModel("../Resource/Scene/2/Dragon.FBX", false);
 	Node* model = Model::LoadModel("../Resource/Scene/3/Scene.FBX", false);
 	Node::ROOT->AddChild(model);
 
 	auto skyBox = SkyBox("../Resource/skybox/front.jpg", "../Resource/skybox/back.jpg", "../Resource/skybox/left.jpg", "../Resource/skybox/right.jpg", "../Resource/skybox/top.jpg", "../Resource/skybox/bottom.jpg");
-	/*
-	Node* cube = new Node();
-	cube->mesh = Mesh::Create(Mesh::Cube);
-	cube->mesh->material = Material::Create();
-	cube->mesh->material->diffuseTexture = Texture2D::Create("../Resource/container2.jpg", false);
-	cube->mesh->material->specularTexture = Texture2D::Create("../Resource/container2_specular.jpg", false);
-	Node::ROOT->AddChild(cube);
-	*/
 	unsigned int lastPrint = 0;
 
 	unsigned int FPS = 150;
 	float FrameTime = 1 / (float)FPS;
 	float FrameStartTime = glfwGetTime();
+
 	//Loop
 	while (!glfwWindowShouldClose(window))
 	{
 		while (glfwGetTime() <FrameStartTime)
 		{
 		}
+		/*
+		system("cls");
+		tank->Find("Cannon")->GetLocalEulerAngles().Print();
+		camera.GetLocalEulerAngles().Print();
+		camera.Print();
+		*/
 		FrameStartTime += FrameTime;
 		Time::Update();
 		//清除颜色缓冲和深度缓冲
