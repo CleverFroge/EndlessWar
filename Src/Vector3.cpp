@@ -85,14 +85,54 @@ Vector3 Vector3::Cross(const Vector3& other) const
 
 float Vector3::Angle(Vector3 from, Vector3 to)
 {
-	glm::vec3 fromVec = glm::normalize(glm::vec3(from.GetX(), from.GetY(), from.GetZ()));
+	/*glm::vec3 fromVec = glm::normalize(glm::vec3(from.GetX(), from.GetY(), from.GetZ()));
 	glm::vec3 toVec = glm::normalize(glm::vec3(to.GetX(), to.GetY(), to.GetZ()));
-	float res = glm::acos(glm::dot(fromVec, toVec)) / PI * 180;
-	if (glm::cross(fromVec, toVec).y > 0) 
+	float dot = glm::dot(fromVec, toVec);
+	if (dot > 1)
+	{
+		dot = 1;
+	}
+	if (dot < -1)
+	{
+		dot = -1;
+	}
+	float res = glm::acos(dot) / 180 * PI;
+
+	glm::vec4 testFrom = glm::vec4(fromVec, 1);
+	glm::mat4 rotate;
+	rotate = glm::rotate(rotate, res, glm::cross(fromVec, toVec));
+	glm::vec4 testTo = rotate * testFrom;
+	if (testTo.x * to.GetX() < 0
+		|| testTo.y * to.GetY() < 0
+		|| testTo.z * to.GetZ() < 0)
 	{
 		res = -res;
 	}
-	return res;
+	return res;*/
+
+	glm::vec3 fromVec = glm::normalize(glm::vec3(from.GetX(), from.GetY(), from.GetZ()));
+	glm::vec3 toVec = glm::normalize(glm::vec3(to.GetX(), to.GetY(), to.GetZ()));
+	float dot = glm::dot(fromVec, toVec);
+	if (dot > 1)
+	{
+		dot = 1;
+	}
+	if (dot < -1)
+	{
+		dot = -1;
+	}
+	float res = glm::acos(dot);
+	glm::vec4 testFrom = glm::vec4(fromVec, 1);
+	glm::mat4 rotate;
+	rotate = glm::rotate(rotate, res, glm::cross(fromVec, toVec));
+	glm::vec4 testTo = testFrom * rotate;
+	if (toVec.x - testTo.x > 0.01
+		|| toVec.y - testTo.y > 0.01
+		|| toVec.z - testTo.z > 0.01)
+	{
+		res = -res;
+	}
+	return res / PI * 180;
 }
 
 float Vector3::GetX() const

@@ -10,11 +10,18 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
+
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <type_traits>
+
 #include "stb_image.h"
+
+#include <algorithm>
 
 namespace FrogEngine
 {
@@ -127,6 +134,7 @@ namespace FrogEngine
 		friend Vector3;
 	};
 	class Mesh;
+	class Component;
 	class Node
 	{
 	private:
@@ -134,6 +142,11 @@ namespace FrogEngine
 	public:
 		Node();
 		~Node();
+		void AddComponent(const char * name,Component* component);
+
+		void SetLocalForward(const Vector3& forward);
+
+		void SetLocalPosition(const Vector3& pos);
 		void SetLocalPosition(float x, float y, float z);
 		void SetLocalEulerAngles(const Vector3& eulerAngles);
 		void SetLocalEulerAngles(float x, float y, float z);
@@ -151,6 +164,7 @@ namespace FrogEngine
 		void Print() const;
 
 		void SetParent(Node* parent);
+		Node* GetParent() const;
 		void AddChild(Node* child);
 		void RemoveChild(Node* child);
 
@@ -164,9 +178,9 @@ namespace FrogEngine
 		static Node* ROOT;
 		Mesh* mesh;
 		std::string name;
-		Matrix4 parentTransform;
 		Vector3 LocalScale;
 		Vector3 LocalPosition;
+		bool AutoRendering;
 	protected:
 		Node* _parent;
 		std::set<Node*> _childs;
@@ -174,6 +188,8 @@ namespace FrogEngine
 		Vector3 _up;
 		Vector3 _front;
 		Vector3 _right;
+		static std::map<const char*, Component*> _components;
+		
 	};
 	class Camera : public Node
 	{
@@ -182,18 +198,13 @@ namespace FrogEngine
 		static Camera* GetCurrentCamera();
 		Camera();
 		~Camera();
-		void ProcessMouseMovement(float deltaX, float deltaY);
-		void Move(Direction direction, float deltaTime);
-		void ProcessMouseScroll(float scroll);
 		Matrix4 GetProjectionMatrix() const;
 		Matrix4 GetLookAtMatrix() const;
 	public:
 		float AspectRatio;
 	private:
 		static Camera* _currentCamera;
-		float _movementSpeed;
-		float _mouseSensitivity;
-		float _zoom;
+		
 	};
 	class Texture2D
 	{
@@ -267,7 +278,6 @@ namespace FrogEngine
 		Mesh();
 		void TransmitData();
 	public:
-		Node transform;
 		Material* material;
 		Shader* shader;
 	private:
@@ -396,15 +406,20 @@ namespace FrogEngine
 		static double _mousePosDeltaX;
 		static double _mousePosDeltaY;
 	};
-	class Tank : public Node
+	class Component
 	{
 	public:
-		Tank(const char* path);
-		void Move(Vector3 direction, float deltaTime);
-		void Aim(float deltaX, float deltaY);
-		~Tank();
+		Component();
+		~Component();
+		virtual void Awake() = 0;
+		virtual void Update() = 0;
+		static void UpdateAllComponents();
+		void AddToUpdatePool();
+		void RemoveFromUpdatePool();
+	public:
+		Node* _node;
 	private:
-		Node* _battery;
-		Node* _cannon;
+		static std::set<Component*> components;
+
 	};
 }

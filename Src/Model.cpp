@@ -56,10 +56,9 @@ Node* Model::ProcessNode(std::string directory, aiNode* node, const aiScene* sce
 		}
 		if (node->mNumMeshes)
 		{
-			ret->SetLocalPosition(ori.x, ori.z, -ori.y);
+			ret->SetLocalPosition(ori.y, ori.z, ori.x);
 		}
 	}
-	ret->parentTransform = node->mTransformation;
 	// 处理节点所有的网格（如果有的话）
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
@@ -84,6 +83,7 @@ Node* Model::ProcessNode(std::string directory, aiNode* node, const aiScene* sce
 Mesh* Model::ProcessMesh(std::string directory, aiMesh* mesh, aiNode* node, const aiScene* scene, bool simplified)
 {
 	std::vector<Vertex> vertices;
+	//model矩阵将顶点变换到局部空间
 	aiMatrix4x4 model;
 	aiNode* it = node->mParent;
 	while (it)
@@ -104,10 +104,10 @@ Mesh* Model::ProcessMesh(std::string directory, aiMesh* mesh, aiNode* node, cons
 		{
 			pos *= model;
 		}
-		vertex.Position = Vector3(pos.x, pos.z, -pos.y);
+		vertex.Position = Vector3(pos.y, pos.z, pos.x);
 		aiVector3D normal = mesh->mNormals[i];
 		normal *= node->mTransformation;
-		vertex.Normal = Vector3(normal.x, normal.y, normal.z);
+		vertex.Normal = Vector3(normal.y, normal.z, normal.x);
 		if (mesh->mTextureCoords[0])
 		{
 			vertex.TexCoord = Vector2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);

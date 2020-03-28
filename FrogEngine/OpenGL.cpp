@@ -1,41 +1,10 @@
 ﻿#include <iostream>
-#include <glad/glad.h> 
-#include <glfw3.h>
 #include "FrogEngine.h"
 
+#include "CameraController.h"
+#include "TankController.h"
+
 using namespace FrogEngine;
-
-Camera camera;
-
-void CameraUpdate()
-{
-	/*camera.ProcessMouseMovement(-Input::GetMousePosDeltaX() / Screen::GetWidth(), Input::GetMousePosDeltaY() / Screen::GetHeight());
-	if (Input::GetKey(GLFW_KEY_W))
-	{
-		camera.Move(Direction::FRONT, Time::GetDeltaTime());
-	}
-	if (Input::GetKey(GLFW_KEY_A))
-	{
-		camera.Move(Direction::LEFT, Time::GetDeltaTime());
-	}
-	if (Input::GetKey(GLFW_KEY_S))
-	{
-		camera.Move(Direction::BACK, Time::GetDeltaTime());
-	}
-	if (Input::GetKey(GLFW_KEY_D))
-	{
-		camera.Move(Direction::RIGHT, Time::GetDeltaTime());
-	}*/
-
-	if (Input::GetKey(GLFW_KEY_SPACE))
-	{
-		camera.Move(Direction::UP, Time::GetDeltaTime());
-	}
-	if (Input::GetKey(GLFW_KEY_LEFT_SHIFT))
-	{
-		camera.Move(Direction::DOWN, Time::GetDeltaTime());
-	}
-}
 
 int main()
 {
@@ -77,28 +46,44 @@ int main()
 	glfwSetCursorPosCallback(window, Input::UpdateMousePos);
 	//深度测试
 	glEnable(GL_DEPTH_TEST);
-
-	Camera::SetCurrentCamera(&camera);
-
+	//Blend
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//添加一个方向光
 	auto directionalLight = DirectionalLight::Create(Vector3(1, -1, 1), Vector3(1, 1, 1));
+	//shader
 	Shader::LoadShader("Phong", "../Shader/Common.vs", "../Shader/BlinnPhong.fs");
 	Shader::LoadShader("SkyBox", "../Shader/SkyBox.vs", "../Shader/SkyBox.fs");
-
-	Tank* tank = new Tank("../Resource/Tank2/Tank2.FBX");
+	//坦克
+	Node* tank = Model::LoadModel("../Resource/Tank1/Tank1.FBX", true);
+	tank->SetLocalPosition(0,0,0);
 	tank->LocalScale = Vector3(0.01,0.01,0.01);
 	Node::ROOT->AddChild(tank);
-
-	camera.SetLocalPosition(300,200,0);
-	camera.SetLocalEulerAngles(-20,90,0);
-	tank->Find("Cannon")->AddChild(&camera);
-
+	Component* tankController = new TankController();
+	tank->AddComponent("TankController", tankController);
+	//相机
+	Camera camera;
+	Camera::SetCurrentCamera(&camera);
+	camera.SetLocalPosition(0, 0, 0);
+	camera.SetLocalEulerAngles(0, 0, 0);
+	CameraController* cameraController = new CameraController();
+	cameraController->_followObject = tank->Find("Cannon");
+	camera.AddComponent("CameraController", cameraController);
+	//地形
 	Node* model = Model::LoadModel("../Resource/Scene/3/Scene.FBX", false);
 	Node::ROOT->AddChild(model);
-
+	//天空盒
 	auto skyBox = SkyBox("../Resource/skybox/front.jpg", "../Resource/skybox/back.jpg", "../Resource/skybox/left.jpg", "../Resource/skybox/right.jpg", "../Resource/skybox/top.jpg", "../Resource/skybox/bottom.jpg");
-	unsigned int lastPrint = 0;
+	//天空穷
+	Node* skyDome = Model::LoadModel("../Resource/SkyDome/SkyDome.fbx",false);
+	skyDome->LocalScale = Vector3(0.03, 0.03, 0.03);
+	Shader* waterWaveShader = Shader::LoadShader("WaterWave", "../Shader/WaterWave.vs", "../Shader/WaterWave.fs");
+	skyDome->mesh->shader = waterWaveShader;
+//	skyDome->mesh->shader = Shader::LoadShader("WaterWave", "../Shader/WaterWave.vs", "../Shader/WaterWave.fs");
+	Node::ROOT->AddChild(skyDome);
 
-	unsigned int FPS = 150;
+	unsigned int lastPrint = 0;
+	unsigned int FPS = 120;
 	float FrameTime = 1 / (float)FPS;
 	float FrameStartTime = glfwGetTime();
 
@@ -108,59 +93,27 @@ int main()
 		while (glfwGetTime() <FrameStartTime)
 		{
 		}
-		/*
-		system("cls");
-		tank->Find("Cannon")->GetLocalEulerAngles().Print();
-		camera.GetLocalEulerAngles().Print();
-		camera.Print();
-		*/
 		FrameStartTime += FrameTime;
 		Time::Update();
 		//清除颜色缓冲和深度缓冲
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 		
 		if (Time::GetCurrentTime() - lastPrint >= 1)
 		{
 			lastPrint = Time::GetCurrentTime();
 			glfwSetWindowTitle(window, (std::string("Endless War    Fps: ") + std::to_string(1 / Time::GetDeltaTime())).c_str());
 		}
-		CameraUpdate();
-		
-
-		tank->Aim(Input::GetMousePosDeltaX(), Input::GetMousePosDeltaY());
-		Vector3 direction;
-		if (Input::GetKey(GLFW_KEY_W))
-		{
-			direction = direction + Vector3::LEFT;
-		}
-		if (Input::GetKey(GLFW_KEY_A))
-		{
-			direction = direction + Vector3::BEHIND;
-		}
-		if (Input::GetKey(GLFW_KEY_S))
-		{
-			direction = direction + Vector3::RIGHT;
-		}
-		if (Input::GetKey(GLFW_KEY_D))
-		{
-			direction = direction + Vector3::FRONT;
-		}
-		if (!(direction == Vector3(0, 0, 0)))
-		{
-			tank->Move(direction.Normalized(), Time::GetDeltaTime());
-		}
-		
+		Component::UpdateAllComponents();
 		
 		skyBox.Draw();
 		Node::ROOT->Rendering();
-
-		Input::ClearFrameInput();
 
 		if (Input::GetKey(GLFW_KEY_ESCAPE))
 		{
 			glfwSetWindowShouldClose(window, true);
 		}
+		Input::ClearFrameInput();
+		
 		//交换颜色缓冲（它是一个储存着GLFW窗口每一个像素颜色值的大缓冲），它在这一迭代中被用来绘制，并且将会作为输出显示在屏幕上
 		glfwSwapBuffers(window);
 		//是否触发事件，键盘输入、鼠标移动等、更新窗口状态，并调用对应的回调函数（可以通过回调方法手动设置）
