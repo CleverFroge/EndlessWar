@@ -1,8 +1,6 @@
 #version 330 core
 out vec4 FragColor;
 
-float gamma = 2.2;
-
 in vec3 Normal;  
 in vec3 FragPos;  
 in vec2 TexCoord;
@@ -11,8 +9,8 @@ in vec2 TexCoord;
 #define NR_POINT_LIGHTS 4
 #define NR_FLASH_LIGHTS 4
 
-float ambientStrength = 0;
-float diffuseStrength = 0;
+float ambientStrength = 0.2;
+float diffuseStrength = 0.3;
 float specularStrength = 0.5;
 
 struct Material {
@@ -20,8 +18,6 @@ struct Material {
     bool alpha;
     sampler2D specular;
     float shininess;
-    sampler2D normal;
-	sampler2D displacement;
 }; 
 
 struct DirectionalLight {
@@ -67,52 +63,64 @@ vec3 CalcFlashLight(Flashlight flashLight, vec4 diffuseTex, vec4 specularTex, ve
 
 void main()
 {
-    vec4 diffuseTex = vec4(pow(texture(material.diffuse, TexCoord).rgb, vec3(gamma)), 1);
-    vec4 specularTex = vec4(1,1,1,1);
-    vec3 norm = normalize(Normal);
-    vec3 viewDir = normalize(viewPos - FragPos);
-	vec3 result = vec3(diffuseTex) * ambientStrength;
-	for(int i = 0; i<directionalLightNum; i++)
-	{
-		result += CalcDirectionalLight(directionalLights[i],diffuseTex,specularTex,norm,viewDir);
-	}
-	for(int i = 0; i<pointLightNum; i++)
-	{
-		result += CalcPointLight(pointLights[i],diffuseTex,specularTex,norm,FragPos,viewDir);
-	}
-	for(int i = 0; i<flashLightNum; i++)
-	{
-		result += CalcFlashLight(flashLights[i],diffuseTex,specularTex,norm,FragPos,viewDir);
-	}
-    FragColor = vec4(pow(result, vec3(1.0/gamma)), 1);
+    vec4 diffuseTex = texture(material.diffuse, TexCoord);
+    vec4 specularTex = texture(material.specular, TexCoord);
+    if (material.alpha)
+    {
+        if (diffuseTex.a>0.1)
+        {
+            FragColor = diffuseTex;
+        }
+        else    
+        {
+            discard;
+        }
+    }
+    else
+    {
+        vec3 norm = normalize(Normal);
+        vec3 viewDir = normalize(viewPos - FragPos);
+	    vec3 result = vec3(diffuseTex) * ambientStrength;
+	    for(int i = 0; i<directionalLightNum; i++)
+	    {
+		    result += CalcDirectionalLight(directionalLights[i],diffuseTex,specularTex,norm,viewDir);
+	    }
+	    for(int i = 0; i<pointLightNum; i++)
+	    {
+		    result += CalcPointLight(pointLights[i],diffuseTex,specularTex,norm,FragPos,viewDir);
+	    }
+	    for(int i = 0; i<flashLightNum; i++)
+	    {
+		    result += CalcFlashLight(flashLights[i],diffuseTex,specularTex,norm,FragPos,viewDir);
+	    }
+        FragColor = vec4(result, 1);
+    }
 } 
 
 vec3 CalcDirectionalLight(DirectionalLight directionalLight, vec4 diffuseTex, vec4 specularTex, vec3 normal, vec3 viewDir)
 {
-    vec3 lightDir = normalize(reflect(-directionalLight.direction, normal));
+    vec3 lightDir = normalize(-directionalLight.direction);
     // 漫反射
     float diff = max(dot(normal, lightDir), 0.0);
     // 镜面反射
-    vec3 halfwayDir = normalize(lightDir + viewDir);
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     // 合并结果
     vec3 diffuse  = diff * vec3(diffuseTex) * diffuseStrength;
     vec3 specular = spec * vec3(specularTex) * specularStrength;
-	return specular;
     return (diffuse + specular) * directionalLight.color;
 }
 
 vec3 CalcPointLight(PointLight pointLight, vec4 diffuseTex, vec4 specularTex, vec3 normal, vec3 fragPos, vec3 viewDir)
 {  	
-    vec3 lightDir = normalize(pointLight.position - fragPos);
-
     // 漫反射 
+    vec3 lightDir = normalize(pointLight.position - fragPos);
     float diff = max(dot(normal, lightDir), 0.0);
 	vec3 diffuse = diff * vec3(diffuseTex) * diffuseStrength;
     
     // 镜面反射
-    vec3 halfwayDir = normalize(lightDir + viewDir);
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
+    vec3 reflectDir = reflect(-lightDir, normal);  
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     vec3 specular = vec3(specularTex) * spec * specularStrength;  
         
     vec3 result = diffuse + specular;
@@ -134,8 +142,8 @@ vec3 CalcFlashLight(Flashlight flashLight, vec4 diffuseTex, vec4 specularTex, ve
         vec3 diffuse = diff * vec3(diffuseTex) * diffuseStrength;  
         
         // specular
-        vec3 halfwayDir = normalize(-lightDir + viewDir);
-        float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
+        vec3 reflectDir = reflect(lightDir, normal);  
+        float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
         vec3 specular = spec * vec3(specularTex) * specularStrength;  
         
         // attenuation

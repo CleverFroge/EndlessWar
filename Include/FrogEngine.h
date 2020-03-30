@@ -231,7 +231,6 @@ namespace FrogEngine
 		Texture2D* diffuseTexture;
 		Texture2D* specularTexture;
 		Texture2D* normalTexture;
-		Texture2D* displacementTexture;
 		float shininess;
 	};
 
@@ -245,7 +244,7 @@ namespace FrogEngine
 	{
 	private:
 		static std::map<const char*, Shader*> _shaders;
-		const char* name;
+		const char* _name;
 		unsigned int _shaderProgram;
 	private:
 		Shader(const char* name, const char* vertexShaderPath, const char* fragmentShaderPath);
@@ -292,7 +291,7 @@ namespace FrogEngine
 	public:
 		static Node* LoadModel(std::string path, bool simplified);
 	private:
-		static Node* ProcessNode(std::string directory, aiNode* node, const aiScene* scene, Node* parent, bool simplified);
+		static Node* ProcessNode(std::string directory, aiNode* node, const aiScene* scene, bool simplified);
 		static Mesh* ProcessMesh(std::string directory, aiMesh* mesh, aiNode* node, const aiScene* scene, bool simplified);
 		static Texture2D* LoadMaterialTextures(std::string directory, aiMaterial* mat, aiTextureType type);
 	};

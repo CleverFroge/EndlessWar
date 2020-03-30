@@ -3,7 +3,6 @@
 using namespace FrogEngine;
 
 Node* Node::ROOT = new Node();
-std::map<const char*, Component*> Node::_components;
 
 Node::Node()
 {
@@ -11,31 +10,10 @@ Node::Node()
 	SetLocalPosition(0, 0, 0);
 	SetLocalEulerAngles(0, 0, 0);
 	InitByEulerAngles();
-	AutoRendering = true;
 }
 
 Node::~Node()
 {
-	auto it = _components.begin();
-	while (it!=_components.end())
-	{
-		Component* component = it->second;
-		delete component;
-		_components.erase(it);
-	}
-}
-
-void Node::AddComponent(const char* name, Component* component)
-{
-	component->_node = this;
-	component->AddToUpdatePool();
-	component->Awake();
-	
-}
-
-void Node::SetLocalPosition(const Vector3& pos)
-{
-	LocalPosition = pos;
 }
 
 void Node::SetLocalPosition(float x, float y, float z)
@@ -48,19 +26,6 @@ void Node::SetLocalEulerAngles(const Vector3& eulerAngles)
 	_eulerAngles.SetX(NormalizedAngle(eulerAngles.GetX()));
 	_eulerAngles.SetY(NormalizedAngle(eulerAngles.GetY()));
 	_eulerAngles.SetZ(NormalizedAngle(eulerAngles.GetZ()));
-	InitByEulerAngles();
-}
-
-void Node::SetLocalForward(const Vector3& forward)
-{
-	Vector3 forwardInXZ = forward;
-	forwardInXZ.SetY(0);
-	float eulerAngleX = Vector3::Angle(forwardInXZ, forward);
-	_eulerAngles.SetX(-eulerAngleX);
-	float eulerAngleY = Vector3::Angle(Vector3::FRONT, forwardInXZ);
-	_eulerAngles.SetY(eulerAngleY);
-	_eulerAngles.SetZ(0);
-
 	InitByEulerAngles();
 }
 
@@ -95,12 +60,12 @@ void Node::SetLocalEulerAngleZ(float eularAngleZ)
 void Node::InitByEulerAngles()
 {
 	Matrix4 rx;
-	rx.Rotate(Vector3::RIGHT, _eulerAngles.GetX());
+	rx.Rotate(Vector3(1, 0, 0), _eulerAngles.GetX());
 	_front = Vector3::FRONT * rx;
 	_up = Vector3::UP * rx;
 	_right = Vector3::RIGHT * rx;
 	Matrix4 ry;
-	ry.Rotate(Vector3::UP, _eulerAngles.GetY());
+	ry.Rotate(Vector3(0, 1, 0), _eulerAngles.GetY());
 	_front = _front * ry;
 	_up = _up * ry;
 	_right = _right * ry;
@@ -154,11 +119,6 @@ void Node::SetParent(Node* parent)
 	}
 }
 
-Node* Node::GetParent() const
-{
-	return _parent;
-}
-
 void Node::AddChild(Node* child)
 {
 	if (child)
@@ -191,45 +151,38 @@ void Node::Rendering()
 			unsigned int textureIndex = 1;
 			if (material->diffuseTexture)
 			{
-				shader->SetBool("material.haveDiffuse", true);
 				shader->SetBool("material.alpha", material->diffuseTexture->Alpha);
 				shader->SetInt("material.diffuse", textureIndex);
 				glActiveTexture(GL_TEXTURE0 + textureIndex);
 				glBindTexture(GL_TEXTURE_2D, material->diffuseTexture->ID);
 				textureIndex++;
 			}
-			else
-			{
-				shader->SetBool("material.haveDiffuse", false);
-			}
 			if (material->specularTexture)
 			{
-				shader->SetBool("material.haveSpecular", true);
 				shader->SetInt("material.specular", textureIndex);
 				glActiveTexture(GL_TEXTURE0 + textureIndex);
 				glBindTexture(GL_TEXTURE_2D, material->specularTexture->ID);
 				textureIndex++;
 			}
-			else
-			{
-				shader->SetBool("material.haveSpecular", false);
-			}
 			if (material->normalTexture)
 			{
-				shader->SetBool("material.haveNormal", true);
 				shader->SetInt("material.normal", textureIndex);
 				glActiveTexture(GL_TEXTURE0 + textureIndex);
 				glBindTexture(GL_TEXTURE_2D, material->normalTexture->ID);
 				textureIndex++;
 			}
-			else
+			if (material->displacementTexture)
 			{
-				shader->SetBool("material.haveNormal", false);
+				shader->SetInt("material.displacement", textureIndex);
+				glActiveTexture(GL_TEXTURE0 + textureIndex);
+				glBindTexture(GL_TEXTURE_2D, material->displacementTexture->ID);
+				textureIndex++;
 			}
 			shader->SetFloat("material.shininess", material->shininess);
 		}
 		//向shader发送model矩阵
 		Matrix4 model;
+		
 		std::stack<Node*> temp;
 		Node* node = this;
 		while (node->_parent != nullptr)
@@ -243,11 +196,12 @@ void Node::Rendering()
 			temp.pop();
 
 			model.Translate(node->LocalPosition);
-			model.Rotate(node->_front, node->_eulerAngles.GetZ());
-			model.Rotate(Vector3::UP, node->_eulerAngles.GetY());
-			model.Rotate(Vector3::RIGHT, node->_eulerAngles.GetX());
+			model.Rotate(_front, node->_eulerAngles.GetZ());
+			model.Rotate(Vector3(0, 1, 0), node->_eulerAngles.GetY());
+			model.Rotate(Vector3(1, 0, 0), -node->_eulerAngles.GetX());
 			model.Scale(node->LocalScale);
 		}
+		
 		shader->SetMat4("model", model);
 
 		//向shader发送相机相关数据
@@ -298,10 +252,7 @@ void Node::Rendering()
 	
 	for (auto it = _childs.begin(); it!=_childs.end(); it++)
 	{
-		if ((*it)->AutoRendering)
-		{
-			(*it)->Rendering();
-		}
+		(*it)->Rendering();
 	}
 }
 
@@ -333,10 +284,10 @@ Vector3 Node::GetPosition() const
 		s.Scale(it->LocalScale);
 		res = res * s;
 		Matrix4 rx;
-		rx.Rotate(Vector3::RIGHT, it->_eulerAngles.GetX());
+		rx.Rotate(Vector3(1, 0, 0), -it->_eulerAngles.GetX());
 		res = res * rx;
 		Matrix4 ry;
-		ry.Rotate(Vector3::UP, it->_eulerAngles.GetY());
+		ry.Rotate(Vector3(0, 1, 0), it->_eulerAngles.GetY());
 		res = res * ry;
 		Matrix4 rz;
 		rz.Rotate(_front, it->_eulerAngles.GetZ());
@@ -361,11 +312,11 @@ Vector3 Node::GetForward() const
 		front = front * s;
 		ori = ori * s;
 		Matrix4 rx;
-		rx.Rotate(Vector3::RIGHT, it->_eulerAngles.GetX());
+		rx.Rotate(Vector3(1, 0, 0), -it->_eulerAngles.GetX());
 		front = front * rx;
 		ori = ori * rx;
 		Matrix4 ry;
-		ry.Rotate(Vector3::UP, it->_eulerAngles.GetY());
+		ry.Rotate(Vector3(0, 1, 0), it->_eulerAngles.GetY());
 		front = front * ry;
 		ori = ori * ry;
 		Matrix4 rz;
@@ -393,11 +344,11 @@ Vector3 Node::GetUp() const
 		up = up * s;
 		ori = ori * s;
 		Matrix4 rx;
-		rx.Rotate(Vector3::RIGHT, it->_eulerAngles.GetX());
+		rx.Rotate(Vector3(1, 0, 0), -it->_eulerAngles.GetX());
 		up = up * rx;
 		ori = ori * rx;
 		Matrix4 ry;
-		ry.Rotate(Vector3::UP, it->_eulerAngles.GetY());
+		ry.Rotate(Vector3(0, 1, 0), it->_eulerAngles.GetY());
 		up = up * ry;
 		ori = ori * ry;
 		Matrix4 rz;
@@ -425,11 +376,11 @@ Vector3 Node::GetRight() const
 		right = right * s;
 		ori = ori * s;
 		Matrix4 rx;
-		rx.Rotate(Vector3::RIGHT, it->_eulerAngles.GetX());
+		rx.Rotate(Vector3(1, 0, 0), -it->_eulerAngles.GetX());
 		right = right * rx;
 		ori = ori * rx;
 		Matrix4 ry;
-		ry.Rotate(Vector3::UP, it->_eulerAngles.GetY());
+		ry.Rotate(Vector3(0, 1, 0), it->_eulerAngles.GetY());
 		right = right * ry;
 		ori = ori * ry;
 		Matrix4 rz;

@@ -20,10 +20,16 @@ struct Material {
 	sampler2D displacement;
 }; 
 uniform Material material;
+uniform float time;
 
 void main()
 {
     TexCoord = aTexCoords;
+	Normal = texture(material.normal, TexCoord).rgb;
+	if (Normal==vec3(0,0,0))
+	{
+		Normal = aNormal;
+	}
 	Normal = aNormal;
 	FragPos = vec3(model * vec4(aPos, 1.0));
     gl_Position = projection * view * vec4(FragPos, 1.0);

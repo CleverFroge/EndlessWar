@@ -12,10 +12,10 @@ Node* Model::LoadModel(std::string path, bool simplified)
 		std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
 		return nullptr;
 	}
-	return ProcessNode(directory, scene->mRootNode, scene, nullptr, simplified);
+	return ProcessNode(directory, scene->mRootNode, scene, simplified);
 }
 
-Node* Model::ProcessNode(std::string directory, aiNode* node, const aiScene* scene, Node* parent, bool simplified)
+Node* Model::ProcessNode(std::string directory, aiNode* node, const aiScene* scene, bool simplified)
 {
 	Node* ret = new Node();
 	ret->name = node->mName.C_Str();
@@ -58,6 +58,7 @@ Node* Model::ProcessNode(std::string directory, aiNode* node, const aiScene* sce
 		{
 			ret->SetLocalPosition(ori.y, ori.z, ori.x);
 		}
+		parent = ret;
 	}
 	// 处理节点所有的网格（如果有的话）
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
@@ -68,14 +69,7 @@ Node* Model::ProcessNode(std::string directory, aiNode* node, const aiScene* sce
 	// 接下来对它的子节点重复这一过程
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
-		if (node->mNumMeshes)
-		{
-			ret->AddChild(ProcessNode(directory, node->mChildren[i], scene, ret, simplified));
-		}
-		else
-		{
-			ret->AddChild(ProcessNode(directory, node->mChildren[i], scene, parent, simplified));
-		}
+		ret->AddChild(ProcessNode(directory, node->mChildren[i], scene, simplified));
 	}
 	return ret;
 }
@@ -135,7 +129,6 @@ Mesh* Model::ProcessMesh(std::string directory, aiMesh* mesh, aiNode* node, cons
 		material->diffuseTexture = LoadMaterialTextures(directory, ai_material, aiTextureType_DIFFUSE);
 		material->specularTexture = LoadMaterialTextures(directory, ai_material, aiTextureType_SPECULAR);
 		material->normalTexture = LoadMaterialTextures(directory, ai_material, aiTextureType_NORMALS);
-		material->displacementTexture = LoadMaterialTextures(directory, ai_material, aiTextureType_DISPLACEMENT);
 
 		aiGetMaterialFloat(ai_material, AI_MATKEY_SHININESS, &material->shininess);
 		result->material = material;

@@ -12,45 +12,27 @@ uniform mat4 view;
 uniform mat4 projection;
 
 struct Material {
+	bool haveDiffuse;
     sampler2D diffuse;
     bool alpha;
+	bool haveSpecular;
     sampler2D specular;
     float shininess;
+	bool haveNormal;
     sampler2D normal;
-	sampler2D displacement;
 }; 
 uniform Material material;
 
 void main()
 {
     TexCoord = aTexCoords;
-	vec3 displacement = texture(material.displacement, TexCoord).rgb;
-	Normal = texture(material.normal, TexCoord).rgb;
-	if (Normal==vec3(0,0,0))
-	{
-		Normal = aNormal;
-	}
 	Normal = aNormal;
-	FragPos = vec3(model * vec4(aPos, 1.0));
-    
-    gl_Position = projection * view * vec4(FragPos, 1.0);
-
-	Normal = mat3(transpose(inverse(model))) * Normal;  
-}
-/*
-void main()
-{
-    TexCoord = aTexCoords;
-	vec3 displacement = texture(material.displacement, TexCoord).rgb;
-	Normal = texture(material.normal, TexCoord).rgb;
-	if (Normal==vec3(0,0,0))
+	if (material.haveNormal)
 	{
-		Normal = aNormal;
+		Normal = texture(material.normal, TexCoord).rgb;
 	}
-	FragPos = vec3(model * vec4(aPos+Normal*displacement, 1.0));
-    
-    gl_Position = projection * view * vec4(FragPos, 1.0);
+	Normal = normalize(mat3(transpose(inverse(model))) * Normal);
 
-	Normal = mat3(transpose(inverse(model))) * Normal;  
+	FragPos = vec3(model * vec4(aPos, 1.0));
+    gl_Position = projection * view * vec4(FragPos, 1.0);
 }
-*/
