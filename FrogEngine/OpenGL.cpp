@@ -1,11 +1,7 @@
 ﻿#include <iostream>
 #include "FrogEngine.h"
-
-#include "CameraController.h"
-#include "TankController.h"
-#include "WaterWaveRendering.h"
-
 using namespace FrogEngine;
+#include "EndlessWar.h"
 
 int main()
 {
@@ -51,62 +47,8 @@ int main()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	//shader
-	Shader::LoadShader("Phong", "../Shader/Common.vs", "../Shader/BlinnPhong.fs");
-	Shader::LoadShader("SkyBox", "../Shader/SkyBox.vs", "../Shader/SkyBox.fs");
-
-	//添加一个方向光
-	auto directionalLight = DirectionalLight::Create(Vector3(1, -1, 1), Vector3(1, 1, 1));
-//	auto pointLight = PointLight::Create(Vector3(0, 10, 0), Vector3(1, 1, 1), 20);
-
-	//坦克
-	Node* tank = Model::LoadModel("../Resource/Tank1/Tank1.FBX", true);
-	tank->SetLocalPosition(0, 0, 0);
-	tank->LocalScale = Vector3(0.01, 0.01, 0.01);
-	Node::ROOT->AddChild(tank);
-	Component* tankController = new TankController();
-		tank->AddComponent("TankController", tankController);
-
-	//天空穷
-	Node* skyDome = Model::LoadModel("../Resource/SkyDome/SkyDome.fbx", false);
-		skyDome->AutoRendering = false;
-	skyDome->LocalScale = Vector3(0.001, 0.001, 0.001);
-	skyDome->SetLocalEulerAngleZ(-90);
-		Shader* waterWaveShader = Shader::LoadShader("WaterWave", "../Shader/WaterWave.vs", "../Shader/WaterWave.fs");
-		skyDome->Find("MountainSkybox")->mesh->shader = waterWaveShader;
-	Node::ROOT->AddChild(skyDome);
-		skyDome->AddComponent("WaterWaveRendering",new WaterWaveRendering());
-
-	//地形
-	Node* model = Model::LoadModel("../Resource/Scene/3/Scene.FBX", false);
-	Node::ROOT->AddChild(model);
-	//天空盒
-	auto skyBox = SkyBox("../Resource/skybox/front.jpg", "../Resource/skybox/back.jpg", "../Resource/skybox/left.jpg", "../Resource/skybox/right.jpg", "../Resource/skybox/top.jpg", "../Resource/skybox/bottom.jpg");
-	
-	//相机
-	Camera camera;
-	Camera::SetCurrentCamera(&camera);
-	CameraController* cameraController = new CameraController();
-	cameraController->_followObject = tank->Find("Cannon");
-	camera.AddComponent("CameraController", cameraController);
-
-	Node* node = new Node();
-	node->SetLocalEulerAngleX(-90);
-	node->mesh = Mesh::Create(Mesh::Geometry::Quad);
-	node->mesh->material = Material::Create();
-	node->mesh->material->shininess = 128;
-	node->mesh->material->diffuseTexture = Texture2D::Create("../Resource/container.jpg", false);
-	node->LocalScale = Vector3(1000, 1000, 1000);
-	node->LocalPosition = Vector3(0, -100, 0);
-	Node::ROOT->AddChild(node);
-	/*
-	Node* light = new Node();
-	light->SetLocalPosition(Vector3(10, 10, 10));
-	light->mesh = Mesh::Create(Mesh::Geometry::Cube);
-	light->mesh->shader = Shader::LoadShader("Light", "../Shader/Light.vs", "../Shader/Light.fs");
-	Node::ROOT->AddChild(light);
-	*/
-
+	Scene* endlessWar = new EndlessWar();
+	Scene::SetCurrentScene(endlessWar);
 
 	unsigned int lastPrint = 0;
 	unsigned int FPS = 120;
@@ -129,9 +71,9 @@ int main()
 			lastPrint = Time::GetCurrentTime();
 			glfwSetWindowTitle(window, (std::string("Endless War    Fps: ") + std::to_string(1 / Time::GetDeltaTime())).c_str());
 		}
-		skyBox.Draw();
-		Node::ROOT->Rendering();
-		Component::UpdateAllComponents();
+
+		Scene::GetCurrentScene()->Run();
+
 		if (Input::GetKey(GLFW_KEY_ESCAPE))
 		{
 			glfwSetWindowShouldClose(window, true);

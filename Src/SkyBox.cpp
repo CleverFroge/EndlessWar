@@ -109,12 +109,13 @@ void SkyBox::Draw()
 	glDepthMask(GL_FALSE);
 	Shader::GetShader("SkyBox")->Use();
 	// ... 设置观察和投影矩阵
-	Camera* camera = Camera::GetCurrentCamera();
+	Scene* currentScene = Scene::GetCurrentScene();
+	Camera* currentCamera = currentScene->GetCurrentCamera();
 	Matrix4 model;
-	model.Translate(camera->GetPosition());
+	model.Translate(currentCamera->GetPosition());
 	Shader::GetShader("SkyBox")->SetMat4("model", model);
-	Shader::GetShader("SkyBox")->SetMat4("projection", camera->GetProjectionMatrix());
-	Shader::GetShader("SkyBox")->SetMat4("view", camera->GetLookAtMatrix());
+	Shader::GetShader("SkyBox")->SetMat4("projection", currentCamera->GetProjectionMatrix());
+	Shader::GetShader("SkyBox")->SetMat4("view", currentCamera->GetLookAtMatrix());
 
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 	glBindVertexArray(_vao);

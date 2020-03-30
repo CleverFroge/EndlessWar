@@ -2,9 +2,6 @@
 #include "FrogEngine.h"
 using namespace FrogEngine;
 
-Node* Node::ROOT = new Node();
-std::map<const char*, Component*> Node::_components;
-
 Node::Node()
 {
 	LocalScale = Vector3(1, 1, 1);
@@ -16,21 +13,26 @@ Node::Node()
 
 Node::~Node()
 {
-	auto it = _components.begin();
-	while (it!=_components.end())
+	auto childIt = _childs.begin();
+	while (childIt!=_childs.end())
 	{
-		Component* component = it->second;
+		delete (*childIt);
+		_childs.erase(childIt);
+	}
+	auto componentIt = _components.begin();
+	while (componentIt!=_components.end())
+	{
+		Component* component = componentIt->second;
 		delete component;
-		_components.erase(it);
+		_components.erase(componentIt);
 	}
 }
 
-void Node::AddComponent(const char* name, Component* component)
+void Node::AddComponent(Component* component)
 {
 	component->_node = this;
-	component->AddToUpdatePool();
 	component->Awake();
-	
+	_components.insert(std::pair<const char*, Component*>(component->_name, component));
 }
 
 void Node::SetLocalPosition(const Vector3& pos)
@@ -251,14 +253,15 @@ void Node::Rendering()
 		shader->SetMat4("model", model);
 
 		//向shader发送相机相关数据
-		Camera* currentCamera = Camera::GetCurrentCamera();
+		Scene* currentScene = Scene::GetCurrentScene();
+		Camera* currentCamera = currentScene->GetCurrentCamera();
 		shader->SetVector3("viewPos", currentCamera->GetPosition());
 		shader->SetMat4("view", currentCamera->GetLookAtMatrix());
 		shader->SetMat4("projection", currentCamera->GetProjectionMatrix());
 
 		//向shader发送光源相关数据
 		//方向光
-		auto directionalLights = DirectionalLight::GetLights();
+		auto directionalLights = currentScene->GetDirectionalLights();
 		shader->SetInt("directionalLightNum", directionalLights.size());
 		for (size_t i = 0; i < directionalLights.size(); i++)
 		{
@@ -267,7 +270,7 @@ void Node::Rendering()
 			shader->SetVector3((name + std::string(".color")).c_str(), directionalLights[i]->color);
 		}
 		//点光源
-		auto pointLights = PointLight::GetLights();
+		auto pointLights = currentScene->GetPointLights();
 		shader->SetInt("pointLightNum", pointLights.size());
 		for (size_t i = 0; i < pointLights.size(); i++)
 		{
@@ -279,7 +282,7 @@ void Node::Rendering()
 			shader->SetFloat((name + std::string(".quadratic")).c_str(), pointLights[i]->quadratic);
 		}
 		//聚光
-		auto flashLights = FlashLight::GetLights();
+		auto flashLights = currentScene->GetFlashLights();
 		shader->SetInt("flashLightNum", flashLights.size());
 		for (size_t i = 0; i < flashLights.size(); i++)
 		{
@@ -443,4 +446,18 @@ Vector3 Node::GetRight() const
 		it = it->_parent;
 	}
 	return (right - ori).Normalized();
+}
+
+void Node::UpdateComponents()
+{
+	auto n = name;
+	for (auto it = _components.begin(); it != _components.end(); it++)
+	{
+		auto component = it->second;
+		component->Update();
+	}
+	for (auto it = _childs.begin(); it != _childs.end(); it++)
+	{
+		(*it)->UpdateComponents();
+	}
 }

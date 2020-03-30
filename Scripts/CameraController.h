@@ -11,7 +11,7 @@ private:
 	float _mouseSensitivity = 180;
 	float _zoom = 45;
 public:
-	CameraController()
+	CameraController() : Component{ "CameraController" }
 	{
 
 	}

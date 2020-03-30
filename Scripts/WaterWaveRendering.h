@@ -5,7 +5,7 @@ using namespace FrogEngine;
 class WaterWaveRendering:public Component
 {
 public:
-	WaterWaveRendering()
+	WaterWaveRendering() : Component{ "WaterWaveRendering" }
 	{
 	}
 

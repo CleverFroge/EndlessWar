@@ -142,7 +142,7 @@ namespace FrogEngine
 	public:
 		Node();
 		~Node();
-		void AddComponent(const char * name,Component* component);
+		void AddComponent(Component* component);
 
 		void SetLocalForward(const Vector3& forward);
 
@@ -170,12 +170,13 @@ namespace FrogEngine
 
 		void Rendering();
 
+		void UpdateComponents();
+
 		Vector3 GetPosition() const;
 		Vector3 GetForward() const;
 		Vector3 GetUp() const;
 		Vector3 GetRight() const;
 	public:
-		static Node* ROOT;
 		Mesh* mesh;
 		std::string name;
 		Vector3 LocalScale;
@@ -188,23 +189,23 @@ namespace FrogEngine
 		Vector3 _up;
 		Vector3 _front;
 		Vector3 _right;
-		static std::map<const char*, Component*> _components;
+		std::map<const char*, Component*> _components;
 		
 	};
+	class SkyBox;
 	class Camera : public Node
 	{
 	public:
-		static void SetCurrentCamera(Camera* camera);
-		static Camera* GetCurrentCamera();
 		Camera();
 		~Camera();
 		Matrix4 GetProjectionMatrix() const;
 		Matrix4 GetLookAtMatrix() const;
+		void SetSkyBox(SkyBox* skyBox);
+		SkyBox* GetSkyBox() const;
 	public:
 		float AspectRatio;
 	private:
-		static Camera* _currentCamera;
-		
+		SkyBox* _skyBox;
 	};
 	class Texture2D
 	{
@@ -297,27 +298,19 @@ namespace FrogEngine
 	};
 	class DirectionalLight
 	{
-		static const int MaxInstance = 1;
 	public:
 		static DirectionalLight* Create(Vector3 direction, Vector3 color);
-		static const std::vector<DirectionalLight*>& GetLights();
-		static void Release(DirectionalLight* light);
 		~DirectionalLight();
 	public:
 		Vector3 direction;
 		Vector3 color;
 	private:
 		DirectionalLight();
-	private:
-		static std::vector<DirectionalLight*> _lights;
 	};
 	class PointLight
 	{
-		static const int MaxInstance = 4;
 	public:
 		static PointLight* Create(Vector3 position, Vector3 color, float range);
-		static const std::vector<PointLight*>& GetLights();
-		static void Release(PointLight* light);
 		~PointLight();
 	public:
 		Vector3 position;
@@ -328,16 +321,11 @@ namespace FrogEngine
 		float quadratic;
 	private:
 		PointLight();
-	private:
-		static std::vector<PointLight*> _lights;
 	};
 	class FlashLight
 	{
-		static const int MaxInstance = 4;
 	public:
 		static FlashLight* Create(Vector3 position, Vector3 direction, Vector3 color, float innerCone, float outerCone);
-		static const std::vector<FlashLight*>& GetLights();
-		static void Release(FlashLight* light);
 		~FlashLight();
 	public:
 		Vector3 position;
@@ -352,8 +340,6 @@ namespace FrogEngine
 		float quadratic;
 	private:
 		FlashLight();
-	private:
-		static std::vector<FlashLight*> _lights;
 	};
 	class SkyBox
 	{
@@ -408,17 +394,37 @@ namespace FrogEngine
 	class Component
 	{
 	public:
-		Component();
+		Component(const char* name);
 		~Component();
 		virtual void Awake() = 0;
 		virtual void Update() = 0;
-		static void UpdateAllComponents();
-		void AddToUpdatePool();
-		void RemoveFromUpdatePool();
 	public:
 		Node* _node;
+		const char* _name;
+	};
+	class Scene
+	{
+	public:
+		static void SetCurrentScene(Scene* scene);
+		static Scene* GetCurrentScene();
+		Scene();
+		~Scene();
+		void Run();
+		void SetCurrentCamera(Camera* camera);
+		Camera* GetCurrentCamera();
+		void AddDirectionalLight(DirectionalLight* light);
+		std::vector<DirectionalLight*>& GetDirectionalLights();
+		void AddPointLight(PointLight* light);
+		std::vector<PointLight*>& GetPointLights();
+		void AddFlashLight(FlashLight* light);
+		std::vector<FlashLight*>& GetFlashLights();
+	protected:
+		Node* _root;
+		Camera* _currentCamera;
+		std::vector<DirectionalLight*> _directionalLights;
+		std::vector<PointLight*> _pointLights;
+		std::vector<FlashLight*> _flashLights;
 	private:
-		static std::set<Component*> components;
-
+		static Scene* CurrentScene;
 	};
 }

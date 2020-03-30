@@ -11,7 +11,7 @@ private:
 	Node* _battery = nullptr;
 	Node* _cannon = nullptr;
 public:
-	TankController()
+	TankController() : Component{"TankController"}
 	{
 	}
 	~TankController()
@@ -34,7 +34,7 @@ public:
 		if (_cannon)
 		{
 			float eulerAngle = _cannon->GetLocalEulerAngles().GetX();
-			_cannon->SetLocalEulerAngleX(eulerAngle - Input::GetMousePosDeltaY() * _mouseSensitivity);
+			_cannon->SetLocalEulerAngleX(eulerAngle + Input::GetMousePosDeltaY() * _mouseSensitivity);
 		}
 		//处理键盘输入
 		Vector3 moveDirection(0, 0, 0);
@@ -58,7 +58,9 @@ public:
 		{
 			moveDirection = moveDirection.Normalized();
 			//应该旋转的角度
-			float eulerAngleY = Vector3::Angle(Vector3::FRONT, moveDirection)+ Camera::GetCurrentCamera()->GetLocalEulerAngles().GetY()-_node->GetLocalEulerAngles().GetY();
+			Scene* currentScene = Scene::GetCurrentScene();
+			Camera* currentCamera = currentScene->GetCurrentCamera();
+			float eulerAngleY = Vector3::Angle(Vector3::FRONT, moveDirection)+ currentCamera->GetLocalEulerAngles().GetY()-_node->GetLocalEulerAngles().GetY();
 			//选择左旋右旋
 			if (eulerAngleY > 180)
 			{

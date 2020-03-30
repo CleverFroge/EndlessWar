@@ -1,18 +1,6 @@
 #include "FrogEngine.h"
 using namespace FrogEngine;
 
-Camera* Camera::_currentCamera = nullptr;
-
-void Camera::SetCurrentCamera(Camera* camera)
-{
-	_currentCamera = camera;
-}
-
-Camera* Camera::GetCurrentCamera()
-{
-	return _currentCamera;
-}
-
 Camera::Camera()
 {
 	
@@ -21,6 +9,10 @@ Camera::Camera()
 
 Camera::~Camera()
 {
+	if (_skyBox)
+	{
+		delete _skyBox;
+	}
 }
 //
 //void Camera::ProcessMouseScroll(float scroll)
@@ -51,4 +43,18 @@ Matrix4 Camera::GetLookAtMatrix() const
 	*/
 	view.LookAt(GetPosition(), GetPosition() + GetForward(), GetUp());
 	return view;
+}
+
+void Camera::SetSkyBox(SkyBox* skyBox)
+{
+	if (_skyBox)
+	{
+		delete _skyBox;
+	}
+	_skyBox = skyBox;
+}
+
+SkyBox* Camera::GetSkyBox() const
+{
+	return _skyBox;
 }
