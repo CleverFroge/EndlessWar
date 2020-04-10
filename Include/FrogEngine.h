@@ -20,6 +20,7 @@
 #include <type_traits>
 
 #include "stb_image.h"
+#include "stb_image_write.h"
 
 #include <algorithm>
 
@@ -169,8 +170,10 @@ namespace FrogEngine
 		void RemoveChild(Node* child);
 
 		void Rendering();
+		void DepthRendering(Matrix4 lightSpaceMatrix);
 
-		void UpdateComponents();
+		void ComponentsUpdate();
+		void ComponentsLateUpdate();
 
 		Vector3 GetPosition() const;
 		Vector3 GetForward() const;
@@ -301,9 +304,17 @@ namespace FrogEngine
 	public:
 		static DirectionalLight* Create(Vector3 direction, Vector3 color);
 		~DirectionalLight();
+		void GenerateDepthMap();
 	public:
 		Vector3 direction;
 		Vector3 color;
+
+		GLuint depthMapFBO;
+
+		const GLuint SHADOW_WIDTH = 4096, SHADOW_HEIGHT = 4096;
+		GLuint depthMap;
+		Matrix4 lightSpaceMatrix;
+		Node* center;
 	private:
 		DirectionalLight();
 	};
@@ -366,7 +377,7 @@ namespace FrogEngine
 	class Time
 	{
 	public:
-		static float GetCurrentTime();
+		static float GetTime();
 		static float GetDeltaTime();
 		static void Update();
 	private:
@@ -398,6 +409,7 @@ namespace FrogEngine
 		~Component();
 		virtual void Awake() = 0;
 		virtual void Update() = 0;
+		virtual void LateUpdate() = 0;
 	public:
 		Node* _node;
 		const char* _name;
@@ -418,8 +430,10 @@ namespace FrogEngine
 		std::vector<PointLight*>& GetPointLights();
 		void AddFlashLight(FlashLight* light);
 		std::vector<FlashLight*>& GetFlashLights();
-	protected:
+		
 		Node* _root;
+	protected:
+		
 		Camera* _currentCamera;
 		std::vector<DirectionalLight*> _directionalLights;
 		std::vector<PointLight*> _pointLights;

@@ -187,10 +187,10 @@ void Node::Rendering()
 		}
 		//使用该着色器程序
 		shader->Use();
+		unsigned int textureIndex = 1;
 		//向shader发送材质数据
 		if (material)
 		{
-			unsigned int textureIndex = 1;
 			if (material->diffuseTexture)
 			{
 				shader->SetBool("material.haveDiffuse", true);
@@ -268,6 +268,12 @@ void Node::Rendering()
 			std::string name = std::string("directionalLights[") + std::to_string(i) + std::string("]");
 			shader->SetVector3((name + std::string(".direction")).c_str(), directionalLights[i]->direction);
 			shader->SetVector3((name + std::string(".color")).c_str(), directionalLights[i]->color);
+			shader->SetMat4((name + std::string(".lighgtSpaceMat")).c_str(), directionalLights[i]->lightSpaceMatrix);
+
+			shader->SetInt((name + std::string(".depthMap")).c_str(), textureIndex);
+			glActiveTexture(GL_TEXTURE0 + textureIndex);
+			glBindTexture(GL_TEXTURE_2D, directionalLights[i]->depthMap);
+			textureIndex++;
 		}
 		//点光源
 		auto pointLights = currentScene->GetPointLights();
@@ -304,6 +310,51 @@ void Node::Rendering()
 		if ((*it)->AutoRendering)
 		{
 			(*it)->Rendering();
+		}
+	}
+}
+
+void Node::DepthRendering(Matrix4 lightSpaceMatrix)
+{
+	if (mesh)
+	{
+		Shader* shader = Shader::GetShader("Depth");
+
+		//使用该着色器程序
+		shader->Use();
+		//向shader发送model矩阵
+		Matrix4 model;
+		std::stack<Node*> temp;
+		Node* node = this;
+		while (node->_parent != nullptr)
+		{
+			temp.push(node);
+			node = node->_parent;
+		}
+		while (temp.size() != 0)
+		{
+			node = temp.top();
+			temp.pop();
+
+			model.Translate(node->LocalPosition);
+			model.Rotate(node->_front, node->_eulerAngles.GetZ());
+			model.Rotate(Vector3::UP, node->_eulerAngles.GetY());
+			model.Rotate(Vector3::RIGHT, node->_eulerAngles.GetX());
+			model.Scale(node->LocalScale);
+		}
+		shader->SetMat4("model", model);
+
+		//向Shader发送转换到光源空间的矩阵
+		shader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+
+		mesh->Draw();
+	}
+
+	for (auto it = _childs.begin(); it != _childs.end(); it++)
+	{
+		if ((*it)->AutoRendering)
+		{
+			(*it)->DepthRendering(lightSpaceMatrix);
 		}
 	}
 }
@@ -448,9 +499,8 @@ Vector3 Node::GetRight() const
 	return (right - ori).Normalized();
 }
 
-void Node::UpdateComponents()
+void Node::ComponentsUpdate()
 {
-	auto n = name;
 	for (auto it = _components.begin(); it != _components.end(); it++)
 	{
 		auto component = it->second;
@@ -458,6 +508,19 @@ void Node::UpdateComponents()
 	}
 	for (auto it = _childs.begin(); it != _childs.end(); it++)
 	{
-		(*it)->UpdateComponents();
+		(*it)->ComponentsUpdate();
+	}
+}
+
+void Node::ComponentsLateUpdate()
+{
+	for (auto it = _components.begin(); it != _components.end(); it++)
+	{
+		auto component = it->second;
+		component->LateUpdate();
+	}
+	for (auto it = _childs.begin(); it != _childs.end(); it++)
+	{
+		(*it)->ComponentsLateUpdate();
 	}
 }

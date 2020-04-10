@@ -11,9 +11,9 @@ in vec2 TexCoord;
 #define NR_POINT_LIGHTS 4
 #define NR_FLASH_LIGHTS 4
 
-float ambientStrength = 0;
-float diffuseStrength = 0;
-float specularStrength = 1;
+float ambientStrength = 0.1;
+float diffuseStrength = 0.2;
+float specularStrength = 0.3;
 
 struct Material {
 	bool haveDiffuse;
@@ -29,6 +29,8 @@ struct Material {
 struct DirectionalLight {
     vec3 direction;
 	vec3 color;
+	mat4 lighgtSpaceMat;
+	sampler2D depthMap;
 };
 
 struct PointLight {
@@ -97,10 +99,46 @@ void main()
 	}
 	result = result *diffuseTex.rgb+ vec3(diffuseTex) * ambientStrength;
     FragColor = vec4(pow(result, vec3(1.0/gamma)), 1);
-} 
+
+	/*
+	FragColor = vec4(1,1,1,1);
+	vec4 fragPosLightSpace = directionalLights[0].lighgtSpaceMat*vec4(FragPos,1);
+	// 执行透视除法
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // 变换到[0,1]的范围
+    projCoords = projCoords * 0.5 + 0.5;
+	// 取得最近点的深度(使用[0,1]范围下的fragPosLight当坐标)
+    float closestDepth = texture(directionalLights[0].depthMap, projCoords.xy).r; 
+    // 取得当前片段在光源视角下的深度
+    float currentDepth = projCoords.z;
+	if (projCoords.x<=1&&projCoords.x>=0&&projCoords.y<=1&&projCoords.y>=0)
+	{
+		if (currentDepth-0.005 >closestDepth)
+		{
+			FragColor = vec4(0,0,0,1);
+		}
+	}
+	*/
+}
 
 vec3 CalcDirectionalLight(DirectionalLight directionalLight, vec4 specularTex, vec3 normal, vec3 viewDir)
 {
+	vec4 fragPosLightSpace = directionalLight.lighgtSpaceMat*vec4(FragPos,1);
+	// 执行透视除法
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // 变换到[0,1]的范围
+    projCoords = projCoords * 0.5 + 0.5;
+	// 取得最近点的深度(使用[0,1]范围下的fragPosLight当坐标)
+    float closestDepth = texture(directionalLight.depthMap, projCoords.xy).r; 
+    // 取得当前片段在光源视角下的深度
+    float currentDepth = projCoords.z;
+	if (projCoords.x<=1&&projCoords.x>=0&&projCoords.y<=1&&projCoords.y>=0)
+	{
+		if (currentDepth-0.005 >closestDepth)
+		{
+			return vec3(0,0,0);
+		}
+	}
 	vec3 lightDir = normalize(directionalLight.direction);
     // 漫反射
     vec3 diffuse = vec3(max(dot(normal, -lightDir), 0.0) * diffuseStrength);

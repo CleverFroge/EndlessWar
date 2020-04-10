@@ -24,6 +24,11 @@ public:
 	}
 	void Update()
 	{
+		/*
+		float eulerAngle = _battery->GetLocalEulerAngles().GetY();
+		_battery->SetLocalEulerAngleY(eulerAngle - 60*Time::GetDeltaTime());
+		return;
+		*/
 		//处理鼠标输入
 		if (_battery)
 		{
@@ -82,5 +87,8 @@ public:
 			tankForward.Normalized();
 			_node->LocalPosition = _node->LocalPosition + tankForward * _movementSpeed * Time::GetDeltaTime();
 		}
-	}	
+	}
+	void LateUpdate()
+	{
+	}
 };

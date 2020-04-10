@@ -22,7 +22,7 @@ public:
 	{
 		Shader* shader = _node->Find("MountainSkybox")->mesh->shader;
 		shader->Use();
-		shader->SetFloat("time",sin(Time::GetCurrentTime()));
+		shader->SetFloat("time",sin(Time::GetTime()));
 		_node->Rendering();
 	}
 

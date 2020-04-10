@@ -45,13 +45,21 @@ Scene* Scene::GetCurrentScene()
 
 void Scene::Run()
 {
+	_root->ComponentsUpdate();
+	for (size_t i = 0; i < _directionalLights.size(); i++)
+	{
+		_directionalLights[i]->GenerateDepthMap();
+	}
+	glViewport(0, 0, Screen::GetWidth(), Screen::GetHeight());
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	if (_currentCamera&&_currentCamera->GetSkyBox())
 	{
 		_currentCamera->GetSkyBox()->Draw();
 	}
-	
+	_root->ComponentsLateUpdate();
 	_root->Rendering();
-	_root->UpdateComponents();
+	
 }
 
 void Scene::SetCurrentCamera(Camera* camera)

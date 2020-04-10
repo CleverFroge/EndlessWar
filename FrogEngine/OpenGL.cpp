@@ -1,8 +1,9 @@
 ﻿#include <iostream>
 #include "FrogEngine.h"
-using namespace FrogEngine;
+//using namespace FrogEngine;
 #include "EndlessWar.h"
-
+#include "windows.h"
+//#undef GetCurrentTime()
 int main()
 {
 	//初始化GLFW
@@ -46,6 +47,10 @@ int main()
 	//Blend
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//面剔除
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
 
 	Scene* endlessWar = new EndlessWar();
 	Scene::SetCurrentScene(endlessWar);
@@ -58,20 +63,18 @@ int main()
 	//Loop
 	while (!glfwWindowShouldClose(window))
 	{
-		while (glfwGetTime() < FrameStartTime)
+		float restTime = (FrameStartTime - glfwGetTime()) * 1000;
+		if (restTime>0)
 		{
+			Sleep(restTime);
 		}
-		FrameStartTime += FrameTime;
+		
+		FrameStartTime = glfwGetTime() + FrameTime;
 		Time::Update();
 		//清除颜色缓冲和深度缓冲
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		
 
-		if (Time::GetCurrentTime() - lastPrint >= 1)
-		{
-			lastPrint = Time::GetCurrentTime();
-			glfwSetWindowTitle(window, (std::string("Endless War    Fps: ") + std::to_string(1 / Time::GetDeltaTime())).c_str());
-		}
-
+		
 		Scene::GetCurrentScene()->Run();
 
 		if (Input::GetKey(GLFW_KEY_ESCAPE))
@@ -84,6 +87,12 @@ int main()
 		glfwSwapBuffers(window);
 		//是否触发事件，键盘输入、鼠标移动等、更新窗口状态，并调用对应的回调函数（可以通过回调方法手动设置）
 		glfwPollEvents();
+
+		if (FrogEngine::Time::GetTime() - lastPrint >= 1)
+		{
+			lastPrint = FrogEngine::Time::GetTime();
+			glfwSetWindowTitle(window, (std::string("Endless War    Fps: ") + std::to_string(1/Time::GetDeltaTime())).c_str());
+		}
 	}
 	//释放/删除之前的分配的所有资源
 	glfwTerminate();

@@ -11,7 +11,7 @@ void Time::Update()
 	CurrentTime = time;
 }
 
-float Time::GetCurrentTime()
+float Time::GetTime()
 {
 	return CurrentTime;
 }
