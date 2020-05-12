@@ -5,11 +5,14 @@ using namespace FrogEngine;
 class CameraController:public Component
 {
 public:
-	Node* _followObject = nullptr;
+	Node* _tank = nullptr;
+	Node* _battery = nullptr;
+	Node* _cannon = nullptr;
 private:
 	float _movementSpeed = 25;
 	float _mouseSensitivity = 180;
 	float _zoom = 45;
+
 public:
 	CameraController() : Component{ "CameraController" }
 	{
@@ -27,12 +30,38 @@ public:
 	}
 	void LateUpdate()
 	{
-		if (_followObject)
+		if (!_tank)
 		{
-			Vector3 pos = _followObject->GetPosition() + Vector3(0, 2, 0) - _followObject->GetForward() * 8;
-			_node->SetLocalPosition(pos);
-			_node->SetLocalForward(_followObject->GetForward());
+			return;
 		}
+		if (!_battery)
+		{
+			_battery = _tank->Find("Battery");
+		}
+		if (!_cannon)
+		{
+			_cannon = _tank->Find("Cannon");
+		}
+		Vector3 pos;
+		if (_battery)
+		{
+			pos = _battery->GetPosition();
+		}
+		if (_cannon)
+		{
+			pos = pos + Vector3(0, 2, 0) + _cannon->GetRight() * 8;
+			_node->SetLocalForward(Vector3(0, 0, 0) - _cannon->GetRight());
+		}
+		_node->SetLocalPosition(pos);
+
+		std::cout << "---------------------" << std::endl;
+//		(Vector3(0, 0, 0) - _cannon->GetRight()).Print();
+//		_node->GetForward().Print();
+
+		_tank->GetRight().Print();
+		_tank->Find("Tank")->GetRight().Print();
+		_tank->Find("Battery")->GetRight().Print();
+		_tank->Find("Cannon")->GetRight().Print();
 		return;
 		
 		//处理鼠标输入
@@ -45,7 +74,7 @@ public:
 		float pitch = eulerAngle.GetX();
 		float yaw = eulerAngle.GetY();
 
-		pitch += deltaY;
+		pitch -= deltaY;
 		if (pitch > 89.0f)
 			pitch = 89.0f;
 		if (pitch < -89.0f)

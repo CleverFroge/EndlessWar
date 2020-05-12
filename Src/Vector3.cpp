@@ -4,8 +4,8 @@ using namespace FrogEngine;
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-Vector3 Vector3::FRONT(0, 0, -1);
-Vector3 Vector3::BEHIND(0, 0, 1);
+Vector3 Vector3::FRONT(0, 0, 1);
+Vector3 Vector3::BEHIND(0, 0, -1);
 Vector3 Vector3::LEFT(-1, 0, 0);
 Vector3 Vector3::RIGHT(1, 0, 0);
 Vector3 Vector3::UP(0, 1, 0);
@@ -25,6 +25,13 @@ Vector3::Vector3(float x, float y, float z)
 	_vec.x = x;
 	_vec.y = y;
 	_vec.z = z;
+}
+
+Vector3::Vector3(FbxVector4 vec)
+{
+	_vec.x = vec[0];
+	_vec.y = vec[1];
+	_vec.z = vec[2];
 }
 
 Vector3::~Vector3()

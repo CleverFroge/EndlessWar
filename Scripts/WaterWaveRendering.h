@@ -20,10 +20,10 @@ public:
 
 	void Update()
 	{
-		Shader* shader = _node->Find("MountainSkybox")->mesh->shader;
+		/*Shader* shader = _node->Find("MountainSkybox")->meshs->shader;
 		shader->Use();
 		shader->SetFloat("time",sin(Time::GetTime()));
-		_node->Rendering();
+		_node->Rendering();*/
 	}
 
 private:

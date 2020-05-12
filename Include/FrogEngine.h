@@ -17,7 +17,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <type_traits>
+#include "FBXSDK/fbxsdk.h"
 
 #include "stb_image.h"
 #include "stb_image_write.h"
@@ -93,6 +93,7 @@ namespace FrogEngine
 		Vector3();
 		Vector3(glm::vec3 vec);
 		Vector3(float x, float y, float z);
+		Vector3(FbxVector4 vec);
 		~Vector3();
 		float* ValuePtr();
 		Vector3 Normalized();
@@ -180,11 +181,12 @@ namespace FrogEngine
 		Vector3 GetUp() const;
 		Vector3 GetRight() const;
 	public:
-		Mesh* mesh;
+		std::vector<Mesh*> meshs;
 		std::string name;
 		Vector3 LocalScale;
 		Vector3 LocalPosition;
 		bool AutoRendering;
+		Matrix4 geomerty;
 	protected:
 		Node* _parent;
 		std::set<Node*> _childs;
@@ -242,6 +244,7 @@ namespace FrogEngine
 	{
 		Vector3 Position;
 		Vector3 Normal;
+		Vector3 Tangent;
 		Vector2 TexCoord;
 	};
 	class Shader
@@ -292,12 +295,15 @@ namespace FrogEngine
 	};
 	class Model
 	{
-	public:
-		static Node* LoadModel(std::string path, bool simplified);
 	private:
-		static Node* ProcessNode(std::string directory, aiNode* node, const aiScene* scene, bool simplified);
-		static Mesh* ProcessMesh(std::string directory, aiMesh* mesh, aiNode* node, const aiScene* scene, bool simplified);
-		static Texture2D* LoadMaterialTextures(std::string directory, aiMaterial* mat, aiTextureType type);
+		static FbxManager* pManager;
+	public:
+		static Node* LoadModel(std::string path);
+	private:
+		static Node* ProcessNode(std::string directory, FbxNode* pNode);
+		static Mesh* ProcessMesh(std::string directory, FbxMesh* pMesh);
+		static Vertex GetVertex(FbxMesh* pMesh, int polygonIndex, int polygonVertexIndex);
+		static Texture2D* LoadMaterialTexture(std::string directory, FbxSurfaceMaterial* pMaterial, const char* type);
 	};
 	class DirectionalLight
 	{

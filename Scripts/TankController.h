@@ -24,22 +24,22 @@ public:
 	}
 	void Update()
 	{
-		/*
-		float eulerAngle = _battery->GetLocalEulerAngles().GetY();
-		_battery->SetLocalEulerAngleY(eulerAngle - 60*Time::GetDeltaTime());
+		float eulerAngle = _battery->GetLocalEulerAngles().GetZ();
+		_battery->SetLocalEulerAngleZ(eulerAngle - 60*Time::GetDeltaTime());
+
+		_cannon->SetLocalEulerAngleY(60);
 		return;
-		*/
 		//处理鼠标输入
 		if (_battery)
 		{
-			float eulerAngle = _battery->GetLocalEulerAngles().GetY();
-			_battery->SetLocalEulerAngleY(eulerAngle - Input::GetMousePosDeltaX() * _mouseSensitivity);
+			float eulerAngle = _battery->GetLocalEulerAngles().GetZ();
+			_battery->SetLocalEulerAngleZ(eulerAngle - Input::GetMousePosDeltaX() * _mouseSensitivity);
 		}
 
 		if (_cannon)
 		{
-			float eulerAngle = _cannon->GetLocalEulerAngles().GetX();
-			_cannon->SetLocalEulerAngleX(eulerAngle + Input::GetMousePosDeltaY() * _mouseSensitivity);
+			float eulerAngle = _cannon->GetLocalEulerAngles().GetY();
+			_cannon->SetLocalEulerAngleY(eulerAngle + Input::GetMousePosDeltaY() * _mouseSensitivity);
 		}
 		//处理键盘输入
 		Vector3 moveDirection(0, 0, 0);
@@ -81,11 +81,11 @@ public:
 				rotateAngle = -rotateAngle;
 			}
 			_node->SetLocalEulerAngleY(_node->GetLocalEulerAngles().GetY() + rotateAngle);
-			_battery->SetLocalEulerAngleY(_battery->GetLocalEulerAngles().GetY() - rotateAngle);
-			Vector3 tankForward = _node->GetForward();
+			_battery->SetLocalEulerAngleZ(_battery->GetLocalEulerAngles().GetZ() - rotateAngle);
+			Vector3 tankForward = _node->GetLocalRight();
 			tankForward.SetY(0);
 			tankForward.Normalized();
-			_node->LocalPosition = _node->LocalPosition + tankForward * _movementSpeed * Time::GetDeltaTime();
+			_node->LocalPosition = _node->LocalPosition - tankForward * _movementSpeed * Time::GetDeltaTime();
 		}
 	}
 	void LateUpdate()

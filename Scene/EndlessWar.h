@@ -16,25 +16,23 @@ public:
 		Shader::LoadShader("Depth", "../Shader/Depth.vs", "../Shader/Depth.fs");
 
 		//地形
-		Node* model = Model::LoadModel("../Resource/Scene/3/Scene.FBX", false);
+		Node* model = Model::LoadModel("../Resource/Scene/Scene.FBX");
 		_root->AddChild(model);
 
-			//坦克
-		Node* tank = Model::LoadModel("../Resource/Tank1/Tank1.FBX", true);
-//		Node* tank = Model::LoadModel("../Resource/PantherD/PantherD.FBX", false);
-//		Node* tank = Model::LoadModel("../Resource/Panzer2/Panzer.FBX", false);
-//		Node* tank = Model::LoadModel("../Resource/Model/nanosuit.obj", false);
-//		Node* tank = Model::LoadModel("../Resource/Test/Test.FBX", false);
-//		tank->SetLocalPosition(0, 0, -10);
-		tank->LocalScale = Vector3(0.01, 0.01, 0.01);
-		Component* tankController = new TankController();
-		tank->AddComponent(tankController);
+		//	//坦克
+		Node* tank = Model::LoadModel("../Resource/Tank1/Tank1.FBX");
+//		Node* tank = Model::LoadModel("../Resource/Crusader/Crusader.FBX");
+//		Node* tank = Model::LoadModel("../Resource/PantherD/PantherD.FBX");
+//		tank->SetLocalEulerAngleY(90);
 		_root->AddChild(tank);
+
+		TankController* tankController = new TankController();
+		tank->AddComponent(tankController);
 	
 		//相机
 		Camera* camera = new Camera();
 		CameraController* cameraController = new CameraController();
-		cameraController->_followObject = tank->Find("Cannon");
+		cameraController->_tank = tank;
 		camera->AddComponent(cameraController);
 		SetCurrentCamera(camera);
 		_root->AddChild(camera);
@@ -50,20 +48,17 @@ public:
 		camera->SetSkyBox(skyBox);
 
 		//天空穷
-		Node* skyDome = Model::LoadModel("../Resource/SkyDome/SkyDome.fbx", false);
+//		Node* skyDome = Model::LoadModel("../Resource/SkyDome/SkyDome.fbx");
 //		skyDome->AutoRendering = false;
-		skyDome->LocalScale = Vector3(0.001, 0.001, 0.001);
-		skyDome->SetLocalEulerAngleZ(90);
+//		skyDome->LocalScale = Vector3(0.001, 0.001, 0.001);
+//		skyDome->SetLocalEulerAngleZ(90);
 		/*Shader* waterWaveShader = Shader::LoadShader("WaterWave", "../Shader/WaterWave.vs", "../Shader/WaterWave.fs");
 		skyDome->Find("MountainSkybox")->mesh->shader = waterWaveShader;
 		_root->AddChild(skyDome);
 		skyDome->AddComponent(new WaterWaveRendering());*/
 //		_root->AddChild(skyDome);
-		
-		
 
-		
-		/*
+/*
 
 		Node* node = new Node();
 		node->name = "Quad";
@@ -75,12 +70,6 @@ public:
 		node->LocalScale = Vector3(10, 10, 10);
 		node->LocalPosition = Vector3(0, -10, 0);
 		_root->AddChild(node);
-		
-		Node* light = new Node();
-		light->SetLocalPosition(Vector3(10, 10, 10));
-		light->mesh = Mesh::Create(Mesh::Geometry::Cube);
-		light->mesh->shader = Shader::LoadShader("Light", "../Shader/Light.vs", "../Shader/Light.fs");
-		Node::ROOT->AddChild(light);
 		*/
 	}
 	~EndlessWar()

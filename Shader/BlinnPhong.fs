@@ -5,13 +5,14 @@ float gamma = 2.2;
 
 in vec3 Normal;  
 in vec3 FragPos;  
+in mat3 TBN;
 in vec2 TexCoord;
 
 #define NR_DIRECTIONAL_LIGHTS 1
 #define NR_POINT_LIGHTS 4
 #define NR_FLASH_LIGHTS 4
 
-float ambientStrength = 0.1;
+float ambientStrength = 0.01;
 float diffuseStrength = 0.2;
 float specularStrength = 0.3;
 
@@ -65,63 +66,44 @@ uniform PointLight pointLights[NR_POINT_LIGHTS];
 uniform int flashLightNum;
 uniform Flashlight flashLights[NR_FLASH_LIGHTS];
 
-vec3 CalcDirectionalLight(DirectionalLight directionalLight, vec4 specularTex, vec3 normal, vec3 viewDir);
-vec3 CalcPointLight(PointLight pointLight, vec4 specularTex, vec3 normal, vec3 fragPos, vec3 viewDir);
-vec3 CalcFlashLight(Flashlight flashLight, vec4 specularTex, vec3 normal, vec3 fragPos, vec3 viewDir);
+vec3 CalcDirectionalLight(DirectionalLight directionalLight, vec4 diffuseTex, vec4 specularTex, vec3 normal, vec3 viewDir);
+vec3 CalcPointLight(PointLight pointLight, vec4 diffuseTex, vec4 specularTex, vec3 normal, vec3 fragPos, vec3 viewDir);
+vec3 CalcFlashLight(Flashlight flashLight, vec4 diffuseTex, vec4 specularTex, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 bool blinn = true;
 
 void main()
 {
-    vec4 diffuseTex = vec4(0,0,0,0);
+	vec4 diffuseTex;
 	if (material.haveDiffuse)
 	{
 		diffuseTex = vec4(pow(texture(material.diffuse, TexCoord).rgb, vec3(gamma)), 1);
 	}
-	vec4 specularTex = vec4(0.5,0.5,0.5,0);
+    
+	vec4 specularTex;
 	if (material.haveSpecular)
 	{
-		vec4 specularTex = texture(material.specular, TexCoord);
+		specularTex = vec4(pow(texture(material.specular, TexCoord).rgb, vec3(gamma)), 1);
 	}
+
     vec3 viewDir = normalize(FragPos-viewPos);
-	vec3 result = vec3(0,0,0);
+	vec3 result;
 	for(int i = 0; i<directionalLightNum; i++)
 	{
-		result += CalcDirectionalLight(directionalLights[i],specularTex,Normal,viewDir);
+		result += CalcDirectionalLight(directionalLights[i],diffuseTex,specularTex,Normal,viewDir);
 	}
 	for(int i = 0; i<pointLightNum; i++)
 	{
-		result += CalcPointLight(pointLights[i],specularTex,Normal,FragPos,viewDir);
+		result += CalcPointLight(pointLights[i],diffuseTex,specularTex,Normal,FragPos,viewDir);
 	}
 	for(int i = 0; i<flashLightNum; i++)
 	{
-		result += CalcFlashLight(flashLights[i],specularTex,Normal,FragPos,viewDir);
+		result += CalcFlashLight(flashLights[i],diffuseTex,specularTex,Normal,FragPos,viewDir);
 	}
-	result = result *diffuseTex.rgb+ vec3(diffuseTex) * ambientStrength;
     FragColor = vec4(pow(result, vec3(1.0/gamma)), 1);
-
-	/*
-	FragColor = vec4(1,1,1,1);
-	vec4 fragPosLightSpace = directionalLights[0].lighgtSpaceMat*vec4(FragPos,1);
-	// 执行透视除法
-    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-    // 变换到[0,1]的范围
-    projCoords = projCoords * 0.5 + 0.5;
-	// 取得最近点的深度(使用[0,1]范围下的fragPosLight当坐标)
-    float closestDepth = texture(directionalLights[0].depthMap, projCoords.xy).r; 
-    // 取得当前片段在光源视角下的深度
-    float currentDepth = projCoords.z;
-	if (projCoords.x<=1&&projCoords.x>=0&&projCoords.y<=1&&projCoords.y>=0)
-	{
-		if (currentDepth-0.005 >closestDepth)
-		{
-			FragColor = vec4(0,0,0,1);
-		}
-	}
-	*/
 }
 
-vec3 CalcDirectionalLight(DirectionalLight directionalLight, vec4 specularTex, vec3 normal, vec3 viewDir)
+vec3 CalcDirectionalLight(DirectionalLight directionalLight, vec4 diffuseTex, vec4 specularTex, vec3 normal, vec3 viewDir)
 {
 	vec4 fragPosLightSpace = directionalLight.lighgtSpaceMat*vec4(FragPos,1);
 	// 执行透视除法
@@ -141,42 +123,42 @@ vec3 CalcDirectionalLight(DirectionalLight directionalLight, vec4 specularTex, v
 	}
 	vec3 lightDir = normalize(directionalLight.direction);
     // 漫反射
-    vec3 diffuse = vec3(max(dot(normal, -lightDir), 0.0) * diffuseStrength);
+    vec3 diffuse = vec3(max(dot(normal, -lightDir), 0.0) * diffuseTex.rgb * diffuseStrength);
     // 镜面反射
 	vec3 specular;
 	if (blinn)
 	{
 		vec3 halfwayDir = -normalize(lightDir + viewDir);
-		specular = pow(max(dot(normal, halfwayDir), 0.0), material.shininess)*vec3(specularTex) * specularStrength;
+		specular = pow(max(dot(normal, halfwayDir), 0.0), material.shininess) * specularTex.rbg * specularStrength;
 	}
     else
 	{
 		vec3 reflectDir = reflect(normal,-lightDir);
-		specular = pow(max(dot(reflectDir, -viewDir), 0.0), material.shininess)*vec3(specularTex) * specularStrength;
+		specular = pow(max(dot(reflectDir, -viewDir), 0.0), material.shininess) * specularTex.rbg * specularStrength;
 	}
     // 合并结果
     return (diffuse + specular) * directionalLight.color;
 }
 
-vec3 CalcPointLight(PointLight pointLight, vec4 specularTex, vec3 normal, vec3 fragPos, vec3 viewDir)
+vec3 CalcPointLight(PointLight pointLight, vec4 diffuseTex, vec4 specularTex, vec3 normal, vec3 fragPos, vec3 viewDir)
 {  	
 
     vec3 lightDir = normalize(fragPos-pointLight.position);
 
     // 漫反射 
-	vec3 diffuse = vec3(max(dot(normal, lightDir), 0.0) * diffuseStrength);
+	vec3 diffuse = vec3(max(dot(normal, -lightDir), 0.0)* diffuseTex.rgb * diffuseStrength);
     
     // 镜面反射
 	vec3 specular;
 	if (blinn)
 	{
 		vec3 halfwayDir = -normalize(lightDir + viewDir);
-		specular = pow(max(dot(normal, halfwayDir), 0.0), material.shininess)*vec3(specularTex) * specularStrength;
+		specular = pow(max(dot(normal, halfwayDir), 0.0), material.shininess) * specularTex.rbg * specularStrength;
 	}
     else
 	{
 		vec3 reflectDir = reflect(normal,-lightDir);
-		specular = pow(max(dot(reflectDir, -viewDir), 0.0), material.shininess)*vec3(specularTex) * specularStrength;
+		specular = pow(max(dot(reflectDir, -viewDir), 0.0), material.shininess) * specularTex.rbg * specularStrength;
 	}
         
     vec3 result = diffuse + specular;
@@ -186,7 +168,7 @@ vec3 CalcPointLight(PointLight pointLight, vec4 specularTex, vec3 normal, vec3 f
 	return result*attenuation*pointLight.color;
 }
 
-vec3 CalcFlashLight(Flashlight flashLight, vec4 specularTex, vec3 normal, vec3 fragPos, vec3 viewDir)
+vec3 CalcFlashLight(Flashlight flashLight, vec4 diffuseTex, vec4 specularTex, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
 	vec3 lightDir = normalize(fragPos-flashLight.position);
 	float theta = dot(lightDir, normalize(flashLight.direction));
@@ -194,19 +176,19 @@ vec3 CalcFlashLight(Flashlight flashLight, vec4 specularTex, vec3 normal, vec3 f
 	{ 
 		// 执行光照计算
 		 // diffuse 
-        vec3 diffuse = vec3(max(dot(normal, -lightDir), 0.0) * diffuseStrength);  
+        vec3 diffuse = vec3(max(dot(normal, -lightDir), 0.0)* diffuseTex.rgb * diffuseStrength);  
         
         // specular
 		vec3 specular;
 		if (blinn)
 		{
 			vec3 halfwayDir = -normalize(lightDir + viewDir);
-			specular = pow(max(dot(normal, halfwayDir), 0.0), material.shininess)*vec3(specularTex) * specularStrength;
+			specular = pow(max(dot(normal, halfwayDir), 0.0), material.shininess) * specularTex.rbg * specularStrength;
 		}
 		else
 		{
 			vec3 reflectDir = reflect(normal,-lightDir);
-			specular = pow(max(dot(reflectDir, -viewDir), 0.0), material.shininess)*vec3(specularTex) * specularStrength;
+			specular = pow(max(dot(reflectDir, -viewDir), 0.0), material.shininess) * specularTex.rbg * specularStrength;
 		}
         
         // attenuation

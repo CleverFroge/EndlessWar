@@ -58,9 +58,9 @@ void Node::SetLocalForward(const Vector3& forward)
 	Vector3 forwardInXZ = forward;
 	forwardInXZ.SetY(0);
 	float eulerAngleX = Vector3::Angle(forwardInXZ, forward);
-	_eulerAngles.SetX(-eulerAngleX);
+	_eulerAngles.SetX(eulerAngleX);
 	float eulerAngleY = Vector3::Angle(Vector3::FRONT, forwardInXZ);
-	_eulerAngles.SetY(eulerAngleY);
+	_eulerAngles.SetY(-eulerAngleY);
 	_eulerAngles.SetZ(0);
 
 	InitByEulerAngles();
@@ -135,15 +135,16 @@ const Vector3& Node::GetLocalRight() const
 
 void Node::Print() const
 {
-	std::cout << "Position:";
+	std::cout << name << std::endl;
+	std::cout << "	Position:";
 	GetPosition().Print();
-	std::cout << "Forward:";
+	std::cout << "	Forward:";
 	GetForward().Print();
-	std::cout << "Up:";
+	std::cout << "	Up:";
 	GetUp().Print();
-	std::cout << "Right:";
+	std::cout << "	Right:";
 	GetRight().Print();
-	std::cout << "EulerAngles:";
+	std::cout << "	EulerAngles:";
 	_eulerAngles.Print();
 }
 
@@ -177,8 +178,9 @@ void Node::RemoveChild(Node* child)
 
 void Node::Rendering()
 {
-	if (mesh)
+	for (size_t i = 0; i < meshs.size(); i++)
 	{
+		Mesh* mesh = meshs[i];
 		Shader* shader = mesh->shader;
 		Material* material = mesh->material;
 		if (!shader)
@@ -230,6 +232,7 @@ void Node::Rendering()
 			}
 			shader->SetFloat("material.shininess", material->shininess);
 		}
+		shader->SetMat4("geometry", geomerty);
 		//向shader发送model矩阵
 		Matrix4 model;
 		std::stack<Node*> temp;
@@ -239,7 +242,7 @@ void Node::Rendering()
 			temp.push(node);
 			node = node->_parent;
 		}
-		while (temp.size()!=0)
+		while (temp.size() != 0)
 		{
 			node = temp.top();
 			temp.pop();
@@ -304,7 +307,6 @@ void Node::Rendering()
 		}
 		mesh->Draw();
 	}
-	
 	for (auto it = _childs.begin(); it!=_childs.end(); it++)
 	{
 		if ((*it)->AutoRendering)
@@ -316,8 +318,9 @@ void Node::Rendering()
 
 void Node::DepthRendering(Matrix4 lightSpaceMatrix)
 {
-	if (mesh)
+	for (size_t i = 0; i < meshs.size(); i++)
 	{
+		Mesh* mesh = meshs[i];
 		Shader* shader = Shader::GetShader("Depth");
 
 		//使用该着色器程序
@@ -343,7 +346,7 @@ void Node::DepthRendering(Matrix4 lightSpaceMatrix)
 			model.Scale(node->LocalScale);
 		}
 		shader->SetMat4("model", model);
-
+		shader->SetMat4("geometry", geomerty);
 		//向Shader发送转换到光源空间的矩阵
 		shader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
 
@@ -363,7 +366,7 @@ Node* Node::Find(const char* searchName) const
 {
 	for (auto it = _childs.begin(); it != _childs.end(); it++)
 	{
-		if ((*it)->name==searchName&&(*it)->mesh)
+		if ((*it)->name==searchName&&(*it)->meshs.size()!=0)
 		{
 			return *it;
 		}
