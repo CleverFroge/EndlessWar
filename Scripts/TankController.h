@@ -24,11 +24,6 @@ public:
 	}
 	void Update()
 	{
-		float eulerAngle = _battery->GetLocalEulerAngles().GetZ();
-		_battery->SetLocalEulerAngleZ(eulerAngle - 60*Time::GetDeltaTime());
-
-		_cannon->SetLocalEulerAngleY(60);
-		return;
 		//处理鼠标输入
 		if (_battery)
 		{
@@ -65,7 +60,7 @@ public:
 			//应该旋转的角度
 			Scene* currentScene = Scene::GetCurrentScene();
 			Camera* currentCamera = currentScene->GetCurrentCamera();
-			float eulerAngleY = Vector3::Angle(Vector3::FRONT, moveDirection)+ currentCamera->GetLocalEulerAngles().GetY()-_node->GetLocalEulerAngles().GetY();
+			float eulerAngleY = Vector3::Angle(Vector3::FRONT, moveDirection) + currentCamera->GetLocalEulerAngles().GetY() - _node->GetLocalEulerAngles().GetY() + 90;
 			//选择左旋右旋
 			if (eulerAngleY > 180)
 			{
@@ -82,7 +77,7 @@ public:
 			}
 			_node->SetLocalEulerAngleY(_node->GetLocalEulerAngles().GetY() + rotateAngle);
 			_battery->SetLocalEulerAngleZ(_battery->GetLocalEulerAngles().GetZ() - rotateAngle);
-			Vector3 tankForward = _node->GetLocalRight();
+			Vector3 tankForward = _node->GetRight();
 			tankForward.SetY(0);
 			tankForward.Normalized();
 			_node->LocalPosition = _node->LocalPosition - tankForward * _movementSpeed * Time::GetDeltaTime();

@@ -40,7 +40,7 @@ Node* Model::ProcessNode(std::string directory, FbxNode* pNode)
 	FbxVector4 t, s, r;
 	t = pNode->GetGeometricTranslation(FbxNode::eSourcePivot);
 	s = pNode->GetGeometricScaling(FbxNode::eSourcePivot);
-//	r = pNode->GetGeometricRotation(FbxNode::eSourcePivot);
+	r = pNode->GetGeometricRotation(FbxNode::eSourcePivot);
 	FbxAMatrix geometry(t, r, s);
 	glm::mat4 g;
 	for (size_t i = 0; i < 4; i++)
@@ -57,7 +57,7 @@ Node* Model::ProcessNode(std::string directory, FbxNode* pNode)
 	ret->LocalScale = local.GetS();
 	ret->SetLocalEulerAngles(local.GetR());
 
-	ret->Print();
+//	ret->Print();
 
 	for (int i = 0; i < pNode->GetChildCount(); ++i)
 	{

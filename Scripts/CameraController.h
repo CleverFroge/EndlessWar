@@ -58,12 +58,9 @@ public:
 //		(Vector3(0, 0, 0) - _cannon->GetRight()).Print();
 //		_node->GetForward().Print();
 
-		_tank->GetRight().Print();
-		_tank->Find("Tank")->GetRight().Print();
-		_tank->Find("Battery")->GetRight().Print();
+		_node->GetLocalEulerAngles().Print();
 		_tank->Find("Cannon")->GetRight().Print();
 		return;
-		
 		//处理鼠标输入
 		float deltaX = Input::GetMousePosDeltaX() / Screen::GetWidth();
 		float deltaY = Input::GetMousePosDeltaY() / Screen::GetHeight();
@@ -83,6 +80,10 @@ public:
 		_node->SetLocalEulerAngleX(pitch);
 		_node->SetLocalEulerAngleY(yaw);
 
+		if (deltaX!=0||deltaY!=0)
+		{
+			_node->GetForward().Print();
+		}
 		//处理键盘输入
 		Vector3 moveDirection(0, 0, 0);
 		if (Input::GetKey(GLFW_KEY_W))
