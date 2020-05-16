@@ -2,14 +2,14 @@
 #include "FrogEngine.h"
 using namespace FrogEngine;
 
-class WaterWaveRendering:public Component
+class SkyDome:public Component
 {
 public:
-	WaterWaveRendering() : Component{ "WaterWaveRendering" }
+	SkyDome() : Component{ "SkyDome" }
 	{
 	}
 
-	~WaterWaveRendering()
+	~SkyDome()
 	{
 	}
 
@@ -20,10 +20,13 @@ public:
 
 	void Update()
 	{
-		/*Shader* shader = _node->Find("MountainSkybox")->meshs->shader;
+		Shader* shader = _node->Find("MountainSkybox")->meshs[0]->shader;
 		shader->Use();
-		shader->SetFloat("time",sin(Time::GetTime()));
-		_node->Rendering();*/
+		shader->SetFloat("alpha",sin(Time::GetTime())/5+0.2);
+		_node->Rendering();
+	}
+	void LateUpdate()
+	{
 	}
 
 private:

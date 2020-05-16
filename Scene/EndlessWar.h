@@ -21,9 +21,7 @@ public:
 
 		//	//Ì¹¿Ë
 		Node* tank = Model::LoadModel("../Resource/Tank1/Tank1.FBX");
-//		Node* tank = Model::LoadModel("../Resource/Crusader/Crusader.FBX");
-//		Node* tank = Model::LoadModel("../Resource/PantherD/PantherD.FBX");
-//		tank->SetLocalEulerAngleY(90);
+		tank->LocalScale = Vector3(1, 1, 1) * 0.1;
 		_root->AddChild(tank);
 
 		TankController* tankController = new TankController();
@@ -48,18 +46,14 @@ public:
 		camera->SetSkyBox(skyBox);
 
 		//Ìì¿ÕÇî
-//		Node* skyDome = Model::LoadModel("../Resource/SkyDome/SkyDome.fbx");
-//		skyDome->AutoRendering = false;
-//		skyDome->LocalScale = Vector3(0.001, 0.001, 0.001);
-//		skyDome->SetLocalEulerAngleZ(90);
-		/*Shader* waterWaveShader = Shader::LoadShader("WaterWave", "../Shader/WaterWave.vs", "../Shader/WaterWave.fs");
-		skyDome->Find("MountainSkybox")->mesh->shader = waterWaveShader;
+		Node* skyDome = Model::LoadModel("../Resource/SkyDome/SkyDome.fbx");
+		skyDome->LocalScale = Vector3(0.2, 0.2, 0.2);
+		skyDome->SetLocalEulerAngleX(180);
+		Shader* waterWaveShader = Shader::LoadShader("WaterWave", "../Shader/WaterWave.vs", "../Shader/WaterWave.fs");
+		skyDome->Find("MountainSkybox")->meshs[0]->shader = waterWaveShader;
+		skyDome->AddComponent(new SkyDome());
 		_root->AddChild(skyDome);
-		skyDome->AddComponent(new WaterWaveRendering());*/
-//		_root->AddChild(skyDome);
-
-/*
-
+		/*
 		Node* node = new Node();
 		node->name = "Quad";
 		node->SetLocalEulerAngleX(-90);

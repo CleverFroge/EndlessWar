@@ -30,6 +30,7 @@ public:
 	}
 	void LateUpdate()
 	{
+		
 		if (!_tank)
 		{
 			return;
@@ -49,18 +50,12 @@ public:
 		}
 		if (_cannon)
 		{
-			pos = pos + Vector3(0, 2, 0) + _cannon->GetRight() * 8;
+			pos = pos + (Vector3(0, 0.25, 0) + _cannon->GetRight());
 			_node->SetLocalForward(Vector3(0, 0, 0) - _cannon->GetRight());
 		}
 		_node->SetLocalPosition(pos);
-
-		std::cout << "---------------------" << std::endl;
-//		(Vector3(0, 0, 0) - _cannon->GetRight()).Print();
-//		_node->GetForward().Print();
-
-		_node->GetLocalEulerAngles().Print();
-		_tank->Find("Cannon")->GetRight().Print();
 		return;
+		
 		//处理鼠标输入
 		float deltaX = Input::GetMousePosDeltaX() / Screen::GetWidth();
 		float deltaY = Input::GetMousePosDeltaY() / Screen::GetHeight();
@@ -80,10 +75,6 @@ public:
 		_node->SetLocalEulerAngleX(pitch);
 		_node->SetLocalEulerAngleY(yaw);
 
-		if (deltaX!=0||deltaY!=0)
-		{
-			_node->GetForward().Print();
-		}
 		//处理键盘输入
 		Vector3 moveDirection(0, 0, 0);
 		if (Input::GetKey(GLFW_KEY_W))
@@ -92,7 +83,7 @@ public:
 		}
 		if (Input::GetKey(GLFW_KEY_A))
 		{
-			moveDirection = moveDirection - _node->GetLocalRight();
+			moveDirection = moveDirection + _node->GetLocalRight();
 		}
 		if (Input::GetKey(GLFW_KEY_S))
 		{
@@ -100,7 +91,7 @@ public:
 		}
 		if (Input::GetKey(GLFW_KEY_D))
 		{
-			moveDirection = moveDirection + _node->GetLocalRight();
+			moveDirection = moveDirection - _node->GetLocalRight();
 		}
 
 		if (Input::GetKey(GLFW_KEY_SPACE))

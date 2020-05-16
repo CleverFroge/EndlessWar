@@ -4,9 +4,14 @@ using namespace FrogEngine;
 class TankController : public Component
 {
 public:
-	float _movementSpeed = 10;
+	float _movementSpeed = 3;
 	float _mouseSensitivity = 0.05;
 	float _rotateSpeed = 60;
+
+	float _min_battery_rotate = -60;
+	float _max_battery_rotate = 60;
+	float _min_cannon_rotate = 0;
+	float _max_cannon_rotate = 60;
 private:
 	Node* _battery = nullptr;
 	Node* _cannon = nullptr;
@@ -27,14 +32,30 @@ public:
 		//处理鼠标输入
 		if (_battery)
 		{
-			float eulerAngle = _battery->GetLocalEulerAngles().GetZ();
-			_battery->SetLocalEulerAngleZ(eulerAngle - Input::GetMousePosDeltaX() * _mouseSensitivity);
+			float eulerAngle = _battery->GetLocalEulerAngles().GetZ() - Input::GetMousePosDeltaX() * _mouseSensitivity;
+			if (eulerAngle > _max_battery_rotate)
+			{
+				eulerAngle = _max_battery_rotate;
+			}
+			else if (eulerAngle < _min_battery_rotate)
+			{
+				eulerAngle = _min_battery_rotate;
+			}
+			_battery->SetLocalEulerAngleZ(eulerAngle);
 		}
 
 		if (_cannon)
 		{
-			float eulerAngle = _cannon->GetLocalEulerAngles().GetY();
-			_cannon->SetLocalEulerAngleY(eulerAngle + Input::GetMousePosDeltaY() * _mouseSensitivity);
+			float eulerAngle = _cannon->GetLocalEulerAngles().GetY() + Input::GetMousePosDeltaY() * _mouseSensitivity;
+			if (eulerAngle > _max_cannon_rotate)
+			{
+				eulerAngle = _max_cannon_rotate;
+			}
+			else if (eulerAngle < _min_cannon_rotate)
+			{
+				eulerAngle = _min_cannon_rotate;
+			}
+			_cannon->SetLocalEulerAngleY(eulerAngle);
 		}
 		//处理键盘输入
 		Vector3 moveDirection(0, 0, 0);

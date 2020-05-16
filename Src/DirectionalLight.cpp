@@ -46,7 +46,7 @@ void DirectionalLight::GenerateDepthMap()
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
-	float size = 100;
+	float size = 20;
 	GLfloat near_plane = 0.0, far_plane = size * 2;
 	glm::mat4 lightProjection = glm::ortho(-size / 2, size / 2, -size / 2, size / 2, near_plane, far_plane);
 

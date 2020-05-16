@@ -116,7 +116,7 @@ vec3 CalcDirectionalLight(DirectionalLight directionalLight, vec4 diffuseTex, ve
     float currentDepth = projCoords.z;
 	if (projCoords.x<=1&&projCoords.x>=0&&projCoords.y<=1&&projCoords.y>=0)
 	{
-		if (currentDepth-0.005 >closestDepth)
+		if (currentDepth-0.001 >closestDepth)
 		{
 			return vec3(0,0,0);
 		}

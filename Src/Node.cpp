@@ -479,8 +479,8 @@ Vector3 Node::GetRight() const
 	{
 		Matrix4 s;
 		s.Scale(it->LocalScale);
-//		right = right * s;
-//		ori = ori * s;
+		right = right * s;
+		ori = ori * s;
 		Matrix4 rx;
 		rx.Rotate(Vector3(1, 0, 0), it->_eulerAngles.GetX());
 		right = right * rx;
