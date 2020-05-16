@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="FrogEngine">
+      <UniqueIdentifier>{db3d43ba-5448-4677-a468-42ed55884d11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{069acecb-6e82-4893-8d26-ce4a098bc4c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Scene">
+      <UniqueIdentifier>{89417fe7-7e83-4cfc-9dcb-79c6bf0380a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Scripts">
+      <UniqueIdentifier>{160b786a-d1ae-47ac-a7e8-bdec5ee7b7fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="第三方库">
+      <UniqueIdentifier>{ec21867f-e85c-45c0-95b3-9962d11c0fd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="第三方库\GLAD">
+      <UniqueIdentifier>{faef3d0e-f9eb-4452-9869-93e2ea706a3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="第三方库\stb_image">
+      <UniqueIdentifier>{6d8c2e65-9908-4836-b7a4-0d7c741e7ceb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="OpenGL.cpp" />
+    <ClCompile Include="..\Src\Camera.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Component.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\DirectionalLight.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\FlashLight.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Input.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Material.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Math.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Matrix4.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Mesh.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Model.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Node.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\PointLight.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Scene.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Screen.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Shader.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\SkyBox.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Texture.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Time.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Vector2.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Vector3.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\stb_image.cpp">
+      <Filter>第三方库\stb_image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\stb_image_write.cpp">
+      <Filter>第三方库\stb_image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\glad.c">
+      <Filter>第三方库\GLAD</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Scripts\CameraController.h">
+      <Filter>Game\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Scripts\TankController.h">
+      <Filter>Game\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Scene\EndlessWar.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Scripts\WaterWaveRendering.h">
+      <Filter>Game\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\FrogEngine.h">
+      <Filter>FrogEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\stb_image.h">
+      <Filter>第三方库\stb_image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\stb_image_write.h">
+      <Filter>第三方库\stb_image</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Shader\BlinnPhong.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\Common.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\FrameBuffer.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\FrameBuffer.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\FrameBuffer_Screen.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\FrameBuffer_Screen.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\SkyBox.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\SkyBox.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\Specular.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\WaterWave.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\WaterWave.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\Light.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\Light.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\Depth.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\Depth.vs">
+      <Filter>Shader</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="FrogEngine.rc">
+      <Filter>Shader</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

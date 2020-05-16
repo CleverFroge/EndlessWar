@@ -1,0 +1,93 @@
+﻿  Camera.cpp
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,34): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,24): warning C4244: “初始化”: 从“double”转换到“const float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(37,2): warning C4305: “初始化”: 从“double”到“float”截断
+  DirectionalLight.cpp
+C:\Users\jzp\Desktop\FrogEngine\Src\Camera.cpp(21,29): warning C4305: “=”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,34): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,24): warning C4244: “初始化”: 从“double”转换到“const float”，可能丢失数据
+  FlashLight.cpp
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(37,2): warning C4305: “初始化”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,34): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,24): warning C4244: “初始化”: 从“double”转换到“const float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(37,2): warning C4305: “初始化”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Src\FlashLight.cpp(19,22): warning C4305: “=”: 从“double”到“float”截断
+  Material.cpp
+C:\Users\jzp\Desktop\FrogEngine\Src\FlashLight.cpp(20,26): warning C4305: “=”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,34): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,24): warning C4244: “初始化”: 从“double”转换到“const float”，可能丢失数据
+  Math.cpp
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(37,2): warning C4305: “初始化”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,34): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,24): warning C4244: “初始化”: 从“double”转换到“const float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(37,2): warning C4305: “初始化”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Src\Math.cpp(11,22): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+  Matrix4.cpp
+C:\Users\jzp\Desktop\FrogEngine\Src\Math.cpp(16,17): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,34): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,24): warning C4244: “初始化”: 从“double”转换到“const float”，可能丢失数据
+  Mesh.cpp
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(37,2): warning C4305: “初始化”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,34): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,24): warning C4244: “初始化”: 从“double”转换到“const float”，可能丢失数据
+  Model.cpp
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(37,2): warning C4305: “初始化”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,34): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,24): warning C4244: “初始化”: 从“double”转换到“const float”，可能丢失数据
+  PointLight.cpp
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(37,2): warning C4305: “初始化”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,34): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,24): warning C4244: “初始化”: 从“double”转换到“const float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(37,2): warning C4305: “初始化”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Src\PointLight.cpp(16,22): warning C4305: “=”: 从“double”到“float”截断
+  Screen.cpp
+C:\Users\jzp\Desktop\FrogEngine\Src\PointLight.cpp(17,26): warning C4305: “=”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,34): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,24): warning C4244: “初始化”: 从“double”转换到“const float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(37,2): warning C4305: “初始化”: 从“double”到“float”截断
+  Shader.cpp
+C:\Users\jzp\Desktop\FrogEngine\Src\Screen.cpp(12,51): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,34): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,24): warning C4244: “初始化”: 从“double”转换到“const float”，可能丢失数据
+  Texture.cpp
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(37,2): warning C4305: “初始化”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,34): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,24): warning C4244: “初始化”: 从“double”转换到“const float”，可能丢失数据
+  Transform.cpp
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(37,2): warning C4305: “初始化”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,34): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,24): warning C4244: “初始化”: 从“double”转换到“const float”，可能丢失数据
+  Vector2.cpp
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(37,2): warning C4305: “初始化”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,34): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,24): warning C4244: “初始化”: 从“double”转换到“const float”，可能丢失数据
+  Vector3.cpp
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(37,2): warning C4305: “初始化”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,34): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,24): warning C4244: “初始化”: 从“double”转换到“const float”，可能丢失数据
+  OpenGL.cpp
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(37,2): warning C4305: “初始化”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,34): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,24): warning C4244: “初始化”: 从“double”转换到“const float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(37,2): warning C4305: “初始化”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\FrogEngine\OpenGL.cpp(222,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\FrogEngine\OpenGL.cpp(301,11): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\FrogEngine\OpenGL.cpp(302,11): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\FrogEngine\OpenGL.cpp(309,9): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\FrogEngine\OpenGL.cpp(310,9): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+  SkyBox.cpp
+C:\Users\jzp\Desktop\FrogEngine\FrogEngine\OpenGL.cpp(341,28): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,34): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(21,24): warning C4244: “初始化”: 从“double”转换到“const float”，可能丢失数据
+  stb_image.cpp
+  正在生成代码...
+C:\Users\jzp\Desktop\FrogEngine\Include\FrogeEngine.h(37,2): warning C4305: “初始化”: 从“double”到“float”截断
+  glad.c
+LINK : warning LNK4098: 默认库“MSVCRT”与其他库的使用冲突；请使用 /NODEFAULTLIB:library
+Model.obj : error LNK2019: 无法解析的外部符号 "public: __thiscall Assimp::Importer::Importer(void)" (??0Importer@Assimp@@QAE@XZ)，该符号在函数 "public: __thiscall FrogeEngine::Model::Model(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0Model@FrogeEngine@@QAE@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+Model.obj : error LNK2019: 无法解析的外部符号 "public: __thiscall Assimp::Importer::~Importer(void)" (??1Importer@Assimp@@QAE@XZ)，该符号在函数 "public: __thiscall FrogeEngine::Model::Model(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0Model@FrogeEngine@@QAE@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+Model.obj : error LNK2019: 无法解析的外部符号 "public: struct aiScene const * __thiscall Assimp::Importer::ReadFile(char const *,unsigned int)" (?ReadFile@Importer@Assimp@@QAEPBUaiScene@@PBDI@Z)，该符号在函数 "public: struct aiScene const * __thiscall Assimp::Importer::ReadFile(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,unsigned int)" (?ReadFile@Importer@Assimp@@QAEPBUaiScene@@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@I@Z) 中被引用
+Model.obj : error LNK2019: 无法解析的外部符号 "public: char const * __thiscall Assimp::Importer::GetErrorString(void)const " (?GetErrorString@Importer@Assimp@@QBEPBDXZ)，该符号在函数 "public: __thiscall FrogeEngine::Model::Model(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0Model@FrogeEngine@@QAE@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+Model.obj : error LNK2019: 无法解析的外部符号 _aiGetMaterialTextureCount，该符号在函数 "public: unsigned int __thiscall aiMaterial::GetTextureCount(enum aiTextureType)const " (?GetTextureCount@aiMaterial@@QBEIW4aiTextureType@@@Z) 中被引用
+Model.obj : error LNK2019: 无法解析的外部符号 _aiGetMaterialTexture，该符号在函数 "public: enum aiReturn __thiscall aiMaterial::GetTexture(enum aiTextureType,unsigned int,struct aiString *,enum aiTextureMapping *,unsigned int *,float *,enum aiTextureOp *,enum aiTextureMapMode *)const " (?GetTexture@aiMaterial@@QBE?AW4aiReturn@@W4aiTextureType@@IPAUaiString@@PAW4aiTextureMapping@@PAIPAMPAW4aiTextureOp@@PAW4aiTextureMapMode@@@Z) 中被引用
+C:\Users\jzp\Desktop\FrogEngine\Debug\FrogEngine.exe : fatal error LNK1120: 6 个无法解析的外部命令
