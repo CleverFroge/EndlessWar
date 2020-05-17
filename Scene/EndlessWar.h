@@ -14,6 +14,7 @@ public:
 		Shader::LoadShader("Phong", "../Shader/Common.vs", "../Shader/BlinnPhong.fs");
 		Shader::LoadShader("SkyBox", "../Shader/SkyBox.vs", "../Shader/SkyBox.fs");
 		Shader::LoadShader("Depth", "../Shader/Depth.vs", "../Shader/Depth.fs");
+		Shader::LoadShader("Particle", "../Shader/Particle.vs", "../Shader/Particle.fs");
 
 		//µØÐÎ
 		Node* model = Model::LoadModel("../Resource/Scene/Scene.FBX");
@@ -22,7 +23,13 @@ public:
 		//	//Ì¹¿Ë
 		Node* tank = Model::LoadModel("../Resource/Tank1/Tank1.FBX");
 		tank->LocalScale = Vector3(1, 1, 1) * 0.1;
-		_root->AddChild(tank);
+//		_root->AddChild(tank);
+		
+		Node* particleEmitterNode = PartilceEmitter::Create();
+		particleEmitterNode->LocalPosition = Vector3(0,0,2);
+		PartilceEmitter* partilceEmitter = (PartilceEmitter*)particleEmitterNode->GetComponent("ParticleEmitter");
+		partilceEmitter->EmitSpeed = 1000;
+		_root->AddChild(particleEmitterNode);
 
 		TankController* tankController = new TankController();
 		tank->AddComponent(tankController);
@@ -53,18 +60,6 @@ public:
 		skyDome->Find("MountainSkybox")->meshs[0]->shader = waterWaveShader;
 		skyDome->AddComponent(new SkyDome());
 		_root->AddChild(skyDome);
-		/*
-		Node* node = new Node();
-		node->name = "Quad";
-		node->SetLocalEulerAngleX(-90);
-		node->mesh = Mesh::Create(Mesh::Geometry::Quad);
-		node->mesh->material = Material::Create();
-		node->mesh->material->shininess = 128;
-		node->mesh->material->diffuseTexture = Texture2D::Create("../Resource/container.jpg", false);
-		node->LocalScale = Vector3(10, 10, 10);
-		node->LocalPosition = Vector3(0, -10, 0);
-		_root->AddChild(node);
-		*/
 	}
 	~EndlessWar()
 	{

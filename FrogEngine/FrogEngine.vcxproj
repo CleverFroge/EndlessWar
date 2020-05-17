@@ -172,7 +172,10 @@
     <ClCompile Include="..\Src\Matrix4.cpp" />
     <ClCompile Include="..\Src\Mesh.cpp" />
     <ClCompile Include="..\Src\Model.cpp" />
+    <ClCompile Include="..\Src\Particle.cpp" />
+    <ClCompile Include="..\Src\ParticleEmitter.cpp" />
     <ClCompile Include="..\Src\PointLight.cpp" />
+    <ClCompile Include="..\Src\Random.cpp" />
     <ClCompile Include="..\Src\Scene.cpp" />
     <ClCompile Include="..\Src\Screen.cpp" />
     <ClCompile Include="..\Src\Shader.cpp" />
@@ -207,6 +210,8 @@
     <None Include="..\Shader\FrameBuffer_Screen.vs" />
     <None Include="..\Shader\Light.fs" />
     <None Include="..\Shader\Light.vs" />
+    <None Include="..\Shader\Particle.fs" />
+    <None Include="..\Shader\Particle.vs" />
     <None Include="..\Shader\SkyBox.fs" />
     <None Include="..\Shader\SkyBox.vs" />
     <None Include="..\Shader\Specular.fs" />

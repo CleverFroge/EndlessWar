@@ -9,6 +9,7 @@ Node::Node()
 	SetLocalEulerAngles(0, 0, 0);
 	InitByEulerAngles();
 	AutoRendering = true;
+	Shadow = true;
 }
 
 Node::~Node()
@@ -33,6 +34,12 @@ void Node::AddComponent(Component* component)
 	component->_node = this;
 	component->Awake();
 	_components.insert(std::pair<const char*, Component*>(component->_name, component));
+}
+
+Component* Node::GetComponent(const char* name)
+{
+	auto ret = _components[name];
+	return ret;
 }
 
 void Node::SetLocalPosition(const Vector3& pos)
@@ -318,6 +325,10 @@ void Node::Rendering()
 
 void Node::DepthRendering(Matrix4 lightSpaceMatrix)
 {
+	if (!Shadow)
+	{
+		return;
+	}
 	for (size_t i = 0; i < meshs.size(); i++)
 	{
 		Mesh* mesh = meshs[i];

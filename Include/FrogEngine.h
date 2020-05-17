@@ -57,6 +57,14 @@ namespace FrogEngine
 	float Radians(float angle);
 	float GetAttenuationLinear(float distant);
 	float GetAttenuationQuadratic(float distant);
+	class Random
+	{
+	public:
+		static float Randf(float min, float max);
+	private:
+		Random() {};
+		~Random() {};
+	};
 	struct Vector2
 	{
 	public:
@@ -145,6 +153,7 @@ namespace FrogEngine
 		Node();
 		~Node();
 		void AddComponent(Component* component);
+		Component* GetComponent(const char* name);
 
 		void SetLocalForward(const Vector3& forward);
 
@@ -186,6 +195,7 @@ namespace FrogEngine
 		Vector3 LocalScale;
 		Vector3 LocalPosition;
 		bool AutoRendering;
+		bool Shadow;
 		Matrix4 geomerty;
 	protected:
 		Node* _parent;
@@ -446,5 +456,34 @@ namespace FrogEngine
 		std::vector<FlashLight*> _flashLights;
 	private:
 		static Scene* CurrentScene;
+	};
+	class Particle :public Node
+	{
+	public:
+		Particle();
+		~Particle();
+	public:
+		float BornTime;
+		float LifeTime;
+		Vector3 EmitDirection;
+		float MoveSpeed;
+	};
+	class PartilceEmitter :public Component
+	{
+	public:
+		static Node* Create();
+		PartilceEmitter();
+		~PartilceEmitter();
+		void Awake();
+		void Update();
+		void LateUpdate();
+	public:
+		int EmitSpeed;
+	private:
+		int MaxParticles;
+		std::vector<Particle*> _particles;
+		float _startTime;
+		float _emittedParticleNum;
+		float _ExistingParticleNum;
 	};
 }

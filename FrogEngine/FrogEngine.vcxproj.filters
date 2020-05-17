@@ -102,6 +102,15 @@
     <ClCompile Include="..\Src\glad.c">
       <Filter>第三方库\GLAD</Filter>
     </ClCompile>
+    <ClCompile Include="..\Src\ParticleEmitter.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Particle.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Random.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Scripts\CameraController.h">
@@ -173,6 +182,12 @@
       <Filter>Shader</Filter>
     </None>
     <None Include="..\Shader\Depth.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\Particle.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\Particle.vs">
       <Filter>Shader</Filter>
     </None>
   </ItemGroup>
