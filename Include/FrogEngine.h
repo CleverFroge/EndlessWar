@@ -143,6 +143,20 @@ namespace FrogEngine
 		glm::mat4 _mat;
 		friend Vector3;
 	};
+	class Ref
+	{
+	public:
+		void Release();
+		void Retain();
+		int GetReferenceCount() const;
+		void AutoRelease();
+	protected:
+		Ref();
+		virtual ~Ref();
+		friend class ReleasePool;
+	private:
+		int _referenceCount;
+	};
 	class Mesh;
 	class Component;
 	class Node
@@ -222,7 +236,7 @@ namespace FrogEngine
 	private:
 		SkyBox* _skyBox;
 	};
-	class Texture2D
+	class Texture2D :public Ref
 	{
 	public:
 		unsigned int ID;
@@ -276,7 +290,7 @@ namespace FrogEngine
 		void SetMat4(const char* valueName, Matrix4 value) const;
 		void SetVector3(const char* valueName, Vector3 value) const;
 	};
-	class Mesh
+	class Mesh :public Ref
 	{
 	public:
 		enum Geometry

@@ -27,4 +27,7 @@ Material::Material(Texture2D* diffuseTexure, Texture2D* specularTexture, float s
 
 Material::~Material()
 {
+	diffuseTexture->Release();
+	specularTexture->Release();
+	normalTexture->Release();
 }

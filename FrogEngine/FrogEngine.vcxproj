@@ -176,6 +176,7 @@
     <ClCompile Include="..\Src\ParticleEmitter.cpp" />
     <ClCompile Include="..\Src\PointLight.cpp" />
     <ClCompile Include="..\Src\Random.cpp" />
+    <ClCompile Include="..\Src\Ref.cpp" />
     <ClCompile Include="..\Src\Scene.cpp" />
     <ClCompile Include="..\Src\Screen.cpp" />
     <ClCompile Include="..\Src\Shader.cpp" />

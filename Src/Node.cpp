@@ -14,18 +14,25 @@ Node::Node()
 
 Node::~Node()
 {
+	//释放Mesh
+	for (size_t i = 0; i < meshs.size(); i++)
+	{
+		meshs[i]->Release();
+	}
+	//删除节点上挂在的组件
+	auto componentIt = _components.begin();
+	while (componentIt != _components.end())
+	{
+		Component* component = componentIt->second;
+		delete component;
+		_components.erase(componentIt);
+	}
+	//删除所有子节点
 	auto childIt = _childs.begin();
 	while (childIt!=_childs.end())
 	{
 		delete (*childIt);
 		_childs.erase(childIt);
-	}
-	auto componentIt = _components.begin();
-	while (componentIt!=_components.end())
-	{
-		Component* component = componentIt->second;
-		delete component;
-		_components.erase(componentIt);
 	}
 }
 
