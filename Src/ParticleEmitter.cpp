@@ -65,8 +65,7 @@ void PartilceEmitter::Update()
 			}
 			if (particle->BornTime + particle->LifeTime < Time::GetTime())
 			{
-				particle->GetParent()->RemoveChild(particle);
-				delete particle;
+				particle->RemoveFromParent();
 				_particles[i] = nullptr;
 				_ExistingParticleNum--;
 			}

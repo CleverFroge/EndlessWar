@@ -53,7 +53,14 @@ void DirectionalLight::GenerateDepthMap()
 	Vector3 centerPos = Vector3(0,0,0);
 	if (center)
 	{
-		centerPos = center->GetPosition();
+		try
+		{
+			centerPos = center->GetPosition();
+		}
+		catch (const std::exception& e)
+		{
+			std::cout << e.what() << std::endl;
+		}
 	}
 
 	Vector3 eyePos = centerPos - direction * size / 2;

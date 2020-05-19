@@ -11,7 +11,6 @@ Texture2D* Texture2D::Create(const char* path, bool alpha)
 {
 	if (_textures.find(path) != _textures.end())
 	{
-		_textures[path]->Retain();
 		return _textures[path];
 	}
 	Texture2D* ret = new Texture2D(path, alpha);

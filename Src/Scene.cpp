@@ -6,13 +6,14 @@ Scene* Scene::CurrentScene = nullptr;
 Scene::Scene()
 {
 	_root = new Node();
+	_root->Retain();
 	_root->name = "root";
 }
 
 Scene::~Scene()
 {
-	delete _root;
-	delete _currentCamera;
+	_root->Release();
+	_currentCamera->Release();
 	auto directionalLightIt = _directionalLights.begin();
 	while (directionalLightIt != _directionalLights.end())
 	{
@@ -59,7 +60,6 @@ void Scene::Run()
 	}
 	_root->ComponentsLateUpdate();
 	_root->Rendering();
-	
 }
 
 void Scene::SetCurrentCamera(Camera* camera)

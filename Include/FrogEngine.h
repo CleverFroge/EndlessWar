@@ -149,7 +149,6 @@ namespace FrogEngine
 		void Release();
 		void Retain();
 		int GetReferenceCount() const;
-		void AutoRelease();
 	protected:
 		Ref();
 		virtual ~Ref();
@@ -157,15 +156,31 @@ namespace FrogEngine
 	private:
 		int _referenceCount;
 	};
+	class ReleasePool
+	{
+	public:
+		static ReleasePool* GetInstance();
+		void AddObject(Ref* object);
+		void RemoveObject(Ref* object);
+		void Clear();
+	private:
+		ReleasePool();
+		~ReleasePool();
+
+		static ReleasePool* _instance;
+		std::set<Ref*> _objects;
+	};
 	class Mesh;
 	class Component;
-	class Node
+	class Node :public Ref
 	{
 	private:
 		void InitByEulerAngles();
 	public:
 		Node();
 		~Node();
+		Node* Clone() const;
+
 		void AddComponent(Component* component);
 		Component* GetComponent(const char* name);
 
@@ -192,6 +207,7 @@ namespace FrogEngine
 		Node* GetParent() const;
 		void AddChild(Node* child);
 		void RemoveChild(Node* child);
+		void RemoveFromParent();
 
 		void Rendering();
 		void DepthRendering(Matrix4 lightSpaceMatrix);
@@ -203,8 +219,10 @@ namespace FrogEngine
 		Vector3 GetForward() const;
 		Vector3 GetUp() const;
 		Vector3 GetRight() const;
+
+		void AddMesh(Mesh* mesh);
+		Mesh* GetMesh(int index);
 	public:
-		std::vector<Mesh*> meshs;
 		std::string name;
 		Vector3 LocalScale;
 		Vector3 LocalPosition;
@@ -212,6 +230,7 @@ namespace FrogEngine
 		bool Shadow;
 		Matrix4 geomerty;
 	protected:
+		std::vector<Mesh*> meshs;
 		Node* _parent;
 		std::set<Node*> _childs;
 		Vector3 _eulerAngles;
@@ -219,7 +238,6 @@ namespace FrogEngine
 		Vector3 _front;
 		Vector3 _right;
 		std::map<const char*, Component*> _components;
-		
 	};
 	class SkyBox;
 	class Camera : public Node
@@ -254,13 +272,19 @@ namespace FrogEngine
 		static Material* Create();
 		static Material* Create(Texture2D* diffuseTexure, Texture2D* specularTexture, float shininess);
 		~Material();
+		void SetDiffuseTexture(Texture2D* texture);
+		Texture2D* GetDiffuseTexture();
+		void SetSpecularTexture(Texture2D* texture);
+		Texture2D* GetSpecularTexture();
+		void SetNormalTexture(Texture2D* texture);
+		Texture2D* GetNormalTexture();
 	private:
 		Material();
 		Material(Texture2D* diffuseTexure, Texture2D* specularTexture, float shininess);
-	public:
 		Texture2D* diffuseTexture;
 		Texture2D* specularTexture;
 		Texture2D* normalTexture;
+	public:
 		float shininess;
 	};
 
@@ -316,6 +340,7 @@ namespace FrogEngine
 		unsigned int _vao;
 		unsigned int _vbo;
 		unsigned int _ebo;
+		static std::map<const char*, Mesh*> _geometryMeshes;
 	};
 	class Model
 	{

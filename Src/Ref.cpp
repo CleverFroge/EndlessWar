@@ -5,10 +5,6 @@ using namespace FrogEngine;
 void Ref::Release()
 {
 	_referenceCount--;
-	if (_referenceCount <= 0)
-	{
-		delete this;
-	}
 }
 
 void Ref::Retain()
@@ -21,17 +17,12 @@ int Ref::GetReferenceCount() const
 	return _referenceCount;
 }
 
-void Ref::AutoRelease()
-{
-
-}
-
 Ref::Ref()
 {
-	_referenceCount = 1;
+	_referenceCount = 0;
+	ReleasePool::GetInstance()->AddObject(this);
 }
 
 Ref::~Ref()
 {
-
 }

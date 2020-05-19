@@ -30,8 +30,7 @@ public:
 	}
 	void LateUpdate()
 	{
-		
-		/*if (!_tank)
+		if (!_tank)
 		{
 			return;
 		}
@@ -54,7 +53,7 @@ public:
 			_node->SetLocalForward(Vector3(0, 0, 0) - _cannon->GetRight());
 		}
 		_node->SetLocalPosition(pos);
-		return;*/
+		return;
 		
 		//处理鼠标输入
 		float deltaX = Input::GetMousePosDeltaX() / Screen::GetWidth();

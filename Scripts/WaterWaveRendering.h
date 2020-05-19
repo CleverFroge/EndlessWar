@@ -20,7 +20,7 @@ public:
 
 	void Update()
 	{
-		Shader* shader = _node->Find("MountainSkybox")->meshs[0]->shader;
+		Shader* shader = _node->Find("MountainSkybox")->GetMesh(0)->shader;
 		shader->Use();
 		shader->SetFloat("alpha",sin(Time::GetTime())/5+0.2);
 		_node->Rendering();

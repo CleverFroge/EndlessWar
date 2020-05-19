@@ -23,12 +23,12 @@ public:
 		//	//Ì¹¿Ë
 		Node* tank = Model::LoadModel("../Resource/Tank1/Tank1.FBX");
 		tank->LocalScale = Vector3(1, 1, 1) * 0.1;
-//		_root->AddChild(tank);
+		_root->AddChild(tank);
 		
 		Node* particleEmitterNode = PartilceEmitter::Create();
 		particleEmitterNode->LocalPosition = Vector3(0,0,2);
 		PartilceEmitter* partilceEmitter = (PartilceEmitter*)particleEmitterNode->GetComponent("ParticleEmitter");
-		partilceEmitter->EmitSpeed = 1000;
+		partilceEmitter->EmitSpeed = 100;
 		_root->AddChild(particleEmitterNode);
 
 		TankController* tankController = new TankController();
@@ -57,7 +57,7 @@ public:
 		skyDome->LocalScale = Vector3(0.2, 0.2, 0.2);
 		skyDome->SetLocalEulerAngleX(180);
 		Shader* waterWaveShader = Shader::LoadShader("WaterWave", "../Shader/WaterWave.vs", "../Shader/WaterWave.fs");
-		skyDome->Find("MountainSkybox")->meshs[0]->shader = waterWaveShader;
+		skyDome->Find("MountainSkybox")->GetMesh(0)->shader = waterWaveShader;
 		skyDome->AddComponent(new SkyDome());
 		_root->AddChild(skyDome);
 	}

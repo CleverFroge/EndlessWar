@@ -2,6 +2,8 @@
 #include "FrogEngine.h"
 using namespace FrogEngine;
 
+std::map<const char*, Mesh*> Mesh::_geometryMeshes;
+
 Mesh::Mesh()
 {
 }
@@ -9,10 +11,17 @@ Mesh::Mesh()
 Mesh* Mesh::Create(Geometry geometry)
 {
 	Mesh* mesh = new Mesh();
+	const char* name;
 	switch (geometry)
 	{
 	case FrogEngine::Mesh::Quad:
 	{
+		name = "Quad";
+		if (_geometryMeshes.find(name)!=_geometryMeshes.end())
+		{
+			_geometryMeshes[name]->Retain();
+			return _geometryMeshes[name];
+		}
 		float vertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
 		// positions   // texCoords
 		-1.0f,  1.0f, 0.0f,  0.0f, 0.0f, 1.0f,  0.0f, 1.0f,
@@ -35,6 +44,12 @@ Mesh* Mesh::Create(Geometry geometry)
 	break;
 	case FrogEngine::Mesh::Cube:
 	{
+		name = "Cube";
+		if (_geometryMeshes.find(name) != _geometryMeshes.end())
+		{
+			_geometryMeshes[name]->Retain();
+			return _geometryMeshes[name];
+		}
 		float vertices[] = {
 			// positions          // normals           // texture coords
 			// positions          // normals           // texture coords
@@ -94,6 +109,7 @@ Mesh* Mesh::Create(Geometry geometry)
 		break;
 	}
 	mesh->TransmitData();
+	_geometryMeshes[name] = mesh;
 	return mesh;
 }
 

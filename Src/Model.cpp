@@ -34,7 +34,8 @@ Node* Model::ProcessNode(std::string directory, FbxNode* pNode)
 		if (attr->GetAttributeType() == FbxNodeAttribute::eMesh)
 		{
 			FbxMesh* pMesh = static_cast<FbxMesh*>(attr);
-			ret->meshs.push_back(ProcessMesh(directory, pMesh));
+			Mesh* mesh = ProcessMesh(directory, pMesh);
+			ret->AddMesh(mesh);
 		}
 	}
 	FbxVector4 t, s, r;
@@ -57,7 +58,7 @@ Node* Model::ProcessNode(std::string directory, FbxNode* pNode)
 	ret->LocalScale = local.GetS();
 	ret->SetLocalEulerAngles(local.GetR());
 
-	ret->Print();
+//	ret->Print();
 
 	for (int i = 0; i < pNode->GetChildCount(); ++i)
 	{
@@ -207,9 +208,9 @@ Mesh* Model::ProcessMesh(std::string directory, FbxMesh* pMesh)
 		if (lMaterial->GetClassId().Is(FbxSurfacePhong::ClassId))
 		{
 			Material* material = Material::Create();			
-			material->diffuseTexture = LoadMaterialTexture(directory, lMaterial, FbxSurfaceMaterial::sDiffuse);
-			material->specularTexture = LoadMaterialTexture(directory, lMaterial, FbxSurfaceMaterial::sSpecular);
-			material->normalTexture = LoadMaterialTexture(directory, lMaterial, FbxSurfaceMaterial::sNormalMap);
+			material->SetDiffuseTexture(LoadMaterialTexture(directory, lMaterial, FbxSurfaceMaterial::sDiffuse));
+			material->SetSpecularTexture(LoadMaterialTexture(directory, lMaterial, FbxSurfaceMaterial::sSpecular));
+			material->SetNormalTexture(LoadMaterialTexture(directory, lMaterial, FbxSurfaceMaterial::sNormalMap));
 			material->shininess = ((FbxSurfacePhong*)lMaterial)->Shininess;
 			result->material = material;
 		}

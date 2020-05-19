@@ -114,6 +114,9 @@
     <ClCompile Include="..\Src\Ref.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
+    <ClCompile Include="..\Src\ReleasePool.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Scripts\CameraController.h">

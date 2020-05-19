@@ -57,7 +57,7 @@ int main()
 	Scene::SetCurrentScene(endlessWar);
 
 	unsigned int lastPrint = 0;
-	unsigned int FPS = 120;
+	unsigned int FPS = 12000;
 	float FrameTime = 1 / (float)FPS;
 	float FrameStartTime = glfwGetTime();
 
@@ -77,6 +77,8 @@ int main()
 
 		
 		Scene::GetCurrentScene()->Run();
+
+		ReleasePool::GetInstance()->Clear();
 
 		if (Input::GetKey(GLFW_KEY_ESCAPE))
 		{

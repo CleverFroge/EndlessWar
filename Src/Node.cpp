@@ -12,6 +12,37 @@ Node::Node()
 	Shadow = true;
 }
 
+Node* Node::Clone() const
+{
+	//复制节点属性
+	Node* ret = new Node();
+	ret->name = name;
+	for (size_t i = 0; i < meshs.size(); i++)
+	{
+		ret->AddMesh(meshs[i]);
+	}
+	ret->geomerty = geomerty;
+
+	ret->_eulerAngles = _eulerAngles;
+	ret->_up = _up;
+	ret->_front = _front;
+	ret->_right = _right;
+	ret->LocalScale = LocalScale;
+	ret->LocalPosition = LocalPosition;
+	ret->AutoRendering = AutoRendering;
+	ret->Shadow = Shadow;
+
+	//添加子节点
+	auto childIt = _childs.begin();
+	while (childIt!=_childs.end())
+	{
+		Node* child = *childIt;
+		ret->AddChild(child->Clone());
+		childIt++;
+	}
+	return ret;
+}
+
 Node::~Node()
 {
 	//释放Mesh
@@ -25,14 +56,14 @@ Node::~Node()
 	{
 		Component* component = componentIt->second;
 		delete component;
-		_components.erase(componentIt);
+		componentIt = _components.erase(componentIt);
 	}
 	//删除所有子节点
 	auto childIt = _childs.begin();
 	while (childIt!=_childs.end())
 	{
-		delete (*childIt);
-		_childs.erase(childIt);
+		(*childIt)->Release();
+		childIt = _childs.erase(childIt);
 	}
 }
 
@@ -166,6 +197,10 @@ void Node::SetParent(Node* parent)
 {
 	if (parent)
 	{
+		if (!_parent)
+		{
+			Retain();
+		}
 		_parent = parent;
 		parent->_childs.insert(this);
 	}
@@ -180,6 +215,10 @@ void Node::AddChild(Node* child)
 {
 	if (child)
 	{
+		if (!child->_parent)
+		{
+			child->Retain();
+		}
 		_childs.insert(child);
 		child->_parent = this;
 	}
@@ -187,7 +226,22 @@ void Node::AddChild(Node* child)
 
 void Node::RemoveChild(Node* child)
 {
-	_childs.erase(child);
+	if (_childs.find(child)!=_childs.end())
+	{
+		_childs.erase(child);
+		child->_parent = nullptr;
+		child->Release();
+	}
+}
+
+void Node::RemoveFromParent()
+{
+	if (_parent)
+	{
+		_parent->_childs.erase(this);
+		_parent = nullptr;
+		Release();
+	}
 }
 
 void Node::Rendering()
@@ -207,37 +261,40 @@ void Node::Rendering()
 		//向shader发送材质数据
 		if (material)
 		{
-			if (material->diffuseTexture)
+			Texture2D* diffuseTexture = material->GetDiffuseTexture();
+			if (diffuseTexture)
 			{
 				shader->SetBool("material.haveDiffuse", true);
-				shader->SetBool("material.alpha", material->diffuseTexture->Alpha);
+				shader->SetBool("material.alpha", diffuseTexture->Alpha);
 				shader->SetInt("material.diffuse", textureIndex);
 				glActiveTexture(GL_TEXTURE0 + textureIndex);
-				glBindTexture(GL_TEXTURE_2D, material->diffuseTexture->ID);
+				glBindTexture(GL_TEXTURE_2D, diffuseTexture->ID);
 				textureIndex++;
 			}
 			else
 			{
 				shader->SetBool("material.haveDiffuse", false);
 			}
-			if (material->specularTexture)
+			Texture2D* specularTexture = material->GetSpecularTexture();
+			if (specularTexture)
 			{
 				shader->SetBool("material.haveSpecular", true);
 				shader->SetInt("material.specular", textureIndex);
 				glActiveTexture(GL_TEXTURE0 + textureIndex);
-				glBindTexture(GL_TEXTURE_2D, material->specularTexture->ID);
+				glBindTexture(GL_TEXTURE_2D, specularTexture->ID);
 				textureIndex++;
 			}
 			else
 			{
 				shader->SetBool("material.haveSpecular", false);
 			}
-			if (material->normalTexture)
+			Texture2D* normalTexture = material->GetNormalTexture();
+			if (normalTexture)
 			{
 				shader->SetBool("material.haveNormal", true);
 				shader->SetInt("material.normal", textureIndex);
 				glActiveTexture(GL_TEXTURE0 + textureIndex);
-				glBindTexture(GL_TEXTURE_2D, material->normalTexture->ID);
+				glBindTexture(GL_TEXTURE_2D, normalTexture->ID);
 				textureIndex++;
 			}
 			else
@@ -544,4 +601,23 @@ void Node::ComponentsLateUpdate()
 	{
 		(*it)->ComponentsLateUpdate();
 	}
+}
+
+void Node::AddMesh(Mesh* mesh)
+{
+	if (!mesh)
+	{
+		return;
+	}
+	mesh->Retain();
+	meshs.push_back(mesh);
+}
+
+Mesh* Node::GetMesh(int index)
+{
+	if (index>=meshs.size())
+	{
+		return nullptr;
+	}
+	return meshs[index];
 }
