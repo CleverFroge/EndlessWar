@@ -3,10 +3,15 @@ out vec4 FragColor;
 
 float gamma = 2.2;
 
-in vec3 Normal;  
-in vec3 FragPos;  
-in mat3 TBN;
-in vec2 TexCoord;
+struct VS_OUT
+{
+	vec3 FragPos;
+	vec3 Normal;
+	mat3 TBN;
+	vec2 TexCoord;
+};
+
+in VS_OUT vs_out;
 
 #define NR_DIRECTIONAL_LIGHTS 1
 #define NR_POINT_LIGHTS 4
@@ -66,7 +71,7 @@ uniform PointLight pointLights[NR_POINT_LIGHTS];
 uniform int flashLightNum;
 uniform Flashlight flashLights[NR_FLASH_LIGHTS];
 
-vec3 CalcDirectionalLight(DirectionalLight directionalLight, vec4 diffuseTex, vec4 specularTex, vec3 normal, vec3 viewDir);
+vec3 CalcDirectionalLight(DirectionalLight directionalLight, vec4 diffuseTex, vec4 specularTex, vec3 normal, vec3 fragPos, vec3 viewDir);
 vec3 CalcPointLight(PointLight pointLight, vec4 diffuseTex, vec4 specularTex, vec3 normal, vec3 fragPos, vec3 viewDir);
 vec3 CalcFlashLight(Flashlight flashLight, vec4 diffuseTex, vec4 specularTex, vec3 normal, vec3 fragPos, vec3 viewDir);
 
@@ -77,35 +82,35 @@ void main()
 	vec4 diffuseTex;
 	if (material.haveDiffuse)
 	{
-		diffuseTex = vec4(pow(texture(material.diffuse, TexCoord).rgb, vec3(gamma)), 1);
+		diffuseTex = vec4(pow(texture(material.diffuse, vs_out.TexCoord).rgb, vec3(gamma)), 1);
 	}
     
 	vec4 specularTex;
 	if (material.haveSpecular)
 	{
-		specularTex = vec4(pow(texture(material.specular, TexCoord).rgb, vec3(gamma)), 1);
+		specularTex = vec4(pow(texture(material.specular, vs_out.TexCoord).rgb, vec3(gamma)), 1);
 	}
 
-    vec3 viewDir = normalize(FragPos-viewPos);
+    vec3 viewDir = normalize(vs_out.FragPos-viewPos);
 	vec3 result;
 	for(int i = 0; i<directionalLightNum; i++)
 	{
-		result += CalcDirectionalLight(directionalLights[i],diffuseTex,specularTex,Normal,viewDir);
+		result += CalcDirectionalLight(directionalLights[i],diffuseTex,specularTex,vs_out.Normal,vs_out.FragPos,viewDir);
 	}
 	for(int i = 0; i<pointLightNum; i++)
 	{
-		result += CalcPointLight(pointLights[i],diffuseTex,specularTex,Normal,FragPos,viewDir);
+		result += CalcPointLight(pointLights[i],diffuseTex,specularTex,vs_out.Normal,vs_out.FragPos,viewDir);
 	}
 	for(int i = 0; i<flashLightNum; i++)
 	{
-		result += CalcFlashLight(flashLights[i],diffuseTex,specularTex,Normal,FragPos,viewDir);
+		result += CalcFlashLight(flashLights[i],diffuseTex,specularTex,vs_out.Normal,vs_out.FragPos,viewDir);
 	}
     FragColor = vec4(pow(result, vec3(1.0/gamma)), 1);
 }
 
-vec3 CalcDirectionalLight(DirectionalLight directionalLight, vec4 diffuseTex, vec4 specularTex, vec3 normal, vec3 viewDir)
+vec3 CalcDirectionalLight(DirectionalLight directionalLight, vec4 diffuseTex, vec4 specularTex, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
-	vec4 fragPosLightSpace = directionalLight.lighgtSpaceMat*vec4(FragPos,1);
+	vec4 fragPosLightSpace = directionalLight.lighgtSpaceMat*vec4(fragPos,1);
 	// 执行透视除法
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     // 变换到[0,1]的范围

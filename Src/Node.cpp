@@ -305,26 +305,7 @@ void Node::Rendering()
 		}
 		shader->SetMat4("geometry", geomerty);
 		//向shader发送model矩阵
-		Matrix4 model;
-		std::stack<Node*> temp;
-		Node* node = this;
-		while (node->_parent != nullptr)
-		{
-			temp.push(node);
-			node = node->_parent;
-		}
-		while (temp.size() != 0)
-		{
-			node = temp.top();
-			temp.pop();
-
-			model.Translate(node->LocalPosition);
-			model.Rotate(node->_front, node->_eulerAngles.GetZ());
-			model.Rotate(Vector3(0, 1, 0), node->_eulerAngles.GetY());
-			model.Rotate(Vector3(1, 0, 0), node->_eulerAngles.GetX());
-			model.Scale(node->LocalScale);
-		}
-		shader->SetMat4("model", model);
+		shader->SetMat4("model", GetModelMatrix());
 
 		//向shader发送相机相关数据
 		Scene* currentScene = Scene::GetCurrentScene();
@@ -401,26 +382,7 @@ void Node::DepthRendering(Matrix4 lightSpaceMatrix)
 		//使用该着色器程序
 		shader->Use();
 		//向shader发送model矩阵
-		Matrix4 model;
-		std::stack<Node*> temp;
-		Node* node = this;
-		while (node->_parent != nullptr)
-		{
-			temp.push(node);
-			node = node->_parent;
-		}
-		while (temp.size() != 0)
-		{
-			node = temp.top();
-			temp.pop();
-
-			model.Translate(node->LocalPosition);
-			model.Rotate(node->_front, node->_eulerAngles.GetZ());
-			model.Rotate(Vector3(0, 1, 0), node->_eulerAngles.GetY());
-			model.Rotate(Vector3(1, 0, 0), node->_eulerAngles.GetX());
-			model.Scale(node->LocalScale);
-		}
-		shader->SetMat4("model", model);
+		shader->SetMat4("model", GetModelMatrix());
 		shader->SetMat4("geometry", geomerty);
 		//向Shader发送转换到光源空间的矩阵
 		shader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
@@ -620,4 +582,48 @@ Mesh* Node::GetMesh(int index)
 		return nullptr;
 	}
 	return meshs[index];
+}
+
+int Node::GetMeshNum()
+{
+	return meshs.size();
+}
+
+Matrix4 Node::GetModelMatrix()
+{
+	//向shader发送model矩阵
+	Matrix4 model;
+	std::stack<Node*> temp;
+	Node* node = this;
+	while (node->_parent != nullptr)
+	{
+		temp.push(node);
+		node = node->_parent;
+	}
+	while (temp.size() != 0)
+	{
+		node = temp.top();
+		temp.pop();
+
+		model.Translate(node->LocalPosition);
+		model.Rotate(node->_front, node->_eulerAngles.GetZ());
+		model.Rotate(Vector3(0, 1, 0), node->_eulerAngles.GetY());
+		model.Rotate(Vector3(1, 0, 0), node->_eulerAngles.GetX());
+		model.Scale(node->LocalScale);
+	}
+	return model;
+}
+
+bool Node::IsDescendantOf(Node* node)
+{
+	Node* it = this;
+	while (it)
+	{
+		if (it==node)
+		{
+			return true;
+		}
+		it = it->_parent;
+	}
+	return false;
 }

@@ -151,37 +151,16 @@
     <None Include="..\Shader\Common.vs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="..\Shader\FrameBuffer.fs">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="..\Shader\FrameBuffer.vs">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="..\Shader\FrameBuffer_Screen.fs">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="..\Shader\FrameBuffer_Screen.vs">
-      <Filter>Shader</Filter>
-    </None>
     <None Include="..\Shader\SkyBox.fs">
       <Filter>Shader</Filter>
     </None>
     <None Include="..\Shader\SkyBox.vs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="..\Shader\Specular.fs">
-      <Filter>Shader</Filter>
-    </None>
     <None Include="..\Shader\WaterWave.vs">
       <Filter>Shader</Filter>
     </None>
     <None Include="..\Shader\WaterWave.fs">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="..\Shader\Light.fs">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="..\Shader\Light.vs">
       <Filter>Shader</Filter>
     </None>
     <None Include="..\Shader\Depth.fs">

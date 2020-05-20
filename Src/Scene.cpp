@@ -59,7 +59,22 @@ void Scene::Run()
 		_currentCamera->GetSkyBox()->Draw();
 	}
 	_root->ComponentsLateUpdate();
+	RenderingScene();
+}
+
+void Scene::RenderingScene()
+{
 	_root->Rendering();
+	auto it = ParticleEmitter::ParticleEmitters.begin();
+	while (it!= ParticleEmitter::ParticleEmitters.end())
+	{
+		ParticleEmitter* particleEmitter = *it;
+		if ((*it)->_node->IsDescendantOf(_root))
+		{
+			particleEmitter->DrawAllParticles();
+		}
+		it++;
+	}
 }
 
 void Scene::SetCurrentCamera(Camera* camera)

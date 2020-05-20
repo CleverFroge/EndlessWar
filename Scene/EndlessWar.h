@@ -25,10 +25,11 @@ public:
 		tank->LocalScale = Vector3(1, 1, 1) * 0.1;
 		_root->AddChild(tank);
 		
-		Node* particleEmitterNode = PartilceEmitter::Create();
+		Node* particleEmitterNode = ParticleEmitter::Create();
 		particleEmitterNode->LocalPosition = Vector3(0,0,2);
-		PartilceEmitter* partilceEmitter = (PartilceEmitter*)particleEmitterNode->GetComponent("ParticleEmitter");
-		partilceEmitter->EmitSpeed = 100;
+		ParticleEmitter* partilceEmitter = (ParticleEmitter*)particleEmitterNode->GetComponent("ParticleEmitter");
+		partilceEmitter->EmitSpeed = 1000;
+		partilceEmitter->MaxParticles = 1000;
 		_root->AddChild(particleEmitterNode);
 
 		TankController* tankController = new TankController();

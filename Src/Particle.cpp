@@ -12,6 +12,8 @@ Particle::Particle()
 	BornTime = Time::GetTime();
 	LifeTime = 1;
 	MoveSpeed = 1;
+
+	AutoRendering = false;
 }
 
 Particle::~Particle()

@@ -208,6 +208,7 @@ namespace FrogEngine
 		void AddChild(Node* child);
 		void RemoveChild(Node* child);
 		void RemoveFromParent();
+		bool IsDescendantOf(Node* node);
 
 		void Rendering();
 		void DepthRendering(Matrix4 lightSpaceMatrix);
@@ -221,7 +222,11 @@ namespace FrogEngine
 		Vector3 GetRight() const;
 
 		void AddMesh(Mesh* mesh);
+		int GetMeshNum();
 		Mesh* GetMesh(int index);
+
+		Matrix4 GetModelMatrix();
+
 	public:
 		std::string name;
 		Vector3 LocalScale;
@@ -303,16 +308,19 @@ namespace FrogEngine
 		unsigned int _shaderProgram;
 	private:
 		Shader(const char* name, const char* vertexShaderPath, const char* fragmentShaderPath);
+		
 	public:
-		static Shader* LoadShader(const char* name, const char* vertexShaderPath, const char* fragmentShaderPath);
-		static Shader* GetShader(const char* name);
-		~Shader();
 		void Use();
 		void SetBool(const char* valueName, bool value) const;
 		void SetFloat(const char* valueName, float value) const;
 		void SetInt(const char* valueName, int value) const;
 		void SetMat4(const char* valueName, Matrix4 value) const;
 		void SetVector3(const char* valueName, Vector3 value) const;
+
+		static Shader* LoadShader(const char* name, const char* vertexShaderPath, const char* fragmentShaderPath);
+		static Shader* GetShader(const char* name);
+		~Shader();
+		virtual void RenderingNodes(Mesh* mesh, std::vector<Node*> nodes) {};
 	};
 	class Mesh :public Ref
 	{
@@ -334,6 +342,7 @@ namespace FrogEngine
 	public:
 		Material* material;
 		Shader* shader;
+		friend class ParticleEmitter;
 	private:
 		std::vector<Vertex> _vertices;
 		std::vector<unsigned int> _indices;
@@ -477,6 +486,7 @@ namespace FrogEngine
 		Scene();
 		~Scene();
 		void Run();
+		void RenderingScene();
 		void SetCurrentCamera(Camera* camera);
 		Camera* GetCurrentCamera();
 		void AddDirectionalLight(DirectionalLight* light);
@@ -507,19 +517,29 @@ namespace FrogEngine
 		Vector3 EmitDirection;
 		float MoveSpeed;
 	};
-	class PartilceEmitter :public Component
+	class ParticleEmitter :public Component
 	{
 	public:
 		static Node* Create();
-		PartilceEmitter();
-		~PartilceEmitter();
+		ParticleEmitter();
+		~ParticleEmitter();
 		void Awake();
 		void Update();
 		void LateUpdate();
-	public:
-		int EmitSpeed;
+		void DrawAllParticles();
 	private:
+		struct ParticleVertex
+		{
+			Vector3 Position;
+			Vector3 Color;
+		};
+		unsigned int vao,vbo;
+		std::vector<ParticleVertex> vertices;
+	public:
 		int MaxParticles;
+		int EmitSpeed;
+		static std::set<ParticleEmitter*> ParticleEmitters;
+	private:
 		std::vector<Particle*> _particles;
 		float _startTime;
 		float _emittedParticleNum;

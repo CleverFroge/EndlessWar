@@ -206,17 +206,10 @@
     <None Include="..\Shader\Common.vs" />
     <None Include="..\Shader\Depth.fs" />
     <None Include="..\Shader\Depth.vs" />
-    <None Include="..\Shader\FrameBuffer.fs" />
-    <None Include="..\Shader\FrameBuffer.vs" />
-    <None Include="..\Shader\FrameBuffer_Screen.fs" />
-    <None Include="..\Shader\FrameBuffer_Screen.vs" />
-    <None Include="..\Shader\Light.fs" />
-    <None Include="..\Shader\Light.vs" />
     <None Include="..\Shader\Particle.fs" />
     <None Include="..\Shader\Particle.vs" />
     <None Include="..\Shader\SkyBox.fs" />
     <None Include="..\Shader\SkyBox.vs" />
-    <None Include="..\Shader\Specular.fs" />
     <None Include="..\Shader\WaterWave.fs" />
     <None Include="..\Shader\WaterWave.vs" />
   </ItemGroup>

@@ -30,7 +30,7 @@ public:
 	}
 	void LateUpdate()
 	{
-		if (!_tank)
+		/*if (!_tank)
 		{
 			return;
 		}
@@ -54,7 +54,7 @@ public:
 		}
 		_node->SetLocalPosition(pos);
 		return;
-		
+		*/
 		//处理鼠标输入
 		float deltaX = Input::GetMousePosDeltaX() / Screen::GetWidth();
 		float deltaY = Input::GetMousePosDeltaY() / Screen::GetHeight();
