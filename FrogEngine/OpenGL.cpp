@@ -43,6 +43,7 @@ int main()
 	glfwSetFramebufferSizeCallback(window, Screen::ScreenSizeChanged);
 	//鼠标输入回调函数
 	glfwSetCursorPosCallback(window, Input::UpdateMousePos);
+	glfwSetMouseButtonCallback(window, Input::MouseClickCallBack);
 	//深度测试
 	glEnable(GL_DEPTH_TEST);
 	//Blend
@@ -72,6 +73,7 @@ int main()
 		
 		FrameStartTime = glfwGetTime() + FrameTime;
 		Time::Update();
+		Input::Update();
 		//清除颜色缓冲和深度缓冲
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		
 

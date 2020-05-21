@@ -39,6 +39,11 @@ float* Matrix4::ValuePtr()
 	return glm::value_ptr(_mat);
 }
 
+Matrix4 Matrix4::Inverse()
+{
+	return glm::inverse(_mat);
+}
+
 void Matrix4::Translate(const Vector3& offset)
 {
 	_mat = glm::translate(_mat,

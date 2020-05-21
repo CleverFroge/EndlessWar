@@ -58,8 +58,6 @@ Node* Model::ProcessNode(std::string directory, FbxNode* pNode)
 	ret->LocalScale = local.GetS();
 	ret->SetLocalEulerAngles(local.GetR());
 
-//	ret->Print();
-
 	for (int i = 0; i < pNode->GetChildCount(); ++i)
 	{
 		ret->AddChild(ProcessNode(directory, pNode->GetChild(i)));

@@ -50,6 +50,7 @@ Node::~Node()
 	{
 		meshs[i]->Release();
 	}
+	Mesh* quad = Mesh::Create(Mesh::Geometry::Quad);
 	//删除节点上挂在的组件
 	auto componentIt = _components.begin();
 	while (componentIt != _components.end())
@@ -100,15 +101,40 @@ void Node::SetLocalEulerAngles(const Vector3& eulerAngles)
 
 void Node::SetLocalForward(const Vector3& forward)
 {
-	Vector3 forwardInXZ = forward;
+	Vector3 normalizedForward = forward.Normalized();
+	Vector3 forwardInXZ = normalizedForward;
 	forwardInXZ.SetY(0);
-	float eulerAngleX = Vector3::Angle(forwardInXZ, forward);
+	float eulerAngleX = Vector3::Angle(forwardInXZ, normalizedForward);
 	_eulerAngles.SetX(eulerAngleX);
 	float eulerAngleY = Vector3::Angle(Vector3::FRONT, forwardInXZ);
 	_eulerAngles.SetY(-eulerAngleY);
 	_eulerAngles.SetZ(0);
 
 	InitByEulerAngles();
+}
+
+void Node::SetForward(const Vector3& forward)
+{
+	//待实现。。。。
+	Node* it = _parent;
+	if (it)
+	{
+		Matrix4 model = it->GetModelMatrix();
+
+		Vector3 forward = GetForward()*model.Inverse();
+		Vector3 f = _front * model - Vector3(0, 0, 0) * model;
+		forward.Print();
+		f.Print();
+		std::cout << 1/forward.Length() << "/" << f.Length() << std::endl;
+	}
+	/*Node* it = _parent;
+	Vector3 localForward = forward.Normalized();
+	if (it)
+	{
+		Matrix4 model = it->GetModelMatrix();
+		localForward = localForward * model.Inverse();
+	}
+	SetLocalForward(localForward);*/
 }
 
 void Node::SetLocalEulerAngles(float x, float y, float z)
@@ -399,11 +425,29 @@ void Node::DepthRendering(Matrix4 lightSpaceMatrix)
 	}
 }
 
+void Node::SetScale(Vector3 scale)
+{
+	Node* it = _parent;
+	float scaleX = scale.GetX();
+	float scaleY = scale.GetY();
+	float scaleZ = scale.GetZ();
+	while (it)
+	{
+		scaleX /= it->LocalScale.GetX();
+		scaleY /= it->LocalScale.GetY();
+		scaleZ /= it->LocalScale.GetZ();
+		it = it->_parent;
+	}
+	LocalScale.SetX(scaleX);
+	LocalScale.SetY(scaleY);
+	LocalScale.SetZ(scaleZ);
+}
+
 Node* Node::Find(const char* searchName) const
 {
 	for (auto it = _childs.begin(); it != _childs.end(); it++)
 	{
-		if ((*it)->name==searchName&&(*it)->meshs.size()!=0)
+		if ((*it)->name==searchName)
 		{
 			return *it;
 		}
@@ -591,7 +635,6 @@ int Node::GetMeshNum()
 
 Matrix4 Node::GetModelMatrix()
 {
-	//向shader发送model矩阵
 	Matrix4 model;
 	std::stack<Node*> temp;
 	Node* node = this;

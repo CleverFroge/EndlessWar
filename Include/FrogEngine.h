@@ -104,7 +104,7 @@ namespace FrogEngine
 		Vector3(FbxVector4 vec);
 		~Vector3();
 		float* ValuePtr();
-		Vector3 Normalized();
+		Vector3 Normalized() const;
 		bool operator==(const Vector3& other) const;
 		Vector3 operator+(const Vector3& other) const;
 		Vector3 operator-(const Vector3& other) const;
@@ -112,6 +112,7 @@ namespace FrogEngine
 		Vector3 operator*(const Matrix4& mat) const;
 		Vector3 operator/(float scale) const;
 		Vector3 Cross(const Vector3& other) const;
+		float Length() const;
 		static float Angle(Vector3 from, Vector3 to);
 		void Print() const { std::cout << "(" << _vec.x << "," << _vec.y << "," << _vec.z << ")" << std::endl; };
 		float GetX() const;
@@ -132,6 +133,7 @@ namespace FrogEngine
 		Matrix4(aiMatrix4x4 mat);
 		~Matrix4();
 		float* ValuePtr();
+		Matrix4 Inverse();
 		void Translate(const Vector3& offset);
 		void Rotate(const Vector3& axis, float angle);
 		void Scale(const Vector3& scale);
@@ -185,6 +187,9 @@ namespace FrogEngine
 		Component* GetComponent(const char* name);
 
 		void SetLocalForward(const Vector3& forward);
+		void SetForward(const Vector3& forward);
+
+		void SetScale(Vector3 scale);
 
 		void SetLocalPosition(const Vector3& pos);
 		void SetLocalPosition(float x, float y, float z);
@@ -342,9 +347,9 @@ namespace FrogEngine
 	public:
 		Material* material;
 		Shader* shader;
-		friend class ParticleEmitter;
+		friend class ParticleEmitter;std::vector<Vertex> _vertices;
 	private:
-		std::vector<Vertex> _vertices;
+		
 		std::vector<unsigned int> _indices;
 		unsigned int _vao;
 		unsigned int _vbo;
@@ -451,13 +456,16 @@ namespace FrogEngine
 	class Input
 	{
 	public:
+		static void Update();
 		static void SetWindow(GLFWwindow* window);
 		static void UpdateMousePos(GLFWwindow* window, double xpos, double ypos);
+		static void MouseClickCallBack(GLFWwindow* window, int button, int action, int mods);
 		static void ClearFrameInput();
 		static double GetMousePosX();
 		static double GetMousePosY();
 		static double GetMousePosDeltaX();
 		static double GetMousePosDeltaY();
+		static Vector2 GetAxis();
 		static bool GetKey(int key);
 	private:
 		static GLFWwindow* _window;
@@ -465,12 +473,18 @@ namespace FrogEngine
 		static double _mousePosY;
 		static double _mousePosDeltaX;
 		static double _mousePosDeltaY;
+
+		static bool _mouseLeftClick;
+		static bool _mouseMiddleClick;
+		static bool _mouseRightClick;
+
+		static Vector2 _axis;
 	};
 	class Component
 	{
 	public:
 		Component(const char* name);
-		~Component();
+		virtual ~Component();
 		virtual void Awake() = 0;
 		virtual void Update() = 0;
 		virtual void LateUpdate() = 0;
@@ -515,7 +529,14 @@ namespace FrogEngine
 		float BornTime;
 		float LifeTime;
 		Vector3 EmitDirection;
-		float MoveSpeed;
+
+		bool ConstantSpeed;
+		float StartSpeed;
+		float EndSpeed;
+
+		bool ConstanColor;
+		Vector3 StartColor;
+		Vector3 EndColor;
 	};
 	class ParticleEmitter :public Component
 	{
@@ -527,6 +548,19 @@ namespace FrogEngine
 		void Update();
 		void LateUpdate();
 		void DrawAllParticles();
+
+		void SetParticleLife(float life);
+		void SetParticleLife(float minLife, float maxLife);
+
+		void SetParticleColor(Vector3 color);
+		void SetParticleColor(Vector3 startColor, Vector3 endColor);
+
+		void SetParticleSpeed(float speed);
+		void SetParticleSpeed(float startSpeed, float endSpeed);
+
+		void Start();
+		void Stop();
+		void ReStart();
 	private:
 		struct ParticleVertex
 		{
@@ -536,13 +570,29 @@ namespace FrogEngine
 		unsigned int vao,vbo;
 		std::vector<ParticleVertex> vertices;
 	public:
+		float EmitAngle;
 		int MaxParticles;
 		int EmitSpeed;
+		bool Loop;
 		static std::set<ParticleEmitter*> ParticleEmitters;
 	private:
 		std::vector<Particle*> _particles;
 		float _startTime;
 		float _emittedParticleNum;
 		float _ExistingParticleNum;
+
+		bool _start;
+
+		bool _constantLife;
+		float _minParticleLife;
+		float _maxParticleLife;
+
+		bool _constantColor;
+		Vector3 _startParticleColor;
+		Vector3 _endParticleColor;
+
+		bool _constantSpeed;
+		float _startParticleSpeed;
+		float _endParticleSpeed;
 	};
 }

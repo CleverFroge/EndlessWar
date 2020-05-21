@@ -19,7 +19,6 @@ Mesh* Mesh::Create(Geometry geometry)
 		name = "Quad";
 		if (_geometryMeshes.find(name)!=_geometryMeshes.end())
 		{
-			_geometryMeshes[name]->Retain();
 			return _geometryMeshes[name];
 		}
 		float vertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
@@ -47,7 +46,6 @@ Mesh* Mesh::Create(Geometry geometry)
 		name = "Cube";
 		if (_geometryMeshes.find(name) != _geometryMeshes.end())
 		{
-			_geometryMeshes[name]->Retain();
 			return _geometryMeshes[name];
 		}
 		float vertices[] = {
@@ -110,6 +108,7 @@ Mesh* Mesh::Create(Geometry geometry)
 	}
 	mesh->TransmitData();
 	_geometryMeshes[name] = mesh;
+	mesh->Retain();
 	return mesh;
 }
 

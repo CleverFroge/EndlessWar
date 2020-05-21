@@ -1,4 +1,4 @@
 ﻿  ParticleEmitter.cpp
-C:\Users\jzp\Desktop\FrogEngine\Src\ParticleEmitter.cpp(58,19): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
-C:\Users\jzp\Desktop\FrogEngine\Src\ParticleEmitter.cpp(61,31): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Src\ParticleEmitter.cpp(59,29): warning C4244: “初始化”: 从“float”转换到“unsigned int”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Src\ParticleEmitter.cpp(62,32): warning C4244: “=”: 从“float”转换到“unsigned int”，可能丢失数据
   FrogEngine.vcxproj -> C:\Users\jzp\Desktop\FrogEngine\x64\Release\FrogEngine.exe

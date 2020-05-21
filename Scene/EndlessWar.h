@@ -24,13 +24,6 @@ public:
 		Node* tank = Model::LoadModel("../Resource/Tank1/Tank1.FBX");
 		tank->LocalScale = Vector3(1, 1, 1) * 0.1;
 		_root->AddChild(tank);
-		
-		Node* particleEmitterNode = ParticleEmitter::Create();
-		particleEmitterNode->LocalPosition = Vector3(0,0,2);
-		ParticleEmitter* partilceEmitter = (ParticleEmitter*)particleEmitterNode->GetComponent("ParticleEmitter");
-		partilceEmitter->EmitSpeed = 1000;
-		partilceEmitter->MaxParticles = 1000;
-		_root->AddChild(particleEmitterNode);
 
 		TankController* tankController = new TankController();
 		tank->AddComponent(tankController);

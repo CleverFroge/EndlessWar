@@ -17,7 +17,7 @@ in VS_OUT vs_out;
 #define NR_POINT_LIGHTS 4
 #define NR_FLASH_LIGHTS 4
 
-float ambientStrength = 0.01;
+float ambientStrength = 0.05;
 float diffuseStrength = 0.2;
 float specularStrength = 0.3;
 
@@ -92,7 +92,7 @@ void main()
 	}
 
     vec3 viewDir = normalize(vs_out.FragPos-viewPos);
-	vec3 result;
+	vec3 result = diffuseTex.rgb * ambientStrength;
 	for(int i = 0; i<directionalLightNum; i++)
 	{
 		result += CalcDirectionalLight(directionalLights[i],diffuseTex,specularTex,vs_out.Normal,vs_out.FragPos,viewDir);

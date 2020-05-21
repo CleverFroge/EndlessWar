@@ -43,7 +43,7 @@ float* Vector3::ValuePtr()
 	return glm::value_ptr(_vec);
 }
 
-Vector3 Vector3::Normalized()
+Vector3 Vector3::Normalized() const
 {
 	glm::vec3 normalizedVec = glm::normalize(_vec);
 	return Vector3(normalizedVec.x, normalizedVec.y, normalizedVec.z);
@@ -88,6 +88,14 @@ Vector3 Vector3::Cross(const Vector3& other) const
 {
 	glm::vec3 result = glm::cross(_vec, other._vec);
 	return Vector3(result.x, result.y, result.z);
+}
+
+float Vector3::Length() const
+{
+	return std::sqrt(_vec.x*_vec.x
+		+ _vec.y * _vec.y
+		+ _vec.z * _vec.z
+	);
 }
 
 float Vector3::Angle(Vector3 from, Vector3 to)
