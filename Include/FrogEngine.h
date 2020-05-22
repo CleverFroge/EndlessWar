@@ -509,7 +509,7 @@ namespace FrogEngine
 		std::vector<PointLight*>& GetPointLights();
 		void AddFlashLight(FlashLight* light);
 		std::vector<FlashLight*>& GetFlashLights();
-		
+		void AddObject(Node* node);
 		Node* _root;
 	protected:
 		
@@ -537,6 +537,8 @@ namespace FrogEngine
 		bool ConstanColor;
 		Vector3 StartColor;
 		Vector3 EndColor;
+
+		float Size;
 	};
 	class ParticleEmitter :public Component
 	{
@@ -558,6 +560,9 @@ namespace FrogEngine
 		void SetParticleSpeed(float speed);
 		void SetParticleSpeed(float startSpeed, float endSpeed);
 
+		void SetParticleSize(float size);
+		void SetParticleSize(float minSize, float maxSize);
+
 		void Start();
 		void Stop();
 		void ReStart();
@@ -574,6 +579,7 @@ namespace FrogEngine
 		int MaxParticles;
 		int EmitSpeed;
 		bool Loop;
+		bool ReleaseAfterEmit;
 		static std::set<ParticleEmitter*> ParticleEmitters;
 	private:
 		std::vector<Particle*> _particles;
@@ -594,5 +600,9 @@ namespace FrogEngine
 		bool _constantSpeed;
 		float _startParticleSpeed;
 		float _endParticleSpeed;
+
+		bool _constantSize;
+		float _minParticleSize;
+		float _maxParticleSize;
 	};
 }

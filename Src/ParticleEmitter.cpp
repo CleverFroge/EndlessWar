@@ -107,7 +107,16 @@ void ParticleEmitter::Update()
 					particle->StartColor = _startParticleColor;
 					particle->EndColor = _endParticleColor;
 				}
-				Scene::GetCurrentScene()->_root->AddChild(particle);
+				//粒子大小
+				if (_constantSize)
+				{
+					particle->Size = _minParticleSize;
+				}
+				else
+				{
+					particle->Size = Random::Randf(_minParticleSize, _maxParticleSize);
+				}
+				Scene::GetCurrentScene()->AddObject(particle);
 				particle->Shadow = false;
 				//找到第一个空指针
 				while (index < _particles.size() && _particles[index])
@@ -130,6 +139,10 @@ void ParticleEmitter::Update()
 		{
 			ReStart();
 		}
+		else if (_ExistingParticleNum == 0 && ReleaseAfterEmit)
+		{
+			_node->RemoveFromParent();
+		}
 	}
 	//更新现有粒子状态
 	for (size_t i = 0; i < _particles.size(); i++)
@@ -150,6 +163,7 @@ void ParticleEmitter::Update()
 			particle->LocalPosition = particle->LocalPosition + particle->EmitDirection * Time::GetDeltaTime() * particle->StartSpeed;
 			Vector3 cameraBack = Vector3(0, 0, 0) - Scene::GetCurrentScene()->GetCurrentCamera()->GetForward();
 			particle->SetLocalForward(cameraBack);
+			particle->LocalScale = Vector3(1, 1, 1) * particle->Size;
 		}
 	}
 }
@@ -262,4 +276,17 @@ void ParticleEmitter::SetParticleSpeed(float startSpeed, float endSpeed)
 	_constantSpeed = false;
 	_startParticleSpeed = startSpeed;
 	_endParticleSpeed = endSpeed;
+}
+
+void ParticleEmitter::SetParticleSize(float size)
+{
+	_constantSize = true;
+	_minParticleSize = size;
+}
+
+void ParticleEmitter::SetParticleSize(float minSize, float maxSize)
+{
+	_constantSize = false;
+	_minParticleSize = minSize;
+	_maxParticleSize = maxSize;
 }

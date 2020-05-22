@@ -116,3 +116,8 @@ std::vector<FlashLight*>& Scene::GetFlashLights()
 {
 	return _flashLights;
 }
+
+void Scene::AddObject(Node* node)
+{
+	_root->AddChild(node);
+}

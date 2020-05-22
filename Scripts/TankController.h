@@ -1,4 +1,5 @@
 #include "FrogEngine.h"
+#include "Missile.h"
 using namespace FrogEngine;
 
 class TankController : public Component
@@ -22,6 +23,8 @@ private:
 	ParticleEmitter* _muzzleEmitter = nullptr;
 	ParticleEmitter* _leftMudEmitter = nullptr;
 	ParticleEmitter* _rightMudEmitter = nullptr;
+private:
+	
 public:
 	TankController() : Component{"TankController"}
 	{
@@ -47,6 +50,7 @@ public:
 			_muzzleEmitter->SetParticleColor(Vector3(1, 0.5, 0), Vector3(0.2, 0.1, 0));
 			_muzzleEmitter->SetParticleLife(0.06, 0.08);
 			_muzzleEmitter->SetParticleSpeed(4, 8);
+			_muzzleEmitter->SetParticleSize(0.01, 0.05);
 			_muzzle->AddChild(particleEmitterNode);
 			particleEmitterNode->SetScale(Vector3(1, 1, 1));
 		}
@@ -61,6 +65,7 @@ public:
 			_leftMudEmitter->SetParticleColor(Vector3(0.5, 0.5, 0.25), Vector3(0.42, 0.31, 0.25));
 			_leftMudEmitter->SetParticleLife(0.2, 0.3);
 			_leftMudEmitter->SetParticleSpeed(2, 4);
+			_leftMudEmitter->SetParticleSize(0.01, 0.05);
 			_leftMudEmitter->Loop = true;
 			_leftMudEmitterNode->AddChild(particleEmitterNode);
 			particleEmitterNode->SetScale(Vector3(1, 1, 1));
@@ -76,6 +81,7 @@ public:
 			_rightMudEmitter->SetParticleColor(Vector3(0.5, 0.5, 0.25), Vector3(0.42, 0.31, 0.25));
 			_rightMudEmitter->SetParticleLife(0.2, 0.3);
 			_rightMudEmitter->SetParticleSpeed(2, 4);
+			_rightMudEmitter->SetParticleSize(0.01, 0.05);
 			_rightMudEmitter->Loop = true;
 			_rightMudEmitterNode->AddChild(particleEmitterNode);
 			particleEmitterNode->SetScale(Vector3(1, 1, 1));
@@ -83,12 +89,20 @@ public:
 	}
 	void Update()
 	{
-		if (_muzzleEmitter && Input::GetKey(GLFW_MOUSE_BUTTON_LEFT))
+		if (Input::GetKey(GLFW_MOUSE_BUTTON_LEFT))
 		{
-			_muzzleEmitter->ReStart();
+			if (_muzzleEmitter)
+			{
+				_muzzleEmitter->ReStart();
+			}
+			Scene* currentScene = Scene::GetCurrentScene();
+			Vector3 position = _muzzle->GetPosition();
+			Vector3 direction = Vector3(0, 0, 0) - _cannon->GetRight();
+			Node* missile = Missile::Create(position, direction);
+			currentScene->AddObject(missile);
 		}
 		//处理鼠标移动输入
-		Aim(Input::GetMousePosDeltaX(), Input::GetMousePosDeltaY());
+		RotateCannon(Input::GetMousePosDeltaX(), Input::GetMousePosDeltaY());
 		//处理键盘输入
 		float deltaTime = Time::GetDeltaTime();
 		Move(Input::GetAxis(), deltaTime);
@@ -96,7 +110,7 @@ public:
 	void LateUpdate()
 	{
 	}
-	void Aim(float deltaX, float deltaY)
+	void RotateCannon(float deltaX, float deltaY)
 	{
 		if (_battery)
 		{

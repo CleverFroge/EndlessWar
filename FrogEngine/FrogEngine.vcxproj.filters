@@ -143,6 +143,12 @@
     <ClInclude Include="..\Include\stb_image_write.h">
       <Filter>第三方库\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="Missile.h">
+      <Filter>Game\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Scripts\Missile.h">
+      <Filter>FrogEngine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Shader\BlinnPhong.fs">

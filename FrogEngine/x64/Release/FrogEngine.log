@@ -1,4 +1,32 @@
-﻿  ParticleEmitter.cpp
-C:\Users\jzp\Desktop\FrogEngine\Src\ParticleEmitter.cpp(59,29): warning C4244: “初始化”: 从“float”转换到“unsigned int”，可能丢失数据
-C:\Users\jzp\Desktop\FrogEngine\Src\ParticleEmitter.cpp(62,32): warning C4244: “=”: 从“float”转换到“unsigned int”，可能丢失数据
+﻿  OpenGL.cpp
+C:\Users\jzp\Desktop\FrogEngine\Scripts\CameraController.h(52,1): warning C4305: “参数”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Scripts\CameraController.h(58,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Scripts\CameraController.h(59,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Scripts\Missile.h(23,1): warning C4305: “参数”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Scripts\Missile.h(66,1): warning C4305: “参数”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Scripts\Missile.h(67,1): warning C4305: “参数”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Scripts\Missile.h(69,1): warning C4305: “参数”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Scripts\Missile.h(105,30): warning C4305: “初始化”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Scripts\TankController.h(9,32): warning C4305: “初始化”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Scripts\TankController.h(50,1): warning C4305: “参数”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Scripts\TankController.h(51,1): warning C4305: “参数”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Scripts\TankController.h(53,1): warning C4305: “参数”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Scripts\TankController.h(65,1): warning C4305: “参数”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Scripts\TankController.h(66,1): warning C4305: “参数”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Scripts\TankController.h(68,1): warning C4305: “参数”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Scripts\TankController.h(81,1): warning C4305: “参数”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Scripts\TankController.h(82,1): warning C4305: “参数”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Scripts\TankController.h(84,1): warning C4305: “参数”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Scripts\TankController.h(105,68): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Scripts\TankController.h(105,40): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Scripts\WaterWaveRendering.h(25,50): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\Scene\EndlessWar.h(25,1): warning C4305: “参数”: 从“double”到“float”截断
+C:\Users\jzp\Desktop\FrogEngine\Scene\EndlessWar.h(51,1): warning C4305: “参数”: 从“double”到“float”截断
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\shared\minwindef.h(130,1): warning C4005: “APIENTRY”: 宏重定义
+C:\Users\jzp\Desktop\FrogEngine\Include\glad\glad.h(10): message : 参见“APIENTRY”的前一个定义
+C:\Users\jzp\Desktop\FrogEngine\FrogEngine\OpenGL.cpp(63,23): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\FrogEngine\OpenGL.cpp(68,18): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\FrogEngine\OpenGL.cpp(71,10): warning C4244: “参数”: 从“float”转换到“DWORD”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\FrogEngine\OpenGL.cpp(74,34): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+C:\Users\jzp\Desktop\FrogEngine\FrogEngine\OpenGL.cpp(98,41): warning C4244: “=”: 从“float”转换到“unsigned int”，可能丢失数据
   FrogEngine.vcxproj -> C:\Users\jzp\Desktop\FrogEngine\x64\Release\FrogEngine.exe
