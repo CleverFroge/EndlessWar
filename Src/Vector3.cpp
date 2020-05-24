@@ -90,6 +90,11 @@ Vector3 Vector3::Cross(const Vector3& other) const
 	return Vector3(result.x, result.y, result.z);
 }
 
+float Vector3::Dot(const Vector3& v1, const Vector3& v2)
+{
+	return glm::dot(v1._vec, v2._vec);
+}
+
 float Vector3::Length() const
 {
 	return std::sqrt(_vec.x*_vec.x

@@ -112,6 +112,7 @@ namespace FrogEngine
 		Vector3 operator*(const Matrix4& mat) const;
 		Vector3 operator/(float scale) const;
 		Vector3 Cross(const Vector3& other) const;
+		static float Dot(const Vector3& v1, const Vector3& v2);
 		float Length() const;
 		static float Angle(Vector3 from, Vector3 to);
 		void Print() const { std::cout << "(" << _vec.x << "," << _vec.y << "," << _vec.z << ")" << std::endl; };
@@ -174,6 +175,7 @@ namespace FrogEngine
 	};
 	class Mesh;
 	class Component;
+	class SphereCollider;
 	class Node :public Ref
 	{
 	private:
@@ -185,6 +187,9 @@ namespace FrogEngine
 
 		void AddComponent(Component* component);
 		Component* GetComponent(const char* name);
+
+		virtual void OnCollision(SphereCollider* collider);
+		void SetCollider(SphereCollider* collider);
 
 		void SetLocalForward(const Vector3& forward);
 		void SetForward(const Vector3& forward);
@@ -248,6 +253,7 @@ namespace FrogEngine
 		Vector3 _front;
 		Vector3 _right;
 		std::map<const char*, Component*> _components;
+		SphereCollider* _collider;
 	};
 	class SkyBox;
 	class Camera : public Node
@@ -313,7 +319,7 @@ namespace FrogEngine
 		unsigned int _shaderProgram;
 	private:
 		Shader(const char* name, const char* vertexShaderPath, const char* fragmentShaderPath);
-		
+
 	public:
 		void Use();
 		void SetBool(const char* valueName, bool value) const;
@@ -347,9 +353,9 @@ namespace FrogEngine
 	public:
 		Material* material;
 		Shader* shader;
-		friend class ParticleEmitter;std::vector<Vertex> _vertices;
+		friend class ParticleEmitter; std::vector<Vertex> _vertices;
 	private:
-		
+
 		std::vector<unsigned int> _indices;
 		unsigned int _vao;
 		unsigned int _vbo;
@@ -512,7 +518,7 @@ namespace FrogEngine
 		void AddObject(Node* node);
 		Node* _root;
 	protected:
-		
+
 		Camera* _currentCamera;
 		std::vector<DirectionalLight*> _directionalLights;
 		std::vector<PointLight*> _pointLights;
@@ -572,7 +578,7 @@ namespace FrogEngine
 			Vector3 Position;
 			Vector3 Color;
 		};
-		unsigned int vao,vbo;
+		unsigned int vao, vbo;
 		std::vector<ParticleVertex> vertices;
 	public:
 		float EmitAngle;
@@ -604,5 +610,36 @@ namespace FrogEngine
 		bool _constantSize;
 		float _minParticleSize;
 		float _maxParticleSize;
+	};
+	class SphereCollider
+	{
+		friend Node;
+	public:
+		enum Layer
+		{
+			Player,
+			Enemy,
+			PlayerMissile,
+			EnemyMissile,
+			PlayerExplosion,
+			EnemyExplosion
+		};
+	public:
+		SphereCollider(Layer layer, float size);
+		static void Detected();
+		static void SetLayerCollsion(Layer layer1, Layer layer2, bool collision);
+		bool CanMove(Vector3 direction) const;
+		Layer GetLayer() const;
+		Node* GetNode() const;
+	private:
+		virtual ~SphereCollider();
+	private:
+		static std::set<SphereCollider*> _colliders;
+		static std::map<Layer, std::set<Layer>> _layerCollision;
+		Layer _layer;
+
+		Node* _node;
+		float _size;
+		std::set<SphereCollider*> _collisionColliders;
 	};
 }

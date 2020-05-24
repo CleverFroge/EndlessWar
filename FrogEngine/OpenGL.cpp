@@ -87,7 +87,7 @@ int main()
 			glfwSetWindowShouldClose(window, true);
 		}
 		Input::ClearFrameInput();
-
+		SphereCollider::Detected();
 		//交换颜色缓冲（它是一个储存着GLFW窗口每一个像素颜色值的大缓冲），它在这一迭代中被用来绘制，并且将会作为输出显示在屏幕上
 		glfwSwapBuffers(window);
 		//是否触发事件，键盘输入、鼠标移动等、更新窗口状态，并调用对应的回调函数（可以通过回调方法手动设置）

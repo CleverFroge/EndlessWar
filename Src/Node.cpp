@@ -59,6 +59,12 @@ Node::~Node()
 		delete component;
 		componentIt = _components.erase(componentIt);
 	}
+	//删除collider
+	if (_collider)
+	{
+		delete _collider;
+		SphereCollider::_colliders.erase(_collider);
+	}
 	//删除所有子节点
 	auto childIt = _childs.begin();
 	while (childIt!=_childs.end())
@@ -79,6 +85,32 @@ Component* Node::GetComponent(const char* name)
 {
 	auto ret = _components[name];
 	return ret;
+}
+
+void Node::OnCollision(SphereCollider* collider)
+{
+}
+
+void Node::SetCollider(SphereCollider* collider)
+{
+	//删除原先Collider
+	if (_collider != nullptr)
+	{
+		delete _collider;
+		SphereCollider::_colliders.erase(_collider);
+	}
+	//collider原来的节点collider设为nullptr
+	if (collider->_node)
+	{
+		collider->_node->_collider = nullptr;
+	}
+	//设置collider
+	collider->_node = this;
+	_collider = collider;
+	if (SphereCollider::_colliders.find(collider) == SphereCollider::_colliders.end())
+	{
+		SphereCollider::_colliders.insert(collider);
+	}
 }
 
 void Node::SetLocalPosition(const Vector3& pos)
@@ -585,14 +617,26 @@ Vector3 Node::GetRight() const
 
 void Node::ComponentsUpdate()
 {
+	//防止ComponentUpdate中删除节点或者Component导致迭代器失效，先保存所有指针
+	std::vector<Component*> components;
 	for (auto it = _components.begin(); it != _components.end(); it++)
 	{
 		auto component = it->second;
-		component->Update();
+		components.push_back(component);
 	}
+	for (size_t i = 0; i < components.size(); i++)
+	{
+		components[i]->Update();
+	}
+	std::vector<Node*> childs;
 	for (auto it = _childs.begin(); it != _childs.end(); it++)
 	{
-		(*it)->ComponentsUpdate();
+		childs.push_back(*it);
+	}
+	for (size_t i = 0; i < childs.size(); i++)
+	{
+
+		childs[i]->ComponentsUpdate();
 	}
 }
 

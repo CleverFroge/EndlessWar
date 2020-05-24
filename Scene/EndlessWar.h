@@ -10,6 +10,7 @@ class EndlessWar:public Scene
 public:
 	EndlessWar()
 	{
+		SphereCollider::SetLayerCollsion(SphereCollider::Layer::Player, SphereCollider::Enemy, true);
 		//shader
 		Shader::LoadShader("Phong", "../Shader/Common.vs", "../Shader/BlinnPhong.fs");
 		Shader::LoadShader("SkyBox", "../Shader/SkyBox.vs", "../Shader/SkyBox.fs");
@@ -21,9 +22,13 @@ public:
 		_root->AddChild(model);
 
 		//	//Ì¹¿Ë
-		Node* tank = Model::LoadModel("../Resource/Tank1/Tank1.FBX");
-		tank->LocalScale = Vector3(1, 1, 1) * 0.1;
+		Tank* tank = new Tank(SphereCollider::Layer::Player);
+//		tank->LocalPosition = Vector3(150.7744, 0, 0);
 		_root->AddChild(tank);
+
+		Tank* enemy = new Tank(SphereCollider::Layer::Enemy);
+		enemy->LocalPosition = Vector3(10, 0, 0);
+		_root->AddChild(enemy);
 
 		TankController* tankController = new TankController();
 		tank->AddComponent(tankController);
