@@ -85,7 +85,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)\Class;$(SolutionDir)\Include\FBXSDK;$(SolutionDir)\Scene;$(SolutionDir)\Scripts;$(SolutionDir)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\FrogEngine\Include\FBXSDK;$(SolutionDir)\FrogEngine\Scene;$(SolutionDir)\FrogEngine\Scripts\EnemyAI;$(SolutionDir)\FrogEngine\Scripts;$(SolutionDir)\FrogEngine\Include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Dll\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -161,78 +161,73 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Scripts\CameraController.cpp" />
-    <ClCompile Include="..\Scripts\EnemyAI\AITankController.cpp" />
-    <ClCompile Include="..\Scripts\EnemyAI\ChaseState.cpp" />
-    <ClCompile Include="..\Scripts\EnemyAI\DeathState.cpp" />
-    <ClCompile Include="..\Scripts\EnemyAI\PatrolState.cpp" />
-    <ClCompile Include="..\Scripts\Explosion.cpp" />
-    <ClCompile Include="..\Scripts\Missile.cpp" />
-    <ClCompile Include="..\Scripts\Spawner.cpp" />
-    <ClCompile Include="..\Scripts\Tank.cpp" />
-    <ClCompile Include="..\Scripts\TankController.cpp" />
-    <ClCompile Include="..\Scripts\SkyDome.cpp" />
-    <ClCompile Include="..\Src\Camera.cpp" />
-    <ClCompile Include="..\Src\Component.cpp" />
-    <ClCompile Include="..\Src\DirectionalLight.cpp" />
-    <ClCompile Include="..\Src\FlashLight.cpp" />
-    <ClCompile Include="..\Src\glad.c" />
-    <ClCompile Include="..\Src\Input.cpp" />
-    <ClCompile Include="..\Src\Material.cpp" />
-    <ClCompile Include="..\Src\Math.cpp" />
-    <ClCompile Include="..\Src\Matrix4.cpp" />
-    <ClCompile Include="..\Src\Mesh.cpp" />
-    <ClCompile Include="..\Src\Model.cpp" />
-    <ClCompile Include="..\Src\Particle.cpp" />
-    <ClCompile Include="..\Src\ParticleEmitter.cpp" />
-    <ClCompile Include="..\Src\PointLight.cpp" />
-    <ClCompile Include="..\Src\Random.cpp" />
-    <ClCompile Include="..\Src\Ref.cpp" />
-    <ClCompile Include="..\Src\ReleasePool.cpp" />
-    <ClCompile Include="..\Src\Scene.cpp" />
-    <ClCompile Include="..\Src\Screen.cpp" />
-    <ClCompile Include="..\Src\Shader.cpp" />
-    <ClCompile Include="..\Src\SkyBox.cpp" />
-    <ClCompile Include="..\Src\SphereCollider.cpp" />
-    <ClCompile Include="..\Src\stb_image.cpp" />
-    <ClCompile Include="..\Src\stb_image_write.cpp" />
-    <ClCompile Include="..\Src\Texture.cpp" />
-    <ClCompile Include="..\Src\Time.cpp" />
-    <ClCompile Include="..\Src\Node.cpp" />
-    <ClCompile Include="..\Src\Vector2.cpp" />
-    <ClCompile Include="..\Src\Vector3.cpp" />
     <ClCompile Include="OpenGL.cpp" />
+    <ClCompile Include="Scripts\CameraController.cpp" />
+    <ClCompile Include="Scripts\EnemyAI\AITankController.cpp" />
+    <ClCompile Include="Scripts\EnemyAI\ChaseState.cpp" />
+    <ClCompile Include="Scripts\EnemyAI\DeathState.cpp" />
+    <ClCompile Include="Scripts\EnemyAI\PatrolState.cpp" />
+    <ClCompile Include="Scripts\Explosion.cpp" />
+    <ClCompile Include="Scripts\Missile.cpp" />
+    <ClCompile Include="Scripts\SkyDome.cpp" />
+    <ClCompile Include="Scripts\Spawner.cpp" />
+    <ClCompile Include="Scripts\Tank.cpp" />
+    <ClCompile Include="Scripts\TankController.cpp" />
+    <ClCompile Include="Src\Camera.cpp" />
+    <ClCompile Include="Src\Component.cpp" />
+    <ClCompile Include="Src\DirectionalLight.cpp" />
+    <ClCompile Include="Src\FlashLight.cpp" />
+    <ClCompile Include="Src\glad.c" />
+    <ClCompile Include="Src\Input.cpp" />
+    <ClCompile Include="Src\Material.cpp" />
+    <ClCompile Include="Src\Math.cpp" />
+    <ClCompile Include="Src\Matrix4.cpp" />
+    <ClCompile Include="Src\Mesh.cpp" />
+    <ClCompile Include="Src\Model.cpp" />
+    <ClCompile Include="Src\Node.cpp" />
+    <ClCompile Include="Src\Particle.cpp" />
+    <ClCompile Include="Src\ParticleEmitter.cpp" />
+    <ClCompile Include="Src\PointLight.cpp" />
+    <ClCompile Include="Src\Random.cpp" />
+    <ClCompile Include="Src\Ref.cpp" />
+    <ClCompile Include="Src\ReleasePool.cpp" />
+    <ClCompile Include="Src\Scene.cpp" />
+    <ClCompile Include="Src\Screen.cpp" />
+    <ClCompile Include="Src\Shader.cpp" />
+    <ClCompile Include="Src\SkyBox.cpp" />
+    <ClCompile Include="Src\SphereCollider.cpp" />
+    <ClCompile Include="Src\stb_image.cpp" />
+    <ClCompile Include="Src\stb_image_write.cpp" />
+    <ClCompile Include="Src\Texture.cpp" />
+    <ClCompile Include="Src\Time.cpp" />
+    <ClCompile Include="Src\Vector2.cpp" />
+    <ClCompile Include="Src\Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Include\FrogEngine.h" />
-    <ClInclude Include="..\Include\stb_image.h" />
-    <ClInclude Include="..\Include\stb_image_write.h" />
-    <ClInclude Include="..\Scene\EndlessWar.h" />
-    <ClInclude Include="..\Scripts\CameraController.h" />
-    <ClInclude Include="..\Scripts\EnemyAI\AI.h" />
-    <ClInclude Include="..\Scripts\EnemyAI\AITankController.h" />
-    <ClInclude Include="..\Scripts\Explosion.h" />
-    <ClInclude Include="..\Scripts\Missile.h" />
-    <ClInclude Include="..\Scripts\Spawner.h" />
-    <ClInclude Include="..\Scripts\Tank.h" />
-    <ClInclude Include="..\Scripts\SkyDome.h" />
-    <ClInclude Include="..\Scripts\TankController.h" />
+    <ClInclude Include="Include\FrogEngine.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Scene\EndlessWar.h" />
+    <ClInclude Include="Scripts\CameraController.h" />
+    <ClInclude Include="Scripts\EnemyAI\AI.h" />
+    <ClInclude Include="Scripts\EnemyAI\AITankController.h" />
+    <ClInclude Include="Scripts\Explosion.h" />
+    <ClInclude Include="Scripts\Missile.h" />
+    <ClInclude Include="Scripts\SkyDome.h" />
+    <ClInclude Include="Scripts\Spawner.h" />
+    <ClInclude Include="Scripts\Tank.h" />
+    <ClInclude Include="Scripts\TankController.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Shader\BlinnPhong.fs" />
-    <None Include="..\Shader\Common.vs" />
-    <None Include="..\Shader\Depth.fs" />
-    <None Include="..\Shader\Depth.vs" />
-    <None Include="..\Shader\Particle.fs" />
-    <None Include="..\Shader\Particle.vs" />
-    <None Include="..\Shader\SkyBox.fs" />
-    <None Include="..\Shader\SkyBox.vs" />
-    <None Include="..\Shader\WaterWave.fs" />
-    <None Include="..\Shader\WaterWave.vs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="FrogEngine.rc" />
+    <None Include="Shader\BlinnPhong.fs" />
+    <None Include="Shader\Common.vs" />
+    <None Include="Shader\Depth.fs" />
+    <None Include="Shader\Depth.vs" />
+    <None Include="Shader\Particle.fs" />
+    <None Include="Shader\Particle.vs" />
+    <None Include="Shader\SkyBox.fs" />
+    <None Include="Shader\SkyBox.vs" />
+    <None Include="Shader\SkyDome.fs" />
+    <None Include="Shader\SkyDome.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

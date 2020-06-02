@@ -58,7 +58,7 @@ int main()
 	Scene::SetCurrentScene(endlessWar);
 
 	unsigned int lastPrint = 0;
-	unsigned int FPS = 12000;
+	unsigned int FPS = 120;
 	float FrameTime = 1 / (float)FPS;
 	float FrameStartTime = glfwGetTime();
 

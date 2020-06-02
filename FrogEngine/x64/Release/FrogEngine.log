@@ -1,6 +1,11 @@
-﻿  Explosion.cpp
-C:\Users\11640\Desktop\FrogEngine\Scripts\Explosion.cpp(13,78): warning C4305: “参数”: 从“double”到“float”截断
-C:\Users\11640\Desktop\FrogEngine\Scripts\Explosion.cpp(14,56): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-C:\Users\11640\Desktop\FrogEngine\Scripts\Explosion.cpp(14,42): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-C:\Users\11640\Desktop\FrogEngine\Scripts\Explosion.cpp(16,46): warning C4305: “参数”: 从“double”到“float”截断
+﻿  OpenGL.cpp
+C:\Users\11640\Desktop\FrogEngine\FrogEngine\Scripts\TankController.h(10,32): warning C4305: “初始化”: 从“double”到“float”截断
+C:\Users\11640\Desktop\FrogEngine\FrogEngine\Scene\EndlessWar.h(57,1): warning C4305: “参数”: 从“double”到“float”截断
+D:\Windows Kits\10\Include\10.0.18362.0\shared\minwindef.h(130,1): warning C4005: “APIENTRY”: 宏重定义
+C:\Users\11640\Desktop\FrogEngine\FrogEngine\Include\glad\glad.h(10): message : 参见“APIENTRY”的前一个定义
+C:\Users\11640\Desktop\FrogEngine\FrogEngine\OpenGL.cpp(63,23): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\11640\Desktop\FrogEngine\FrogEngine\OpenGL.cpp(68,18): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\11640\Desktop\FrogEngine\FrogEngine\OpenGL.cpp(71,10): warning C4244: “参数”: 从“float”转换到“DWORD”，可能丢失数据
+C:\Users\11640\Desktop\FrogEngine\FrogEngine\OpenGL.cpp(74,34): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+C:\Users\11640\Desktop\FrogEngine\FrogEngine\OpenGL.cpp(98,41): warning C4244: “=”: 从“float”转换到“unsigned int”，可能丢失数据
   FrogEngine.vcxproj -> C:\Users\11640\Desktop\FrogEngine\x64\Release\FrogEngine.exe

@@ -36,206 +36,195 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OpenGL.cpp" />
-    <ClCompile Include="..\Src\Camera.cpp">
+    <ClCompile Include="Src\Camera.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Component.cpp">
+    <ClCompile Include="Src\Component.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\DirectionalLight.cpp">
+    <ClCompile Include="Src\DirectionalLight.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\FlashLight.cpp">
+    <ClCompile Include="Src\FlashLight.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Input.cpp">
+    <ClCompile Include="Src\Input.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Material.cpp">
+    <ClCompile Include="Src\Material.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Math.cpp">
+    <ClCompile Include="Src\Math.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Matrix4.cpp">
+    <ClCompile Include="Src\Matrix4.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Mesh.cpp">
+    <ClCompile Include="Src\Mesh.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Model.cpp">
+    <ClCompile Include="Src\Model.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Node.cpp">
+    <ClCompile Include="Src\Node.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\PointLight.cpp">
+    <ClCompile Include="Src\Particle.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Scene.cpp">
+    <ClCompile Include="Src\ParticleEmitter.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Screen.cpp">
+    <ClCompile Include="Src\PointLight.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Shader.cpp">
+    <ClCompile Include="Src\Random.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\SkyBox.cpp">
+    <ClCompile Include="Src\Ref.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Texture.cpp">
+    <ClCompile Include="Src\ReleasePool.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Time.cpp">
+    <ClCompile Include="Src\Scene.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Vector2.cpp">
+    <ClCompile Include="Src\Screen.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Vector3.cpp">
+    <ClCompile Include="Src\Shader.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\stb_image.cpp">
-      <Filter>第三方库\stb_image</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Src\stb_image_write.cpp">
-      <Filter>第三方库\stb_image</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Src\glad.c">
-      <Filter>第三方库\GLAD</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Src\ParticleEmitter.cpp">
+    <ClCompile Include="Src\SkyBox.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Particle.cpp">
+    <ClCompile Include="Src\SphereCollider.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Random.cpp">
+    <ClCompile Include="Src\stb_image.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\Ref.cpp">
+    <ClCompile Include="Src\stb_image_write.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\ReleasePool.cpp">
+    <ClCompile Include="Src\Texture.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\SphereCollider.cpp">
+    <ClCompile Include="Src\Time.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
-    <ClCompile Include="..\Scripts\EnemyAI\PatrolState.cpp">
+    <ClCompile Include="Src\Vector2.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Vector3.cpp">
+      <Filter>FrogEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\EnemyAI\AITankController.cpp">
       <Filter>Game\Scripts\EnemyAI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Scripts\CameraController.cpp">
-      <Filter>Game\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Scripts\Explosion.cpp">
-      <Filter>Game\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Scripts\Missile.cpp">
-      <Filter>Game\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Scripts\Tank.cpp">
-      <Filter>Game\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Scripts\TankController.cpp">
-      <Filter>Game\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Scripts\SkyDome.cpp">
-      <Filter>Game\Scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Scripts\EnemyAI\ChaseState.cpp">
+    <ClCompile Include="Scripts\EnemyAI\ChaseState.cpp">
       <Filter>Game\Scripts\EnemyAI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Scripts\EnemyAI\DeathState.cpp">
+    <ClCompile Include="Scripts\EnemyAI\DeathState.cpp">
       <Filter>Game\Scripts\EnemyAI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Scripts\EnemyAI\AITankController.cpp">
+    <ClCompile Include="Scripts\EnemyAI\PatrolState.cpp">
       <Filter>Game\Scripts\EnemyAI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Scripts\Spawner.cpp">
+    <ClCompile Include="Scripts\CameraController.cpp">
       <Filter>Game\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Explosion.cpp">
+      <Filter>Game\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Missile.cpp">
+      <Filter>Game\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\SkyDome.cpp">
+      <Filter>Game\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Spawner.cpp">
+      <Filter>Game\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Tank.cpp">
+      <Filter>Game\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\TankController.cpp">
+      <Filter>Game\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\glad.c">
+      <Filter>FrogEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\Scene\EndlessWar.h">
-      <Filter>Game\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\FrogEngine.h">
+    <ClInclude Include="Include\FrogEngine.h">
       <Filter>FrogEngine</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\stb_image.h">
-      <Filter>第三方库\stb_image</Filter>
+    <ClInclude Include="Scene\EndlessWar.h">
+      <Filter>Game\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\stb_image_write.h">
-      <Filter>第三方库\stb_image</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Scripts\Explosion.h">
-      <Filter>Game\Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Scripts\Missile.h">
-      <Filter>Game\Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Scripts\Tank.h">
-      <Filter>Game\Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Scripts\CameraController.h">
-      <Filter>Game\Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Scripts\TankController.h">
-      <Filter>Game\Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Scripts\EnemyAI\AITankController.h">
+    <ClInclude Include="Scripts\EnemyAI\AI.h">
       <Filter>Game\Scripts\EnemyAI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Scripts\EnemyAI\AI.h">
+    <ClInclude Include="Scripts\EnemyAI\AITankController.h">
       <Filter>Game\Scripts\EnemyAI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Scripts\SkyDome.h">
+    <ClInclude Include="Scripts\CameraController.h">
       <Filter>Game\Scripts</Filter>
     </ClInclude>
-    <ClInclude Include="..\Scripts\Spawner.h">
+    <ClInclude Include="Scripts\Explosion.h">
+      <Filter>Game\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Missile.h">
+      <Filter>Game\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\SkyDome.h">
+      <Filter>Game\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Spawner.h">
+      <Filter>Game\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Tank.h">
+      <Filter>Game\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\TankController.h">
       <Filter>Game\Scripts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Shader\BlinnPhong.fs">
+    <None Include="Shader\BlinnPhong.fs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="..\Shader\Common.vs">
+    <None Include="Shader\Common.vs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="..\Shader\SkyBox.fs">
+    <None Include="Shader\Depth.fs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="..\Shader\SkyBox.vs">
+    <None Include="Shader\Depth.vs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="..\Shader\WaterWave.vs">
+    <None Include="Shader\Particle.fs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="..\Shader\WaterWave.fs">
+    <None Include="Shader\Particle.vs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="..\Shader\Depth.fs">
+    <None Include="Shader\SkyBox.fs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="..\Shader\Depth.vs">
+    <None Include="Shader\SkyBox.vs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="..\Shader\Particle.fs">
+    <None Include="Shader\SkyDome.fs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="..\Shader\Particle.vs">
+    <None Include="Shader\SkyDome.vs">
       <Filter>Shader</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="FrogEngine.rc">
-      <Filter>Shader</Filter>
-    </ResourceCompile>
   </ItemGroup>
 </Project>
