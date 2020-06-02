@@ -30,6 +30,9 @@
     <Filter Include="第三方库\stb_image">
       <UniqueIdentifier>{6d8c2e65-9908-4836-b7a4-0d7c741e7ceb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Scripts\EnemyAI">
+      <UniqueIdentifier>{2eb46a7e-6cfa-45cd-ac49-9c5d663185d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OpenGL.cpp" />
@@ -120,22 +123,46 @@
     <ClCompile Include="..\Src\SphereCollider.cpp">
       <Filter>FrogEngine</Filter>
     </ClCompile>
+    <ClCompile Include="..\Scripts\EnemyAI\PatrolState.cpp">
+      <Filter>Game\Scripts\EnemyAI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Scripts\CameraController.cpp">
+      <Filter>Game\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Scripts\Explosion.cpp">
+      <Filter>Game\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Scripts\Missile.cpp">
+      <Filter>Game\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Scripts\Tank.cpp">
+      <Filter>Game\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Scripts\TankController.cpp">
+      <Filter>Game\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Scripts\SkyDome.cpp">
+      <Filter>Game\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Scripts\EnemyAI\ChaseState.cpp">
+      <Filter>Game\Scripts\EnemyAI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Scripts\EnemyAI\DeathState.cpp">
+      <Filter>Game\Scripts\EnemyAI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Scripts\EnemyAI\AITankController.cpp">
+      <Filter>Game\Scripts\EnemyAI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Scripts\Spawner.cpp">
+      <Filter>Game\Scripts</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Scripts\CameraController.h">
-      <Filter>Game\Scripts</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\Scripts\TankController.h">
-      <Filter>Game\Scripts</Filter>
-    </ClInclude>
     <ClInclude Include="..\Scene\EndlessWar.h">
       <Filter>Game\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Scripts\WaterWaveRendering.h">
-      <Filter>Game\Scripts</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\FrogEngine.h">
       <Filter>FrogEngine</Filter>
@@ -146,13 +173,31 @@
     <ClInclude Include="..\Include\stb_image_write.h">
       <Filter>第三方库\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="..\Scripts\Explosion.h">
+      <Filter>Game\Scripts</Filter>
+    </ClInclude>
     <ClInclude Include="..\Scripts\Missile.h">
       <Filter>Game\Scripts</Filter>
     </ClInclude>
-    <ClInclude Include="..\Class\Tank.h">
+    <ClInclude Include="..\Scripts\Tank.h">
       <Filter>Game\Scripts</Filter>
     </ClInclude>
-    <ClInclude Include="..\Scripts\Explosion.h">
+    <ClInclude Include="..\Scripts\CameraController.h">
+      <Filter>Game\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Scripts\TankController.h">
+      <Filter>Game\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Scripts\EnemyAI\AITankController.h">
+      <Filter>Game\Scripts\EnemyAI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Scripts\EnemyAI\AI.h">
+      <Filter>Game\Scripts\EnemyAI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Scripts\SkyDome.h">
+      <Filter>Game\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Scripts\Spawner.h">
       <Filter>Game\Scripts</Filter>
     </ClInclude>
   </ItemGroup>

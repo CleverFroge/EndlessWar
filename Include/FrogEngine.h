@@ -57,6 +57,7 @@ namespace FrogEngine
 	float Radians(float angle);
 	float GetAttenuationLinear(float distant);
 	float GetAttenuationQuadratic(float distant);
+	float Clamp(float value, float min, float max);
 	class Random
 	{
 	public:
@@ -189,6 +190,8 @@ namespace FrogEngine
 		Component* GetComponent(const char* name);
 
 		virtual void OnCollision(SphereCollider* collider);
+		virtual void OnEnter(SphereCollider* collider);
+		virtual void OnExit(SphereCollider* collider);
 		void SetCollider(SphereCollider* collider);
 
 		void SetLocalForward(const Vector3& forward);
@@ -213,6 +216,7 @@ namespace FrogEngine
 
 		void Print() const;
 
+		int GetChildNum();
 		void SetParent(Node* parent);
 		Node* GetParent() const;
 		void AddChild(Node* child);

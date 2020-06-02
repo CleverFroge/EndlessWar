@@ -161,6 +161,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Scripts\CameraController.cpp" />
+    <ClCompile Include="..\Scripts\EnemyAI\AITankController.cpp" />
+    <ClCompile Include="..\Scripts\EnemyAI\ChaseState.cpp" />
+    <ClCompile Include="..\Scripts\EnemyAI\DeathState.cpp" />
+    <ClCompile Include="..\Scripts\EnemyAI\PatrolState.cpp" />
+    <ClCompile Include="..\Scripts\Explosion.cpp" />
+    <ClCompile Include="..\Scripts\Missile.cpp" />
+    <ClCompile Include="..\Scripts\Spawner.cpp" />
+    <ClCompile Include="..\Scripts\Tank.cpp" />
+    <ClCompile Include="..\Scripts\TankController.cpp" />
+    <ClCompile Include="..\Scripts\SkyDome.cpp" />
     <ClCompile Include="..\Src\Camera.cpp" />
     <ClCompile Include="..\Src\Component.cpp" />
     <ClCompile Include="..\Src\DirectionalLight.cpp" />
@@ -193,15 +204,18 @@
     <ClCompile Include="OpenGL.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Class\Tank.h" />
     <ClInclude Include="..\Include\FrogEngine.h" />
     <ClInclude Include="..\Include\stb_image.h" />
     <ClInclude Include="..\Include\stb_image_write.h" />
     <ClInclude Include="..\Scene\EndlessWar.h" />
     <ClInclude Include="..\Scripts\CameraController.h" />
+    <ClInclude Include="..\Scripts\EnemyAI\AI.h" />
+    <ClInclude Include="..\Scripts\EnemyAI\AITankController.h" />
     <ClInclude Include="..\Scripts\Explosion.h" />
     <ClInclude Include="..\Scripts\Missile.h" />
-    <ClInclude Include="..\Scripts\WaterWaveRendering.h" />
+    <ClInclude Include="..\Scripts\Spawner.h" />
+    <ClInclude Include="..\Scripts\Tank.h" />
+    <ClInclude Include="..\Scripts\SkyDome.h" />
     <ClInclude Include="..\Scripts\TankController.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

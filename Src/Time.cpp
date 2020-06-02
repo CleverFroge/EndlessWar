@@ -6,6 +6,10 @@ float Time::CurrentTime = 0;
 
 void Time::Update()
 {
+	if (CurrentTime==0)
+	{
+		CurrentTime = glfwGetTime();
+	}
 	float time = glfwGetTime();
 	DeltaTime = time - CurrentTime;
 	CurrentTime = time;

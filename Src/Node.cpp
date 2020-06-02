@@ -70,6 +70,7 @@ Node::~Node()
 	while (childIt!=_childs.end())
 	{
 		(*childIt)->Release();
+		(*childIt)->_parent = nullptr;
 		childIt = _childs.erase(childIt);
 	}
 }
@@ -88,6 +89,12 @@ Component* Node::GetComponent(const char* name)
 }
 
 void Node::OnCollision(SphereCollider* collider)
+{
+}
+void Node::OnEnter(SphereCollider* collider)
+{
+}
+void Node::OnExit(SphereCollider* collider)
 {
 }
 
@@ -249,6 +256,11 @@ void Node::Print() const
 	GetRight().Print();
 	std::cout << "	EulerAngles:";
 	_eulerAngles.Print();
+}
+
+int Node::GetChildNum()
+{
+	return _childs.size();
 }
 
 void Node::SetParent(Node* parent)

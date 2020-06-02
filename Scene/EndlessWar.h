@@ -3,7 +3,9 @@
 using namespace FrogEngine;
 #include "CameraController.h"
 #include "TankController.h"
-#include "WaterWaveRendering.h"
+#include "SkyDome.h"
+#include "Spawner.h"
+
 
 class EndlessWar:public Scene
 {
@@ -11,6 +13,8 @@ public:
 	EndlessWar()
 	{
 		SphereCollider::SetLayerCollsion(SphereCollider::Layer::Player, SphereCollider::Enemy, true);
+		SphereCollider::SetLayerCollsion(SphereCollider::Layer::Player, SphereCollider::Player, true);
+		SphereCollider::SetLayerCollsion(SphereCollider::Layer::Enemy, SphereCollider::Enemy, true);
 		//shader
 		Shader::LoadShader("Phong", "../Shader/Common.vs", "../Shader/BlinnPhong.fs");
 		Shader::LoadShader("SkyBox", "../Shader/SkyBox.vs", "../Shader/SkyBox.fs");
@@ -20,18 +24,15 @@ public:
 		//地形
 		Node* model = Model::LoadModel("../Resource/Scene/Scene.FBX");
 		_root->AddChild(model);
-
 		//	//坦克
 		Tank* tank = new Tank(SphereCollider::Layer::Player);
-//		tank->LocalPosition = Vector3(150.7744, 0, 0);
 		_root->AddChild(tank);
-
-		Tank* enemy = new Tank(SphereCollider::Layer::Enemy);
-		enemy->LocalPosition = Vector3(10, 0, 0);
-		_root->AddChild(enemy);
 
 		TankController* tankController = new TankController();
 		tank->AddComponent(tankController);
+
+		Node* spawner = Spawner::Create();
+		_root->AddChild(spawner);
 	
 		//相机
 		Camera* camera = new Camera();

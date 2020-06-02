@@ -33,3 +33,16 @@ float FrogEngine::GetAttenuationQuadratic(float distant)
 {
 	return 0;
 }
+
+float FrogEngine::Clamp(float value, float min, float max)
+{
+	if (value < min)
+	{
+		return min;
+	}
+	if (value > max)
+	{
+		return max;
+	}
+	return value;
+}

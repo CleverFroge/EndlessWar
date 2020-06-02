@@ -43,15 +43,43 @@ void SphereCollider::Detected()
 					float distance = (pos - otherPos).Length();
 					if (distance < collider->_size + otherCollider->_size)
 					{
-						node->OnCollision(otherCollider);
-						otherNode->OnCollision(collider);
-						collider->_collisionColliders.insert(otherCollider);
-						otherCollider->_collisionColliders.insert(collider);
+						if (collider->_collisionColliders.find(otherCollider)== collider->_collisionColliders.end())
+						{
+							//碰撞开始
+							collider->_collisionColliders.insert(otherCollider);
+							node->OnEnter(otherCollider);
+						}
+						else
+						{
+							//持续碰撞
+							node->OnCollision(otherCollider);
+						}
+						if (otherCollider->_collisionColliders.find(collider) == otherCollider->_collisionColliders.end())
+						{
+							//碰撞开始
+							otherCollider->_collisionColliders.insert(collider);
+							otherNode->OnEnter(collider);
+						}
+						else
+						{
+							//持续碰撞
+							otherNode->OnCollision(collider);
+						}
 					}
 					else
 					{
-						collider->_collisionColliders.erase(otherCollider);
-						otherCollider->_collisionColliders.erase(collider);
+						if (collider->_collisionColliders.find(otherCollider) != collider->_collisionColliders.end())
+						{
+							//碰撞结束
+							collider->_collisionColliders.erase(otherCollider);
+							node->OnExit(otherCollider);
+						}
+						if (otherCollider->_collisionColliders.find(collider) != otherCollider->_collisionColliders.end())
+						{
+							//碰撞结束
+							otherCollider->_collisionColliders.erase(collider);
+							otherNode->OnExit(collider);
+						}
 					}
 				}
 			}
